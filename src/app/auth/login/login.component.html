@@ -13,8 +13,13 @@
         </div>
         <div class="input">
           <label>Password</label>
-          <input type="password" placeholder="Enter password" />
-          <span>&nbsp;</span>
+          <input
+            [type]="show ? 'text' : 'password'"
+            placeholder="Enter password"
+          />
+          <span class="toggle-btn" (click)="password()">{{
+            show ? "Hide" : "Show"
+          }}</span>
         </div>
         <button type="button" mat-flat-button class="w-100" routerLink="portal">
           Continue

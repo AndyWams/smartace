@@ -26,6 +26,13 @@
     margin-bottom: 6px;
     font-weight: 400;
   }
+  .toggle-btn {
+    position: absolute;
+    right: 22px;
+    top: 3.7em;
+    font-size: 12px;
+    cursor: pointer;
+  }
   textarea {
     display: block;
     padding: 1.2em 20px;
