@@ -1,0 +1,81 @@
+<ng-container *ngIf="_chartType === 'pie'">
+  <div class="card">
+    <div class="header d-flex justify-content-between align-items-center">
+      <div class="title-sm">Distribution by Pay Scale</div>
+      <div class="filter_wrap" [matMenuTriggerFor]="filterOne">
+        <span>{{ filterItem || "Filter items" }}</span
+        ><span><ion-icon name="chevron-down"></ion-icon></span>
+      </div>
+      <mat-menu #filterOne>
+        <button mat-menu-item (click)="setFilterItem('last-month')">
+          <span>Last Month</span>
+        </button>
+        <button mat-menu-item (click)="setFilterItem('this-year')">
+          <span>This year</span>
+        </button>
+      </mat-menu>
+    </div>
+    <div class="block pt-5 pb-3">
+      <canvas
+        mdbChart
+        [chartType]="pieChartType"
+        [data]="pieChartData"
+        [labels]="pieChartLabels"
+        [options]="pieChartOptions"
+        [colors]="pieChartColors"
+        width="300"
+      ></canvas>
+    </div>
+    <div class="ruler"></div>
+    <div
+      class="chart-label d-flex align-items-center justify-content-evenly mt-auto"
+    >
+      <label>Deductions</label>
+      <label>Earnings</label>
+      <label>Net Pay</label>
+    </div>
+  </div>
+</ng-container>
+<ng-container *ngIf="_chartType === 'line'">
+  <div class="card">
+    <div class="header d-flex justify-content-between align-items-center">
+      <div class="title-sm">Payroll History Graph</div>
+      <div class="filter_wrap" [matMenuTriggerFor]="filterOne">
+        <span>{{ filterItem || "Filter items" }}</span
+        ><span><ion-icon name="chevron-down"></ion-icon></span>
+      </div>
+      <mat-menu #filterOne>
+        <button mat-menu-item (click)="setFilterItem('last-month')">
+          <span>Last Month</span>
+        </button>
+        <button mat-menu-item (click)="setFilterItem('this-year')">
+          <span>This year</span>
+        </button>
+      </mat-menu>
+    </div>
+    <div class="block pt-5 pb-3">
+      <canvas
+        class="line-chart"
+        mdbChart
+        [chartType]="lineChartType"
+        [datasets]="lineChartDatasets"
+        [labels]="lineChartLabels"
+        [colors]="lineChartColors"
+        [options]="lineChartOptions"
+      >
+      </canvas>
+    </div>
+    <div class="d-flex justify-content-center my-4">
+      <strong>Time(Year)</strong>
+    </div>
+    <div class="ruler"></div>
+    <div
+      class="chart-label d-flex align-items-center justify-content-evenly mt-auto"
+    >
+      <label>Salary</label>
+      <label>Taxes</label>
+      <label>Pension</label>
+      <label>Health</label>
+    </div>
+  </div>
+</ng-container>

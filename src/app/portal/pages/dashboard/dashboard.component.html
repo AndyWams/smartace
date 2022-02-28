@@ -1,1 +1,21 @@
-<p>dashboard works!</p>
+<section>
+  <div class="header d-flex align-items-center justify-content-between mb-4">
+    <div class="title">Dashboard</div>
+    <div class="d-flex align-items-center mb-res">
+      <button mat-stroked-button>Quick Payroll</button>
+      <button mat-stroked-button class="mx-3">
+        <ion-icon src="assets/img/upload-ico.svg" class="me-2"></ion-icon> Bulk
+        Upload
+      </button>
+      <button mat-flat-button><ion-icon name="add"></ion-icon>Add New</button>
+    </div>
+  </div>
+  <app-overview></app-overview>
+  <div class="grid grid--1fr--1fr my-4">
+    <app-chart-graph _chartType="pie"></app-chart-graph>
+    <app-payroll-events></app-payroll-events>
+  </div>
+  <div class="block">
+    <app-chart-graph _chartType="line"></app-chart-graph>
+  </div>
+</section>

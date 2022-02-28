@@ -1,0 +1,72 @@
+@import "src/scss/_vars.scss";
+.header {
+  .filter_wrap {
+    display: flex;
+    align-items: center;
+    border: 4px;
+    border: 0.5px solid #cccccc;
+    border-radius: 4px;
+    cursor: pointer;
+    span {
+      display: flex;
+      &:first-child {
+        padding: 10px 1em;
+        font-size: 14px;
+        border-right: 1px solid #ccc;
+      }
+      &:last-child {
+        padding: 10px;
+      }
+    }
+  }
+}
+.card {
+  padding: 1.5em;
+  border: 0.5px solid rgba(204, 204, 204, 0.3);
+  box-shadow: -1px 0 20px rgb(47 19 67 / 6%);
+  border-radius: 4px;
+  height: 100%;
+}
+canvas {
+  margin: 0 auto;
+  &.line-chart {
+    width: -webkit-fill-available;
+    height: auto;
+  }
+}
+.chart-label {
+  label {
+    font-size: 14px;
+    color: #343a40;
+    position: relative;
+    &::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      position: absolute;
+      left: -1.5em;
+      top: 5px;
+    }
+    &:nth-child(1) {
+      &::before {
+        background: $yellow;
+      }
+    }
+    &:nth-child(2) {
+      &::before {
+        background: $light-blue;
+      }
+    }
+    &:nth-child(3) {
+      &::before {
+        background: $blue;
+      }
+    }
+    &:nth-child(4) {
+      &::before {
+        background: #2cd9c5;
+      }
+    }
+  }
+}

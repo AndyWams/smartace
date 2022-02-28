@@ -18,15 +18,19 @@ a {
 }
 
 .mat-flat-button {
-  height: 52px;
+  height: 48px;
   border-radius: 4px !important;
-  min-width: 150px !important;
+  min-width: 175px !important;
   text-decoration: none !important;
   width: auto;
   color: #fff;
   background: $blue;
   font-size: 16px;
-  font-family: "Roboto", sans-serif !important;
+  font-family: "Rubik", sans-serif;
+  ion-icon {
+    font-size: 21px;
+    margin: 0em 5px;
+  }
   &:focus {
     outline: 0px auto -webkit-focus-ring-color !important;
   }
@@ -55,17 +59,17 @@ a {
   }
 }
 .mat-stroked-button {
-  min-width: 172px !important;
-  height: 52px;
+  min-width: 128px !important;
+  height: 48px;
   text-decoration: none;
   align-items: center;
   display: flex;
   font-size: 14px;
-  border-radius: 35px !important;
-  border: 1px solid $white !important;
-  color: $white;
+  border-radius: 4px !important;
+  border: 1px solid $blue !important;
+  color: $blue;
   &:hover {
-    color: $white;
+    color: $blue;
   }
 }
 
