@@ -1,0 +1,48 @@
+@import "src/scss/_vars.scss";
+header {
+  padding: 1em 2em;
+  background: $blue;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 10;
+  .notify {
+    cursor: pointer;
+    img {
+      width: 27px;
+    }
+  }
+  .avatar {
+    width: 40px;
+    height: 40px;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    background-position: center !important;
+    margin-right: 1em;
+    border-radius: 50%;
+  }
+  .dropdown-toggle::after {
+    position: absolute;
+    right: 0em;
+    top: 1em;
+    color: $white;
+  }
+  .dropdown {
+    cursor: pointer;
+    .dropdown-menu {
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      border: none;
+      a {
+        padding: 0.8em 4em 0.8em 2em;
+        font-size: 14px;
+        cursor: pointer;
+        color: $black;
+        &:active {
+          background: transparent;
+        }
+      }
+    }
+  }
+}

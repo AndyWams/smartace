@@ -1,0 +1,75 @@
+.mat-button,
+a {
+  border: none;
+  display: flex !important;
+  justify-content: center !important;
+  &:focus {
+    outline: none !important;
+  }
+}
+.mat-button {
+  padding: 0px 6px !important;
+}
+.mat-button-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 400 !important;
+}
+
+.mat-flat-button {
+  height: 54px;
+  border-radius: 35px !important;
+  min-width: 150px !important;
+  text-decoration: none !important;
+  width: auto;
+  color: #fff;
+  background: $blue;
+  font-size: 16px;
+  font-family: "Roboto", sans-serif !important;
+  &:focus {
+    outline: 0px auto -webkit-focus-ring-color !important;
+  }
+  &:hover {
+    color: $white;
+  }
+  &.w--auto {
+    min-width: 100% !important;
+  }
+  &.w--124 {
+    min-width: 124px !important;
+    height: 52px;
+  }
+  &.w--117 {
+    min-width: 117px !important;
+    height: 52px;
+  }
+
+  &.w--141 {
+    min-width: 141px !important;
+    height: 52px;
+  }
+  &.w--195 {
+    font-weight: bold;
+    min-width: 195px !important;
+  }
+}
+.mat-stroked-button {
+  min-width: 172px !important;
+  height: 52px;
+  text-decoration: none;
+  align-items: center;
+  display: flex;
+  font-size: 14px;
+  border-radius: 35px !important;
+  border: 1px solid $white !important;
+  color: $white;
+  &:hover {
+    color: $white;
+  }
+}
+
+.mat-flat-white {
+  background: $white !important;
+  color: $blue !important;
+}

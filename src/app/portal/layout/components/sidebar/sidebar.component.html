@@ -1,0 +1,113 @@
+<nav id="sidebar" [ngClass]="{ open: _isOpen }">
+  <div class="sidebar-content">
+    <ul>
+      <li>
+        <a routerLink="/dashboard" routerLinkActive="active">
+          <span><ion-icon name="grid-outline"></ion-icon></span
+          ><span>Dashboard</span>
+        </a>
+      </li>
+      <li class="accordion" id="root">
+        <a data-bs-toggle="collapse" data-bs-target="#itemOne">
+          <div class="d-flex justify-content-between align-items-center w-100">
+            <div class="d-flex align-items-center">
+              <span>
+                <ion-icon src="assets/img/credit-card.svg"></ion-icon>
+              </span>
+              <span>Payroll</span>
+            </div>
+            <div class="caret">
+              <span><ion-icon name="chevron-forward-outline"></ion-icon></span>
+            </div>
+          </div>
+        </a>
+        <div id="itemOne" class="collapse" data-bs-parent="#root">
+          <ul>
+            <li>
+              <a
+                routerLink="/payroll/institute-management"
+                routerLinkActive="active"
+                ><small>Institution Mgmt</small></a
+              >
+            </li>
+            <li>
+              <a routerLink="/payroll/pay-elements" routerLinkActive="active"
+                ><small>Pay Elements</small></a
+              >
+            </li>
+            <li>
+              <a routerLink="/payroll/pay-scale" routerLinkActive="active"
+                ><small>Pay Scale</small></a
+              >
+            </li>
+            <li>
+              <a routerLink="/payroll/quick-payroll" routerLinkActive="active"
+                ><small>Quick Payroll</small></a
+              >
+            </li>
+            <li>
+              <a routerLink="/payroll/payroll-run-log" routerLinkActive="active"
+                ><small>Payroll Run Log</small></a
+              >
+            </li>
+            <li>
+              <a routerLink="/payroll/gross-netpay" routerLinkActive="active"
+                ><small>Gross/Net Pay</small></a
+              >
+            </li>
+            <li>
+              <a routerLink="/payroll/tax-type" routerLinkActive="active"
+                ><small>Tax Type</small></a
+              >
+            </li>
+            <li>
+              <a routerLink="/payroll/report" routerLinkActive="active"
+                ><small>Report</small></a
+              >
+            </li>
+            <li class="accordion" id="root_">
+              <a
+                class="d-flex w-100"
+                data-bs-toggle="collapse"
+                data-bs-target="#itemTwo"
+              >
+                <div><small>Payroll Setup</small></div>
+                <span class="caret"
+                  ><ion-icon name="chevron-forward-outline"></ion-icon
+                ></span>
+              </a>
+              <div id="itemTwo" class="collapse" data-bs-parent="#root_">
+                <ul>
+                  <li>
+                    <a
+                      routerLink="/payroll/payscale-setup"
+                      routerLinkActive="active"
+                      ><small>Payscale Setup</small></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      routerLink="/payroll/payschedule-setup"
+                      routerLinkActive="active"
+                      ><small>Pay Schedule Setup</small></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      routerLink="/payroll/payroll-settings"
+                      routerLinkActive="active"
+                      ><small>Payroll Settings</small></a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="snap-btn" (click)="toggleSnap()">
+    <ion-icon name="caret-forward-outline"></ion-icon>
+  </div>
+</nav>

@@ -1,0 +1,163 @@
+@import "src/scss/_vars.scss";
+#sidebar {
+  padding-top: 7em;
+  position: fixed;
+  width: 250px;
+  height: 100vh;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background: $white;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.03);
+  z-index: 1;
+  .sidebar-content {
+    overflow-y: scroll;
+    position: absolute;
+    width: -webkit-fill-available;
+    height: calc(100% - 115px);
+    padding-left: 0.8em;
+    ul {
+      list-style: none;
+      padding-left: 0;
+      margin-bottom: 0;
+      width: 100%;
+      li {
+        position: relative;
+        margin-bottom: 1em;
+        a {
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: flex-start !important;
+          padding: 0.8em 1em;
+          text-transform: capitalize;
+          text-decoration: none;
+          cursor: pointer;
+          font-weight: 400;
+          span {
+            display: flex;
+            ion-icon {
+              font-size: 19px;
+              filter: grayscale(1);
+            }
+            &:last-child {
+              color: $light-grey;
+              font-size: 14px;
+              margin-left: 1.2em;
+            }
+          }
+          &.active {
+            background: rgba(72, 71, 224, 0.08);
+            span {
+              ion-icon {
+                filter: grayscale(0);
+                color: $blue;
+              }
+              &:last-child {
+                color: $blue;
+              }
+            }
+          }
+        }
+        &.accordion {
+          a {
+            .caret ion-icon {
+              transition: all 0.2s ease-in-out;
+            }
+            &[aria-expanded="true"] {
+              background: rgba(72, 71, 224, 0.08);
+              .d-flex span,
+              small {
+                color: $blue;
+                font-weight: 500;
+                ion-icon {
+                  filter: grayscale(0);
+                }
+              }
+              .caret ion-icon {
+                transition: all 0.2s ease-in-out;
+                transform: rotate(90deg);
+                filter: grayscale(0);
+                color: $blue;
+              }
+            }
+          }
+
+          ul {
+            li {
+              margin: 0.5em 0em 0em;
+              a {
+                position: relative;
+                padding: 0.5em 1em 0.5em 4em;
+                color: $light-grey;
+                font-weight: 300;
+
+                &:hover:not([data-bs-toggle="collapse"]) {
+                  color: $blue;
+                }
+                &[data-bs-toggle="collapse"] {
+                  justify-content: space-between !important;
+                }
+                // &[aria-expanded="true"] {
+                //   &[data-bs-toggle="collapse"] {
+                //     &::before {
+                //       background: $blue;
+                //     }
+                //   }
+                // }
+                &.active {
+                  background: none;
+                  &::before {
+                    content: "";
+                    position: absolute;
+                    width: 7px;
+                    height: 7px;
+                    border-radius: 50%;
+                    background: $blue;
+                    left: 2.5em;
+                  }
+                  small {
+                    color: $blue;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .snap-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 5px;
+    box-shadow: -1px 3px 11px 0px rgb(0 0 0 / 25%);
+    position: absolute;
+    top: 5.5em;
+    right: -2.5em;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media only screen and (min-width: 320px) and (max-width: 991px) {
+    transform: translateX(-100%);
+    transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: unset;
+    .snap-btn {
+      display: flex;
+    }
+    &.open {
+      transform: translateX(0%);
+      .snap-btn {
+        background: rgb(196 196 245);
+        ion-icon {
+          transition: all 0.2s ease-in-out;
+          transform: rotate(180deg);
+          color: $white;
+        }
+      }
+    }
+  }
+}
