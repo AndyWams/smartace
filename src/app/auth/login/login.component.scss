@@ -1,0 +1,65 @@
+.auth {
+  height: 100vh;
+  .grid {
+    display: grid;
+    height: 100%;
+    &--1fr--2fr {
+      grid-template-columns: 1fr 2fr;
+    }
+    .banner {
+      position: relative;
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(#03081f, 70%);
+      }
+      img {
+        height: 100vh;
+      }
+    }
+    .form-wrap {
+      padding: 6em 0em;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      h2 {
+        color: #080730;
+        font-weight: 700;
+        font-size: 32px;
+        span {
+          display: block;
+          font-size: 16px;
+          font-weight: 300;
+          color: #343a40;
+        }
+      }
+      form {
+        padding: 3em 0em;
+        width: 400px;
+      }
+      .d-flex,
+      .d-block {
+        a {
+          color: #4847e0;
+          font-size: 16px;
+          text-decoration: none;
+          position: relative;
+          span {
+            display: block;
+            height: 1px;
+            width: 100%;
+            position: absolute;
+            background: #4847e0;
+            left: 0;
+            bottom: 0px;
+          }
+        }
+      }
+    }
+  }
+}

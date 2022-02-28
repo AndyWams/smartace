@@ -6,9 +6,11 @@ import { LoadingBarModule } from '@ngx-loading-bar/core';
 import { LoadingBarRouterModule } from '@ngx-loading-bar/router';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { LoginComponent } from './auth/login/login.component';
+import { AngularMaterialModule } from './portal/shared/angular-material.module';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, LoginComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -16,6 +18,7 @@ import { AppComponent } from './app.component';
     LoadingBarModule,
     LoadingBarRouterModule,
     HttpClientModule,
+    AngularMaterialModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
