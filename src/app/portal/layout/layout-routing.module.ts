@@ -8,7 +8,7 @@ const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
-        path: '',
+        path: 'dashboard',
         loadChildren: () =>
           import('../pages/dashboard/dashboard.module').then(
             (m) => m.DashboardModule
@@ -20,6 +20,10 @@ const routes: Routes = [
           import('../pages/payroll/payroll.module').then(
             (m) => m.PayrollModule
           ),
+      },
+      {
+        path: '',
+        redirectTo: 'dashboard',
       },
     ],
   },

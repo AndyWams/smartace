@@ -7,6 +7,10 @@ const routes: Routes = [
     loadChildren: () =>
       import('./portal/layout/layout.module').then((m) => m.LayoutModule),
   },
+  {
+    path: '**',
+    redirectTo: '',
+  },
 ];
 
 @NgModule({

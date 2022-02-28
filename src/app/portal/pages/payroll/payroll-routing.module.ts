@@ -63,7 +63,7 @@ const routes: Routes = [
         component: PayrollSettingsComponent,
       },
       {
-        path: 'payroll',
+        path: '',
         redirectTo: 'institute-management',
       },
     ],
