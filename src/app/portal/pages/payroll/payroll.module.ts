@@ -15,9 +15,24 @@ import { ReportComponent } from './components/report/report.component';
 import { PayscaleSetupComponent } from './components/payscale-setup/payscale-setup.component';
 import { PayscheduleSetupComponent } from './components/payschedule-setup/payschedule-setup.component';
 import { PayrollSettingsComponent } from './components/payroll-settings/payroll-settings.component';
+import { TableComponent } from '../../components/table/table.component';
 
 @NgModule({
-  declarations: [PayrollComponent, InstituteManagementComponent, PayElementsComponent, PayScaleComponent, QuickPayrollComponent, PayrollRunlogComponent, GrossNetpayComponent, TaxTypeComponent, ReportComponent, PayscaleSetupComponent, PayscheduleSetupComponent, PayrollSettingsComponent],
+  declarations: [
+    PayrollComponent,
+    InstituteManagementComponent,
+    PayElementsComponent,
+    PayScaleComponent,
+    QuickPayrollComponent,
+    PayrollRunlogComponent,
+    GrossNetpayComponent,
+    TaxTypeComponent,
+    ReportComponent,
+    PayscaleSetupComponent,
+    PayscheduleSetupComponent,
+    PayrollSettingsComponent,
+    TableComponent,
+  ],
   imports: [CommonModule, PayrollRoutingModule, AngularMaterialModule],
   exports: [PayrollComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

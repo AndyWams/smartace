@@ -9,12 +9,17 @@ a {
 }
 .mat-button {
   padding: 0px 6px !important;
+  &.print {
+    mat-icon {
+      color: $blue;
+    }
+  }
 }
 .mat-button-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 400 !important;
+  font-weight: 300 !important;
 }
 
 .mat-flat-button {
@@ -70,6 +75,15 @@ a {
   color: $blue;
   &:hover {
     color: $blue;
+  }
+  &.mat-stroked-secondary {
+    height: 44px;
+    border: 1px solid #cbcbcd !important;
+    color: $black;
+    ion-icon,
+    mat-icon {
+      color: $black;
+    }
   }
 }
 

@@ -1,1 +1,18 @@
-<p>institute-management works!</p>
+<div class="header d-flex align-items-center justify-content-between mb-4">
+  <div class="title">Institution Management</div>
+  <button mat-flat-button>
+    <ion-icon name="add"></ion-icon>Add Institution
+  </button>
+</div>
+<app-table
+  [_tblHeader]="[
+    'Name',
+    'Category',
+    'Account Name',
+    'Acount Number',
+    'Bank',
+    'Date Created',
+    ''
+  ]"
+  [_data]="data"
+></app-table>
