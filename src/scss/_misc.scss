@@ -375,6 +375,11 @@ mat-radio-group {
       .center {
         width: 500px;
         padding: 3em 4em;
+        p {
+          color: $light-grey;
+          font-weight: 400;
+          font-size: 14px;
+        }
       }
     }
   }
