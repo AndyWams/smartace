@@ -85,6 +85,14 @@ a {
       color: $black;
     }
   }
+  &.btn--danger {
+    border: 1px solid $red !important;
+    color: $red;
+  }
+}
+.btn-link {
+  color: $blue !important;
+  text-decoration: underline !important;
 }
 .txt-danger {
   color: $red;

@@ -52,12 +52,17 @@
           <input type="text" placeholder="Tax id" />
         </div>
       </div>
-
       <div class="grid align-items-center">
         <span>&nbsp;</span>
         <div class="d-flex align-items-center">
           <button type="button" mat-flat-button class="me-4">Save</button>
-          <button type="button" mat-stroked-button>Cancel</button>
+          <button
+            type="button"
+            mat-stroked-button
+            routerLink="/portal/dashboard/"
+          >
+            Cancel
+          </button>
         </div>
       </div>
     </form>

@@ -67,51 +67,103 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of _data">
-          <td>
-            <mat-checkbox>{{ item.name }}</mat-checkbox>
-          </td>
-          <td>
-            <span>{{ item.category }}</span>
-          </td>
-          <td>
-            <span>{{ item.accountName }}</span>
-          </td>
-          <td>
-            <span>{{ item.accountNumber }}</span>
-          </td>
-          <td>
-            <span>{{ item.bank }}</span>
-          </td>
-          <td>
-            <span>{{ item.createdDate }}</span>
-          </td>
-          <td>
-            <div class="dropdown">
-              <span class="dropdown-toggle" [matMenuTriggerFor]="menu">
-                <ion-icon name="ellipsis-horizontal"></ion-icon>
-              </span>
-              <mat-menu #menu="matMenu">
-                <button
-                  mat-menu-item
-                  data-bs-toggle="modal"
-                  data-bs-target="#viewInstMgt"
-                >
-                  View
-                </button>
-                <button mat-menu-item>Edit</button>
-                <button
-                  mat-menu-item
-                  class="txt-danger"
-                  data-bs-toggle="modal"
-                  data-bs-target="#deactivate"
-                >
-                  Deactivate
-                </button>
-              </mat-menu>
-            </div>
-          </td>
-        </tr>
+        <ng-container *ngIf="_identifier === 'inst_mgmt'">
+          <tr *ngFor="let item of _data">
+            <td>
+              <mat-checkbox>{{ item.name }}</mat-checkbox>
+            </td>
+            <td>
+              <span>{{ item.category }}</span>
+            </td>
+            <td>
+              <span>{{ item.accountName }}</span>
+            </td>
+            <td>
+              <span>{{ item.accountNumber }}</span>
+            </td>
+            <td>
+              <span>{{ item.bank }}</span>
+            </td>
+            <td>
+              <span>{{ item.createdDate }}</span>
+            </td>
+            <td>
+              <div class="dropdown">
+                <span class="dropdown-toggle" [matMenuTriggerFor]="menu">
+                  <ion-icon name="ellipsis-horizontal"></ion-icon>
+                </span>
+                <mat-menu #menu="matMenu">
+                  <button
+                    mat-menu-item
+                    data-bs-toggle="modal"
+                    data-bs-target="#viewInstMgt"
+                  >
+                    View
+                  </button>
+                  <button mat-menu-item>Edit</button>
+                  <button
+                    mat-menu-item
+                    class="txt-danger"
+                    data-bs-toggle="modal"
+                    data-bs-target="#deactivate"
+                  >
+                    Deactivate
+                  </button>
+                </mat-menu>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+        <ng-container *ngIf="_identifier === 'pay_elements'">
+          <tr *ngFor="let item of _data">
+            <td>
+              <mat-checkbox>{{ item.name }}</mat-checkbox>
+            </td>
+            <td>
+              <span>{{ item.payType }}</span>
+            </td>
+            <td>
+              <span>{{ item.elementName }}</span>
+            </td>
+            <td>
+              <span>{{ item.elementCategory }}</span>
+            </td>
+            <td>
+              <span>{{ item.elementType }}</span>
+            </td>
+            <td>
+              <span>{{ item.amount }}</span>
+            </td>
+            <td>
+              <span>{{ item.institution }}</span>
+            </td>
+            <td>
+              <div class="dropdown">
+                <span class="dropdown-toggle" [matMenuTriggerFor]="menu">
+                  <ion-icon name="ellipsis-horizontal"></ion-icon>
+                </span>
+                <mat-menu #menu="matMenu">
+                  <button
+                    mat-menu-item
+                    data-bs-toggle="modal"
+                    data-bs-target="#viewPayElement"
+                  >
+                    View
+                  </button>
+                  <button mat-menu-item>Edit</button>
+                  <button
+                    mat-menu-item
+                    class="txt-danger"
+                    data-bs-toggle="modal"
+                    data-bs-target="#deletePayElement"
+                  >
+                    Delete
+                  </button>
+                </mat-menu>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
       </tbody>
     </table>
     <div class="d-flex justify-content-between align-items-center px-4">
@@ -214,7 +266,7 @@
                 <label>Bank </label>
                 <label><span>UBA</span></label>
               </div>
-              <div class="pt-4 mt-5">
+              <div class="pt-4 mt-auto">
                 <button mat-flat-button data-bs-dismiss="modal">Close</button>
               </div>
             </div>
@@ -246,6 +298,92 @@
         </div>
         <div class="modal-footer d-flex justify-content-end align-items-center">
           <button mat-flat-button class="me-3">Deactivate</button>
+          <button mat-stroked-button data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="viewPayElement" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">View Pay Element</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <div class="pb-3">
+            <div class="bg-white w--400 m-3">
+              <div class="grid grid--repeat--two list-items">
+                <label>Name</label>
+                <label><span>Test</span></label>
+                <label>Pay Type </label>
+                <label><span>Standard</span></label>
+                <label>Element Name </label>
+                <label><span>AGM</span></label>
+                <label>Element Type </label>
+                <label><span>Transport</span></label>
+                <label>Element Category </label>
+                <label><span>Taxable</span></label>
+                <label>Amount </label>
+                <label><span>₦20,000.00</span></label>
+                <label>Payment institution </label>
+                <label><span>Pencom</span></label>
+                <label>Variable </label>
+                <label><span>True</span></label>
+                <label>Ratio </label>
+                <label><span>32%</span></label>
+                <label>Pay Element </label>
+                <label><span>32</span></label>
+                <label>Taxable </label>
+                <label><span>False</span></label>
+              </div>
+              <div class="d-flex align-items-center pt-5 mt-auto">
+                <button mat-flat-button>Edit</button>
+                <button
+                  mat-stroked-button
+                  class="btn--danger mx-3"
+                  data-bs-toggle="modal"
+                  data-bs-target="#deletePayElement"
+                >
+                  Delete
+                </button>
+                <button mat-button data-bs-dismiss="modal" class="btn-link">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="deletePayElement" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Delete Pay Element</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <div class="pb-3">
+            <div class="center">
+              <p>
+                Are you sure you want to deactivate this item? They will no
+                longer be accessible.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-end align-items-center">
+          <button mat-flat-button class="me-3">Delete</button>
           <button mat-stroked-button data-bs-dismiss="modal">Cancel</button>
         </div>
       </div>

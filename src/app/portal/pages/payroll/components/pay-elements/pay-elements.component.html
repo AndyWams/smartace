@@ -1,1 +1,20 @@
-<p>pay-elements works!</p>
+<div class="header d-flex align-items-center justify-content-between mb-4">
+  <div class="title">Pay Elements</div>
+  <button mat-flat-button routerLink="/portal/payroll/add-pay-element">
+    <ion-icon name="add"></ion-icon>Add Pay Element
+  </button>
+</div>
+<app-table
+  [_tblHeader]="[
+    'name',
+    'pay type',
+    'element name',
+    'element category',
+    'element type',
+    'amount',
+    'institution',
+    ''
+  ]"
+  [_data]="data"
+  _identifier="pay_elements"
+></app-table>

@@ -8,6 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class TableComponent implements OnInit {
   @Input() _tblHeader: any;
   @Input() _data: any;
+  @Input() _identifier;
   constructor() {}
 
   ngOnInit(): void {}

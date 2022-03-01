@@ -358,6 +358,10 @@ mat-radio-group {
         background: #ffffff;
         box-shadow: 0px 4px 25px rgba(0, 0, 0, 0.1);
         border-radius: 4px;
+        height: 400px;
+        overflow-y: scroll;
+        display: flex;
+        flex-direction: column;
         .list-items {
           label {
             font-size: 14px;
