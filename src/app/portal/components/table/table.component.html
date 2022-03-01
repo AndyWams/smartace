@@ -20,16 +20,27 @@
           <span><mat-icon>search</mat-icon></span>
           <input type="text" placeholder="Search" />
         </div>
-        <div>
+        <div *ngIf="_identifier === 'inst_mgmt'">
           <button
             mat-stroked-button
             class="mat-stroked-secondary"
             data-bs-toggle="modal"
-            data-bs-target="#filterBy"
+            data-bs-target="#instMgmtFilterBy"
           >
             Filter <ion-icon name="options" class="mx-3"></ion-icon>
           </button>
         </div>
+        <div *ngIf="_identifier === 'pay_elements'">
+          <button
+            mat-stroked-button
+            class="mat-stroked-secondary"
+            data-bs-toggle="modal"
+            data-bs-target="#payElementFilterBy"
+          >
+            Filter <ion-icon name="options" class="mx-3"></ion-icon>
+          </button>
+        </div>
+
         <div class="d-flex align-items-center">
           <label class="me-3">Sort by</label>
           <button
@@ -195,7 +206,7 @@
     </div>
   </div>
 </div>
-<div class="modal fade" id="filterBy" role="dialog">
+<div class="modal fade" id="instMgmtFilterBy" role="dialog">
   <div class="modal-dialog modal-wrapper">
     <div class="modal-content-wrap">
       <div class="modal-body">
@@ -225,6 +236,74 @@
               <div class="input">
                 <label>Date Created</label>
                 <input type="date" required />
+              </div>
+              <div class="d-flex align-items-center mt-5">
+                <button type="button" mat-flat-button class="me-3">
+                  Apply
+                </button>
+                <button mat-stroked-button data-bs-dismiss="modal">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="payElementFilterBy" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Filter By</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <form class="pb-3">
+            <div class="form-wrap scroll">
+              <div class="input">
+                <label>Pay Type</label>
+                <select class="select" required>
+                  <option disabled="" selected="" value="">
+                    Select pay type
+                  </option>
+                </select>
+              </div>
+              <div class="input">
+                <label>Element Name</label>
+                <input type="text" placeholder="Element name" />
+              </div>
+              <div class="input">
+                <label>Element Category</label>
+                <select class="select" required>
+                  <option disabled="" selected="" value="">
+                    Select category
+                  </option>
+                </select>
+              </div>
+              <div class="input">
+                <label>Element Type</label>
+                <select class="select" required>
+                  <option disabled="" selected="" value="">
+                    Select element type
+                  </option>
+                </select>
+              </div>
+              <div class="input">
+                <label>Amount</label>
+                <input type="text" placeholder="Amount" />
+              </div>
+              <div class="input">
+                <label>Institution</label>
+                <select class="select" required>
+                  <option disabled="" selected="" value="">
+                    Select institution
+                  </option>
+                </select>
               </div>
               <div class="d-flex align-items-center mt-5">
                 <button type="button" mat-flat-button class="me-3">
@@ -316,7 +395,7 @@
         </div>
         <div class="container">
           <div class="pb-3">
-            <div class="bg-white w--400 m-3">
+            <div class="bg-white w--400 scroll m-3">
               <div class="grid grid--repeat--two list-items">
                 <label>Name</label>
                 <label><span>Test</span></label>

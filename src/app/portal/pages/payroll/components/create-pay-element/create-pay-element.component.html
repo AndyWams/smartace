@@ -1,0 +1,165 @@
+<div class="header d-flex align-items-center justify-content-between mb-4">
+  <div class="title">Set up a Pay Element</div>
+</div>
+<div class="bg-white">
+  <div class="form-wrap">
+    <form>
+      <div class="grid align-items-center">
+        <label>Payroll Item</label>
+        <div class="input mb-0">
+          <select class="select" required>
+            <option disabled="" selected="" value="">Select item</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid align-items-center">
+        <label>Payroll Type</label>
+        <div class="input mb-0">
+          <select class="select" required>
+            <option disabled="" selected="" value="">Select type</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid align-items-center">
+        <label>Element Name</label>
+        <div class="input mb-0">
+          <input type="text" placeholder="Element name" />
+        </div>
+      </div>
+      <div class="grid align-items-center">
+        <label>Element Category</label>
+        <div class="input mb-0">
+          <select class="select" required>
+            <option disabled="" selected="" value="">
+              Select element category
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="grid align-items-center">
+        <label>Element Type</label>
+        <div class="input mb-0">
+          <select class="select" required>
+            <option disabled="" selected="" value="">
+              Select element type
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="grid align-items-center">
+        <label>Payment Mode</label>
+        <mat-radio-group aria-label="Select an option">
+          <mat-radio-button
+            class="me-4"
+            value="predefined"
+            (change)="handlePaymentModeToggle($event)"
+            checked
+            id="predefined"
+            >Amount</mat-radio-button
+          >
+          <mat-radio-button
+            value="variable"
+            (change)="handlePaymentModeToggle($event)"
+            id="variable"
+            >Variable</mat-radio-button
+          >
+        </mat-radio-group>
+      </div>
+      <!--Variable-->
+      <div
+        class="grid align-items-center"
+        *ngIf="predefinedPaymentMode === 'variable'"
+      >
+        <label>Variable</label>
+        <div class="d-flex align-items-center">
+          <div class="input mb-0">
+            <input type="text" placeholder="Percentage" />
+          </div>
+          <span class="mx-3 txt-sm">Of</span>
+          <div class="input mb-0">
+            <select class="select" required>
+              <option disabled="" selected="" value="">Pay element</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <!--Amount-->
+      <div
+        class="grid align-items-center"
+        *ngIf="predefinedPaymentMode === 'predefined'"
+      >
+        <label>Amount</label>
+        <div class="input mb-0">
+          <input type="text" placeholder="Amount" />
+        </div>
+      </div>
+      <div class="grid align-items-center">
+        <label>Payment Institution</label>
+        <div class="input mb-0">
+          <select class="select" required>
+            <option disabled="" selected="" value="">
+              Select payment institution
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="grid align-items-center">
+        <label>Deduct Tax</label>
+        <mat-slide-toggle
+          style="width: fit-content"
+          (change)="handleSlideToggle($event)"
+        ></mat-slide-toggle>
+      </div>
+      <!--Tax mode-->
+      <div class="grid align-items-center" *ngIf="_isChecked">
+        <label>Tax Mode</label>
+        <mat-radio-group aria-label="Select an option">
+          <mat-radio-button
+            checked
+            value="default"
+            class="me-4"
+            (change)="handleTaxModeToggle($event)"
+            id="default"
+            >Select from Tax list</mat-radio-button
+          >
+          <mat-radio-button
+            value="inputValue"
+            (change)="handleTaxModeToggle($event)"
+            id="inputValue"
+            >input Tax Value</mat-radio-button
+          >
+        </mat-radio-group>
+      </div>
+      <!--Tax type-->
+      <div
+        class="grid align-items-center"
+        *ngIf="_isChecked && taxMode === 'default'"
+      >
+        <label>Tax Type</label>
+        <div class="input mb-0">
+          <select class="select" required>
+            <option disabled="" selected="" value="">
+              Select category type
+            </option>
+          </select>
+        </div>
+      </div>
+      <div
+        class="grid align-items-center"
+        *ngIf="_isChecked && taxMode === 'inputValue'"
+      >
+        <label>Tax Type</label>
+        <div class="input mb-0">
+          <input type="text" placeholder="Tax value" />
+        </div>
+      </div>
+      <div class="grid align-items-center pt-4">
+        <span>&nbsp;</span>
+        <div class="d-flex align-items-center">
+          <button type="button" mat-flat-button class="me-4">Save</button>
+          <button type="button" mat-stroked-button>Cancel</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
