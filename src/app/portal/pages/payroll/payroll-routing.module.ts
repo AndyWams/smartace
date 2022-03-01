@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CreateNewEmployeeComponent } from './components/create-new-employee/create-new-employee.component';
 import { CreatePaymentInstitutionComponent } from './components/create-payment-institution/create-payment-institution.component';
 import { GrossNetpayComponent } from './components/gross-netpay/gross-netpay.component';
 import { InstituteManagementComponent } from './components/institute-management/institute-management.component';
@@ -50,6 +51,10 @@ const routes: Routes = [
       {
         path: 'report',
         component: ReportComponent,
+      },
+      {
+        path: 'add-employee',
+        component: CreateNewEmployeeComponent,
       },
       {
         path: 'payscale-setup',

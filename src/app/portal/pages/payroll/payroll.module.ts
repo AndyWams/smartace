@@ -17,6 +17,7 @@ import { PayscheduleSetupComponent } from './components/payschedule-setup/paysch
 import { PayrollSettingsComponent } from './components/payroll-settings/payroll-settings.component';
 import { TableComponent } from '../../components/table/table.component';
 import { CreatePaymentInstitutionComponent } from './components/create-payment-institution/create-payment-institution.component';
+import { CreateNewEmployeeComponent } from './components/create-new-employee/create-new-employee.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { CreatePaymentInstitutionComponent } from './components/create-payment-i
     PayrollSettingsComponent,
     TableComponent,
     CreatePaymentInstitutionComponent,
+    CreateNewEmployeeComponent,
   ],
   imports: [CommonModule, PayrollRoutingModule, AngularMaterialModule],
   exports: [PayrollComponent],
