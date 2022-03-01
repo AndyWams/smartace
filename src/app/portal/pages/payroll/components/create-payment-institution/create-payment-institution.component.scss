@@ -1,0 +1,15 @@
+.form-wrap {
+  padding: 3em;
+  width: 700px;
+  form {
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      margin-bottom: 1.5em;
+    }
+    .mat-flat-button,
+    .mat-stroked-button {
+      width: -webkit-fill-available;
+    }
+  }
+}

@@ -1,0 +1,49 @@
+@import "src/scss/_vars.scss";
+.w--900 {
+  width: 900px;
+  margin: 0 auto;
+  padding: 4em 3em;
+}
+.card {
+  padding: 2em;
+  height: 340px;
+  .icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &.orange {
+      background: rgba($orange, 0.08);
+      ion-icon {
+        color: $orange;
+        font-size: 26px;
+      }
+    }
+    &.blue {
+      background: rgba($blue, 0.08);
+      ion-icon {
+        color: $blue;
+        font-size: 26px;
+      }
+    }
+    &.green {
+      background: rgba($green, 0.08);
+      ion-icon {
+        color: $green;
+        font-size: 26px;
+      }
+    }
+  }
+  strong {
+    font-size: 16px;
+    line-height: 144.7%;
+    margin-bottom: 0.5em;
+  }
+  label {
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: -0.005em;
+  }
+}
