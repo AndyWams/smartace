@@ -92,7 +92,13 @@
                 <ion-icon name="ellipsis-horizontal"></ion-icon>
               </span>
               <mat-menu #menu="matMenu">
-                <button mat-menu-item>View</button>
+                <button
+                  mat-menu-item
+                  data-bs-toggle="modal"
+                  data-bs-target="#viewInstMgt"
+                >
+                  View
+                </button>
                 <button mat-menu-item>Edit</button>
                 <button mat-menu-item>Deactivate</button>
               </mat-menu>
@@ -171,6 +177,41 @@
               </div>
             </div>
           </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="viewInstMgt" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Institution Management</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <div class="pb-3">
+            <div class="bg-white w--400 m-3">
+              <div class="grid grid--repeat--two list-items">
+                <label>Name</label>
+                <label><span>Tola Folaranmi</span></label>
+                <label>Category </label>
+                <label><span>Pension</span></label>
+                <label>Account Name </label>
+                <label><span>*******</span></label>
+                <label>Account Number </label>
+                <label><span>0099496452</span></label>
+                <label>Bank </label>
+                <label><span>UBA</span></label>
+              </div>
+              <div class="pt-4 mt-5">
+                <button mat-flat-button data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

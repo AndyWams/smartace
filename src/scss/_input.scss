@@ -73,6 +73,31 @@
       font-size: 14px;
     }
   }
+  input[type="date"] {
+    position: relative;
+    &::-webkit-calendar-picker-indicator {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: auto;
+      height: auto;
+      color: transparent;
+      background: transparent;
+    }
+    &::before {
+      position: absolute;
+      right: 1em;
+      font-family: "Material Icons";
+      content: "\e935";
+      opacity: 0.5;
+    }
+    &:invalid::-webkit-datetime-edit {
+      color: #b1b5c4;
+      font-weight: 400;
+    }
+  }
 }
 
 .search-input {

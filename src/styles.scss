@@ -36,4 +36,10 @@ html {
     grid-template-columns: 1fr 1fr;
     grid-column-gap: 20px;
   }
+  &--repeat--two {
+    grid-template-columns: auto auto;
+    grid-column-gap: 20px;
+    grid-row-gap: 30px;
+    align-items: center;
+  }
 }
