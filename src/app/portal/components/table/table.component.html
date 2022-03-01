@@ -1,6 +1,6 @@
 <div class="overflow--wrap">
   <div class="table-wrapper tbl-wrap">
-    <div class="toolbar mb-3">
+    <div class="toolbar mb-5">
       <div class="d-flex align-items-center justify-content-evenly">
         <div class="d-flex align-items-center" style="width: fit-content">
           <mat-checkbox></mat-checkbox>
@@ -21,7 +21,12 @@
           <input type="text" placeholder="Search" />
         </div>
         <div>
-          <button mat-stroked-button class="mat-stroked-secondary">
+          <button
+            mat-stroked-button
+            class="mat-stroked-secondary"
+            data-bs-toggle="modal"
+            data-bs-target="#filterBy"
+          >
             Filter <ion-icon name="options" class="mx-3"></ion-icon>
           </button>
         </div>
@@ -122,6 +127,52 @@
           </li>
         </ul>
       </nav>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="filterBy" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Filter By</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <form class="pb-3">
+            <div class="form-wrap">
+              <div class="input">
+                <label>Category</label>
+                <select class="select" required>
+                  <option disabled="" selected="" value="">
+                    Select category
+                  </option>
+                </select>
+              </div>
+              <div class="input">
+                <label>Bank</label>
+                <select class="select" required>
+                  <option disabled="" selected="" value="">Select bank</option>
+                </select>
+              </div>
+              <div class="input">
+                <label>Date Created</label>
+                <input type="date" required />
+              </div>
+              <div class="d-flex align-items-center mt-5">
+                <button type="button" mat-flat-button class="me-3">
+                  Apply
+                </button>
+                <button mat-stroked-button data-bs-dismiss="modal">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
 </div>

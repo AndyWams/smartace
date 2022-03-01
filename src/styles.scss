@@ -36,8 +36,4 @@ html {
     grid-template-columns: 1fr 1fr;
     grid-column-gap: 20px;
   }
-  &--repeat--six {
-    grid-template-columns: repeat(6, 15.1%);
-    grid-column-gap: 20px;
-  }
 }

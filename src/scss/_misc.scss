@@ -18,7 +18,7 @@
   padding: 2em 1em 2em;
   .custom-table {
     border-collapse: separate;
-    border-spacing: 0 1em;
+    border-spacing: 0em 0em;
     padding: 0em 2em;
     &.w-100 {
       width: 100%;
@@ -49,7 +49,7 @@
       td {
         letter-spacing: 0.0115em;
         vertical-align: middle;
-        padding: 1rem 0;
+        padding: 1.2rem 0;
         color: #080730;
         font-size: 14px;
         text-transform: capitalize;
@@ -249,5 +249,145 @@ mat-radio-group {
   }
   .mat-radio-label-content {
     padding-left: 12px;
+  }
+}
+
+.modal {
+  .modal-dialog {
+    position: absolute;
+    top: -1.6em;
+    right: 0.1em;
+    min-width: fit-content;
+  }
+  .modal-content-wrap {
+    pointer-events: auto;
+    .modal-header {
+      background: transparent;
+      padding: 1em 0em 1.5em;
+      position: relative;
+      border-bottom: none;
+      align-items: center;
+      .d-flex {
+        cursor: pointer;
+        position: relative;
+        z-index: 2;
+        ion-icon {
+          font-size: 18px;
+          margin-right: 9px;
+          color: $white;
+        }
+        span {
+          color: #fff;
+          font-size: 14px;
+          font-weight: 400;
+        }
+      }
+    }
+    .modal-body {
+      position: relative;
+      background: $white;
+      padding: 0em 0em 0em;
+      box-sizing: border-box;
+      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.03);
+      border-radius: 2px;
+      .header-top {
+        border-bottom: 1px solid #f2f2f2;
+        background: #f5f5fa;
+        ion-icon {
+          font-size: 27px;
+          color: #8f92a1;
+          cursor: pointer;
+        }
+        .title {
+          font-size: 18px;
+          font-weight: 500;
+        }
+      }
+      h3 {
+        font-size: 24px;
+        font-weight: bold;
+        line-height: 22px;
+        text-align: center;
+        &.md-txt {
+          padding: 0em 2em;
+          line-height: 29px;
+        }
+      }
+      p {
+        color: $light-grey;
+        font-size: 18px;
+        text-align: center;
+        span {
+          color: #1567bb;
+        }
+        &.sm-txt {
+          color: $black;
+          font-size: 14px;
+        }
+      }
+      .txt-green {
+        color: $green;
+      }
+      .icon {
+        color: #b0b7c3;
+      }
+      .form-wrap {
+        padding: 2em 2em;
+        margin: 2em 0em;
+        background: #ffffff;
+        box-shadow: 0px 4px 25px rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+        min-width: 500px;
+        .action {
+          span {
+            font-size: 12px;
+            width: 213px;
+            color: #b0b7c3;
+          }
+        }
+      }
+      .center {
+        width: 500px;
+        padding: 3em 4em;
+      }
+    }
+  }
+  @media screen and (min-width: 320px) and (max-width: 767px) {
+    .modal-dialog {
+      position: relative;
+      top: 0;
+      right: 0;
+    }
+    .modal-content-wrap {
+      .modal-body {
+        .form-wrap {
+          padding: 2.5em 0.5em;
+          min-width: auto;
+          &.px-5 {
+            padding: 2em 1em !important;
+          }
+          .grid {
+            grid-template-columns: auto;
+          }
+        }
+        .center {
+          width: auto;
+          padding: 3em 0em;
+          .action {
+            flex-direction: column;
+            width: 100%;
+            button {
+              width: 100%;
+              &:first-child {
+                margin-bottom: 1em;
+              }
+              &.me-5 {
+                margin-right: 0em !important;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
