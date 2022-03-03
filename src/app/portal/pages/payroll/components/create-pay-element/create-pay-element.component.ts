@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { filter } from 'rxjs/internal/operators/filter';
 
 @Component({
   selector: 'app-create-pay-element',
@@ -6,12 +8,22 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./create-pay-element.component.scss'],
 })
 export class CreatePayElementComponent implements OnInit {
+  queryString: string = '';
   predefinedPaymentMode: string = 'predefined';
   taxMode: string = 'default';
   _isChecked: boolean = false;
-  constructor() {}
+  constructor(private route: ActivatedRoute, private router: Router) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.route.queryParams
+      .pipe(filter((params) => params.query))
+      .subscribe((params) => {
+        this.queryString = params.query;
+      });
+    if (this.queryString === '') {
+      this.router.navigate(['/portal/payroll/pay-elements']);
+    }
+  }
   handlePaymentModeToggle(event: any) {
     this.predefinedPaymentMode = event.value;
   }

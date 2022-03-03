@@ -441,3 +441,29 @@ mat-radio-group {
     }
   }
 }
+/* Chips style*/
+._chips {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 114px;
+  background: rgba(73, 79, 177, 0.04);
+  border: 1px solid #353982;
+  border-radius: 4px;
+  margin: 0em 0.5em 1em 0em;
+  padding: 5px 12px;
+  span {
+    color: #353982;
+    font-size: 13px;
+    &:last-child {
+      cursor: pointer;
+      display: flex;
+      ion-icon {
+        font-size: 20px;
+      }
+      &:hover ion-icon {
+        color: $red;
+      }
+    }
+  }
+}

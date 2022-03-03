@@ -19,7 +19,7 @@
     &:focus,
     &:active {
       outline: none;
-      border: 1px solid $black;
+      border: 1px solid $blue;
     }
     &:disabled {
       background: rgba(205, 215, 220, 0.5);
@@ -69,7 +69,6 @@
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    font-size: 18px;
     &:invalid {
       color: #95a8b8;
       font-size: 14px;

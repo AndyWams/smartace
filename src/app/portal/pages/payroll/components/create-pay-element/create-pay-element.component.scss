@@ -1,6 +1,11 @@
 .form-wrap {
   padding: 3em;
-  width: 700px;
+  &.w--700 {
+    width: 700px;
+  }
+  &.w--850 {
+    width: 850px;
+  }
   form {
     .grid {
       display: grid;
@@ -10,6 +15,25 @@
     .mat-flat-button,
     .mat-stroked-button {
       width: -webkit-fill-available;
+    }
+  }
+  @media screen and (min-width: 320px) and (max-width: 991px) {
+    &.w--700,
+    &.w--850 {
+      width: auto;
+    }
+    padding: 1em;
+    form .grid {
+      grid-template-columns: auto;
+      .d-flex {
+        flex-direction: column;
+        button {
+          &.me-4 {
+            margin-right: 0 !important;
+            margin-bottom: 1em;
+          }
+        }
+      }
     }
   }
 }

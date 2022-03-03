@@ -78,3 +78,63 @@ export const payElementData = [
     institution: 'Pencom',
   },
 ];
+export const payScaleData = [
+  {
+    id: 1,
+    name: 'Test Scale',
+    payElement: 'Test Element, test 2',
+    payFrequency: 'Monthly',
+    noOfEmployees: '34',
+  },
+  {
+    id: 2,
+    name: 'Test Scale',
+    payElement: 'Test Element, test 2',
+    payFrequency: 'Monthly',
+    noOfEmployees: '34',
+  },
+  {
+    id: 3,
+    name: 'Test Scale',
+    payElement: 'Test Element, test 2',
+    payFrequency: 'Monthly',
+    noOfEmployees: '34',
+  },
+  {
+    id: 4,
+    name: 'Test Scale',
+    payElement: 'Test Element, test 2',
+    payFrequency: 'Monthly',
+    noOfEmployees: '34',
+  },
+];
+export const employeeData = [
+  {
+    id: 1,
+    name: 'John Doe',
+    empId: '2345',
+    department: 'Products',
+    dateCreated: '23rd Nov 1999',
+  },
+  {
+    id: 2,
+    name: 'Jane Doe',
+    empId: '2346',
+    department: 'Products',
+    dateCreated: '23rd Nov 1999',
+  },
+  {
+    id: 3,
+    name: 'Smith Davidson',
+    empId: '2347',
+    department: 'Research',
+    dateCreated: '23rd Nov 1999',
+  },
+  {
+    id: 4,
+    name: 'Andrew Wams',
+    empId: '2348',
+    department: 'Development',
+    dateCreated: '23rd Nov 1999',
+  },
+];

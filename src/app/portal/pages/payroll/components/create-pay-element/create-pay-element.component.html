@@ -1,8 +1,13 @@
 <div class="header d-flex align-items-center justify-content-between mb-4">
-  <div class="title">Set up a Pay Element</div>
+  <div class="title">
+    {{ queryString === "add" ? "Set up a Pay Element" : "Edit Pay Element" }}
+  </div>
 </div>
 <div class="bg-white">
-  <div class="form-wrap">
+  <div
+    class="form-wrap"
+    [ngClass]="[queryString === 'add' ? 'w--700' : 'w--850']"
+  >
     <form>
       <div class="grid align-items-center">
         <label>Payroll Item</label>
@@ -156,7 +161,17 @@
       <div class="grid align-items-center pt-4">
         <span>&nbsp;</span>
         <div class="d-flex align-items-center">
-          <button type="button" mat-flat-button class="me-4">Save</button>
+          <button type="button" mat-flat-button class="me-4">
+            {{ queryString === "add" ? "Save" : "Update" }}
+          </button>
+          <button
+            type="button"
+            mat-stroked-button
+            class="btn--danger me-4"
+            *ngIf="queryString === 'edit'"
+          >
+            Delete
+          </button>
           <button type="button" mat-stroked-button>Cancel</button>
         </div>
       </div>

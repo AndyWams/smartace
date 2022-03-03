@@ -2,7 +2,8 @@
   <div class="title">Institution Management</div>
   <button
     mat-flat-button
-    routerLink="/portal/payroll/institution-payment-setup"
+    [routerLink]="['/portal/payroll/institution-payment-setup']"
+    [queryParams]="{ query: 'add' }"
   >
     <ion-icon name="add"></ion-icon>Add Institution
   </button>

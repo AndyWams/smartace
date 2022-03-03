@@ -85,6 +85,15 @@ a {
       color: $black;
     }
   }
+  &.mat-stroked-primary {
+    height: 44px;
+    border: 1px solid $blue !important;
+    color: $blue;
+    ion-icon,
+    mat-icon {
+      color: $blue;
+    }
+  }
   &.btn--danger {
     border: 1px solid $red !important;
     color: $red;

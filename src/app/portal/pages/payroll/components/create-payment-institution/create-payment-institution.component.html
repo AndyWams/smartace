@@ -1,5 +1,11 @@
 <div class="header d-flex align-items-center justify-content-between mb-4">
-  <div class="title">Create Payment Institution</div>
+  <div class="title">
+    {{
+      queryString === "add"
+        ? "Create Payment Institution"
+        : "Edit Payment Institution"
+    }}
+  </div>
 </div>
 <div class="bg-white">
   <div class="form-wrap">

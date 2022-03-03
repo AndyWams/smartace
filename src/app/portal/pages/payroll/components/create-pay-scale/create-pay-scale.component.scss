@@ -1,6 +1,11 @@
 .form-wrap {
   padding: 3em;
-  width: 700px;
+  &.w--700 {
+    width: 700px;
+  }
+  &.w--850 {
+    width: 850px;
+  }
   form {
     .grid {
       display: grid;
@@ -12,8 +17,14 @@
       width: -webkit-fill-available;
     }
   }
+  .chips_wrap {
+    flex-wrap: wrap;
+  }
   @media screen and (min-width: 320px) and (max-width: 991px) {
-    width: auto;
+    &.w--700,
+    &.w--850 {
+      width: auto;
+    }
     padding: 1em;
     form .grid {
       grid-template-columns: auto;

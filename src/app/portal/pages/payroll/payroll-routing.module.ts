@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CreateNewEmployeeComponent } from './components/create-new-employee/create-new-employee.component';
 import { CreatePayElementComponent } from './components/create-pay-element/create-pay-element.component';
+import { CreatePayScaleComponent } from './components/create-pay-scale/create-pay-scale.component';
 import { CreatePaymentInstitutionComponent } from './components/create-payment-institution/create-payment-institution.component';
 import { GrossNetpayComponent } from './components/gross-netpay/gross-netpay.component';
 import { InstituteManagementComponent } from './components/institute-management/institute-management.component';
@@ -34,6 +35,26 @@ const routes: Routes = [
         component: PayScaleComponent,
       },
       {
+        path: 'add-employee',
+        component: CreateNewEmployeeComponent,
+      },
+      {
+        path: 'payscale-setup',
+        component: PayscaleSetupComponent,
+      },
+      {
+        path: 'institution-payment-setup',
+        component: CreatePaymentInstitutionComponent,
+      },
+      {
+        path: 'pay-element-setup',
+        component: CreatePayElementComponent,
+      },
+      {
+        path: 'pay-scale-setup',
+        component: CreatePayScaleComponent,
+      },
+      {
         path: 'quick-payroll',
         component: QuickPayrollComponent,
       },
@@ -52,22 +73,6 @@ const routes: Routes = [
       {
         path: 'report',
         component: ReportComponent,
-      },
-      {
-        path: 'add-employee',
-        component: CreateNewEmployeeComponent,
-      },
-      {
-        path: 'payscale-setup',
-        component: PayscaleSetupComponent,
-      },
-      {
-        path: 'institution-payment-setup',
-        component: CreatePaymentInstitutionComponent,
-      },
-      {
-        path: 'pay-element-setup',
-        component: CreatePayElementComponent,
       },
       {
         path: 'payschedule-setup',

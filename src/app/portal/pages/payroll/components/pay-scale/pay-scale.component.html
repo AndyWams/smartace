@@ -1,1 +1,21 @@
-<p>pay-scale works!</p>
+<div class="header d-flex align-items-center justify-content-between mb-4">
+  <div class="title">Pay Scale</div>
+  <button
+    mat-flat-button
+    [routerLink]="['/portal/payroll/pay-scale-setup']"
+    [queryParams]="{ query: 'add' }"
+  >
+    <ion-icon name="add"></ion-icon>Add New Pay Scale
+  </button>
+</div>
+<app-table
+  [_tblHeader]="[
+    'scale name',
+    'pay elements',
+    'pay frequency',
+    'no of employees',
+    ''
+  ]"
+  [_data]="data"
+  _identifier="pay_scale"
+></app-table>

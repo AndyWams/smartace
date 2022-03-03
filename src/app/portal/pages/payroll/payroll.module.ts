@@ -19,6 +19,7 @@ import { TableComponent } from '../../components/table/table.component';
 import { CreatePaymentInstitutionComponent } from './components/create-payment-institution/create-payment-institution.component';
 import { CreateNewEmployeeComponent } from './components/create-new-employee/create-new-employee.component';
 import { CreatePayElementComponent } from './components/create-pay-element/create-pay-element.component';
+import { CreatePayScaleComponent } from './components/create-pay-scale/create-pay-scale.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { CreatePayElementComponent } from './components/create-pay-element/creat
     CreatePaymentInstitutionComponent,
     CreateNewEmployeeComponent,
     CreatePayElementComponent,
+    CreatePayScaleComponent,
   ],
   imports: [CommonModule, PayrollRoutingModule, AngularMaterialModule],
   exports: [PayrollComponent],

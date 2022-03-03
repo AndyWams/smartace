@@ -1,0 +1,72 @@
+<div class="header d-flex align-items-center justify-content-between mb-4">
+  <div class="title">Pay Scale Set-Up</div>
+</div>
+<div class="bg-white">
+  <div class="form-wrap w--700">
+    <form>
+      <div class="grid align-items-center">
+        <label>Scale Name</label>
+        <div class="input mb-0">
+          <input type="text" placeholder="Scale name" />
+        </div>
+      </div>
+      <div class="grid align-items-center">
+        <label>Pay Elements</label>
+        <div class="input mb-0">
+          <select
+            class="select"
+            required
+            (change)="hanglePayElementSelect($event)"
+            #selectRef
+          >
+            <option disabled="" selected="" value="">Select pay element</option>
+            <option *ngFor="let item of _payElements">
+              {{ item }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <ng-container *ngIf="_selectedPayElements.length !== 0">
+        <div class="grid align-items-center">
+          <label>&nbsp;</label>
+          <div class="chips_wrap d-flex align-items-center">
+            <div
+              class="_chips animate__animated animate__bounceIn"
+              *ngFor="let chip of _selectedPayElements; let i = index"
+            >
+              <span>{{ chip }}</span>
+              <span (click)="dropItem(i)"
+                ><ion-icon name="close"></ion-icon
+              ></span>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <div class="grid align-items-center">
+        <label>Pay Frequency</label>
+        <div class="input mb-0">
+          <select class="select" required>
+            <option disabled="" selected="" value="">
+              Select pay frequencies
+            </option>
+            <option *ngFor="let item of _payFrequencies">
+              {{ item }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="bg-white">
+  <div class="title-sm px-5">Add Employees</div>
+  <app-table
+    [_tblHeader]="['name', 'id', 'department', 'employee date']"
+    [_data]="data"
+    _identifier="employees"
+  ></app-table>
+  <div class="d-flex justify-content-center align-items-center pb-5">
+    <button mat-flat-button class="me-3">Save</button>
+    <button mat-stroked-button>Cancel</button>
+  </div>
+</div>

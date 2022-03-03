@@ -17,7 +17,8 @@
       >
       <div class="mt-auto">
         <a
-          routerLink="/portal/payroll/institution-payment-setup"
+          [routerLink]="['/portal/payroll/institution-payment-setup']"
+          [queryParams]="{ query: 'add' }"
           mat-flat-button
           >Continue</a
         >
@@ -34,7 +35,8 @@
       >
       <div class="mt-auto">
         <a
-          routerLink="/portal/payroll/institution-payment-setup"
+          [routerLink]="['/portal/payroll/pay-element-setup']"
+          [queryParams]="{ query: 'add' }"
           mat-flat-button
           >Continue</a
         >
@@ -51,7 +53,8 @@
       >
       <div class="mt-auto">
         <a
-          routerLink="/portal/payroll/institution-payment-setup"
+          [routerLink]="['/portal/payroll/pay-scale-setup']"
+          [queryParams]="{ query: 'add' }"
           mat-flat-button
           >Continue</a
         >
