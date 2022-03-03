@@ -11,7 +11,12 @@ import { employeeData } from 'src/assets/raw_data';
 export class CreatePayScaleComponent implements OnInit {
   @ViewChild('selectRef') selectRef: ElementRef;
   queryString: string = '';
-  _payElements: string[] = ['Item1', 'Item2', 'Item3', 'Item4'];
+  _payElements: string[] = [
+    'Test Element 1',
+    'Test Element 2',
+    'Test Element 3',
+    'Test Element 4',
+  ];
   _payFrequencies: string[] = [
     'Daily',
     'Weekly',
