@@ -45,7 +45,7 @@ export class TableComponent implements OnInit {
   }
   ngAfterViewInit() {}
 
-  toggleCheck(event: any, index) {
+  toggleCheck(event: any, index: number) {
     let checkedItems = 0;
 
     let i = index;
@@ -110,60 +110,25 @@ export class TableComponent implements OnInit {
     }
   }
 
-  checkSourceData(type: string, index) {
+  checkSourceData(type: string, index: number) {
     let data: any;
     let checkedItems = this.selectedItems.filter((x) => x.isSelected).length;
     switch (type) {
       case (type = 'Employee'):
         data = this.employeeData;
-        if (checkedItems < data.length) {
-          this.indeterminate = true;
-          this.addTblBgRenderer(index);
-        } else {
-          this.allChecked = true;
-          this.indeterminate = false;
-          this.addTblBgRenderer(index);
-        }
+        this.getSwitch(checkedItems, data, index);
       case (type = 'Institution'):
         data = this.institutionData;
-        if (checkedItems < data.length) {
-          this.indeterminate = true;
-          this.addTblBgRenderer(index);
-        } else {
-          this.allChecked = true;
-          this.indeterminate = false;
-          this.addTblBgRenderer(index);
-        }
+        this.getSwitch(checkedItems, data, index);
       case (type = 'PayElements'):
         data = this.payElementsData;
-        if (checkedItems < data.length) {
-          this.indeterminate = true;
-          this.addTblBgRenderer(index);
-        } else {
-          this.allChecked = true;
-          this.indeterminate = false;
-          this.addTblBgRenderer(index);
-        }
+        this.getSwitch(checkedItems, data, index);
       case (type = 'PayScale'):
         data = this.payScaleData;
-        if (checkedItems < data.length) {
-          this.indeterminate = true;
-          this.addTblBgRenderer(index);
-        } else {
-          this.allChecked = true;
-          this.indeterminate = false;
-          this.addTblBgRenderer(index);
-        }
+        this.getSwitch(checkedItems, data, index);
       case (type = 'EmpOnPayScale'):
         data = this.employeesOnPayscaleData;
-        if (checkedItems < data.length) {
-          this.indeterminate = true;
-          this.addTblBgRenderer(index);
-        } else {
-          this.allChecked = true;
-          this.indeterminate = false;
-          this.addTblBgRenderer(index);
-        }
+        this.getSwitch(checkedItems, data, index);
       default:
         return null;
     }
@@ -179,5 +144,15 @@ export class TableComponent implements OnInit {
       this.tblRows._results[index].nativeElement,
       'bg-wrap'
     );
+  }
+  getSwitch(checkedItems: any, data: any, index) {
+    if (checkedItems < data.length) {
+      this.indeterminate = true;
+      this.addTblBgRenderer(index);
+    } else {
+      this.allChecked = true;
+      this.indeterminate = false;
+      this.addTblBgRenderer(index);
+    }
   }
 }
