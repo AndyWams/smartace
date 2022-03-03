@@ -1,0 +1,68 @@
+.bg-white {
+  position: relative;
+  .abs-pos {
+    position: absolute;
+    top: 4.9em;
+    right: 4em;
+    border: 1px solid rgba(72, 71, 224, 0.6);
+    border-radius: 4px;
+    padding: 2em;
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    background: rgba(72, 71, 224, 0.12) url("/assets/img/wavy-line.svg");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    label {
+      font-size: 16px;
+      margin-bottom: 0.3em;
+      color: #080730;
+      &:last-child {
+        margin: 0em;
+        font-size: 24px;
+        font-weight: 500;
+      }
+    }
+  }
+}
+.form-wrap {
+  padding: 3em;
+  &.w--700 {
+    width: 700px;
+  }
+  &.w--850 {
+    width: 850px;
+  }
+  form {
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      margin-bottom: 1.5em;
+    }
+    .mat-flat-button,
+    .mat-stroked-button {
+      width: -webkit-fill-available;
+    }
+  }
+
+  @media screen and (min-width: 320px) and (max-width: 991px) {
+    &.w--700,
+    &.w--850 {
+      width: auto;
+    }
+    padding: 1em;
+    form .grid {
+      grid-template-columns: auto;
+      .d-flex {
+        flex-direction: column;
+        button {
+          &.me-4 {
+            margin-right: 0 !important;
+            margin-bottom: 1em;
+          }
+        }
+      }
+    }
+  }
+}

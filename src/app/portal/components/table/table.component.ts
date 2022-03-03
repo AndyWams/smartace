@@ -33,7 +33,6 @@ export class TableComponent implements OnInit {
   payScaleData: any[];
   employeesOnPayscaleData: any[];
   selectedItems: any[] = [];
-  isDisabled: boolean = false;
   allChecked: boolean = false;
   indeterminate: boolean = false;
   constructor(private renderer: Renderer2) {}

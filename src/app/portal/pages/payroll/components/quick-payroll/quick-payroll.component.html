@@ -1,1 +1,89 @@
-<p>quick-payroll works!</p>
+<div class="header d-flex align-items-center justify-content-between mb-4">
+  <div class="title">Quick Payroll</div>
+</div>
+<div class="bg-white">
+  <div class="form-wrap w--700">
+    <form>
+      <div class="grid align-items-center">
+        <label>Payroll Period</label>
+        <div class="d-flex align-items-center">
+          <div class="input mb-0 me-3">
+            <label for="">Start Date</label>
+            <input type="date" required />
+          </div>
+          <div class="input mb-0">
+            <label for="">End Date</label>
+            <input type="date" required />
+          </div>
+        </div>
+      </div>
+      <div class="grid align-items-center">
+        <label>Payroll Schedule</label>
+        <div class="input mb-0">
+          <select class="select" required>
+            <option disabled="" selected="" value="">
+              Select payroll schedule
+            </option>
+            <option value="">Option One</option>
+            <option value="">Option Two</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid align-items-center">
+        <label>Payment Channel</label>
+        <div class="input mb-0">
+          <select class="select" required (change)="handlePayChannel($event)">
+            <option disabled="" selected="" value="">
+              Select payment channel
+            </option>
+            <option value="Master">Master Card</option>
+            <option value="Bank">Bank Payment</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid align-items-center">
+        <label>Run By</label>
+        <div class="input mb-0">
+          <select class="select" required (change)="handleRunBy($event)">
+            <option disabled="" selected="" value="">
+              Select payment channel
+            </option>
+            <option value="Payscale">By Payscale</option>
+            <option value="Gross/net">By Gross/Net Pay</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid align-items-center" *ngIf="runByItem === 'Payscale'">
+        <label>Select Payscale</label>
+        <div class="input mb-0">
+          <select class="select" required>
+            <option disabled="" selected="" value="">
+              Select payment channel
+            </option>
+            <option value="">Payscale One</option>
+            <option value="">Payscale Two</option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div
+    class="abs-pos animate__animated animate__bounceIn"
+    *ngIf="payChannel === 'Bank'"
+  >
+    <label>Bank Balance</label>
+    <label class="bold-txt">NGN 39,000,920.00</label>
+  </div>
+</div>
+<!-- <div class="bg-white">
+    <div class="title-sm px-5">Add Employees</div>
+    <app-table
+      [_tblHeader]="['name', 'id', 'department', 'employee date']"
+      [_data]="data"
+      _identifier="employees"
+    ></app-table>
+    <div class="d-flex justify-content-center align-items-center pb-5">
+      <button mat-flat-button class="me-3">Save</button>
+      <button mat-stroked-button>Cancel</button>
+    </div>
+  </div> -->
