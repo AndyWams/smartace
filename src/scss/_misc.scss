@@ -378,7 +378,7 @@ mat-radio-group {
       }
       .bg-white {
         padding: 2em;
-        background: #ffffff;
+        background: $white;
         box-shadow: 0px 4px 25px rgba(0, 0, 0, 0.1);
         border-radius: 4px;
         display: flex;
@@ -399,6 +399,19 @@ mat-radio-group {
         &.scroll {
           height: 400px;
           overflow-y: scroll;
+        }
+      }
+      .file__content {
+        background: $white;
+        padding: 1em 1em;
+        width: 500px;
+        figure {
+          min-height: 200px;
+          margin: 1em 0em;
+          .dashed-border {
+            padding: 1em;
+            border: 2px dashed #dfe3e8;
+          }
         }
       }
       .center {
@@ -446,6 +459,9 @@ mat-radio-group {
               }
             }
           }
+        }
+        .file__content {
+          width: auto;
         }
       }
     }

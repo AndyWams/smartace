@@ -1,8 +1,10 @@
 import {
   Component,
   ElementRef,
+  EventEmitter,
   Input,
   OnInit,
+  Output,
   QueryList,
   Renderer2,
   ViewChildren,
@@ -134,7 +136,7 @@ export class TableComponent implements OnInit {
     }
   }
   addTblBgRenderer(index: number) {
-    return this.renderer.addClass(
+    this.renderer.addClass(
       this.tblRows._results[index].nativeElement,
       'bg-wrap'
     );

@@ -23,18 +23,18 @@
             class="select"
             required
             (change)="handleCategorySelect($event)"
+            *ngIf="categoryType !== 'New'"
           >
             <option disabled="" selected="" value="">Select category</option>
             <option value="Tax">Tax</option>
             <option value="Union">Union</option>
             <option value="New">Create New</option>
           </select>
-        </div>
-      </div>
-      <div class="grid align-items-center" *ngIf="categoryType === 'New'">
-        <label>New Category</label>
-        <div class="input mb-0">
-          <input type="text" placeholder="Enter category name" />
+          <input
+            type="text"
+            placeholder="Input category name"
+            *ngIf="categoryType === 'New'"
+          />
         </div>
       </div>
       <div class="grid align-items-center">

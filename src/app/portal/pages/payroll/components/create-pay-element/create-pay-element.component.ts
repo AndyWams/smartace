@@ -12,6 +12,7 @@ export class CreatePayElementComponent implements OnInit {
   predefinedPaymentMode: string = 'predefined';
   taxMode: string = 'default';
   payType: string = 'Monthly';
+  payrollItem: string = 'default';
   _isChecked: boolean = false;
   constructor(private route: ActivatedRoute, private router: Router) {}
 
@@ -37,5 +38,8 @@ export class CreatePayElementComponent implements OnInit {
   }
   handlePayTypeSelect(event: any) {
     this.payType = event.target.value;
+  }
+  handlePayrollItemSelect(event: any) {
+    this.payrollItem = event.target.value;
   }
 }

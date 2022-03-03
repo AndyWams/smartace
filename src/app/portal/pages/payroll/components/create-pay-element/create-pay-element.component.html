@@ -12,11 +12,22 @@
       <div class="grid align-items-center">
         <label>Payroll Item</label>
         <div class="input mb-0">
-          <select class="select" required>
+          <select
+            class="select"
+            required
+            (change)="handlePayrollItemSelect($event)"
+            *ngIf="payrollItem !== 'Create new'"
+          >
             <option disabled="" selected="" value="">Select item</option>
             <option value="Statutory">Statutory</option>
             <option value="Non-statutory">Non-statutory</option>
+            <option value="Create new">Create new</option>
           </select>
+          <input
+            type="text"
+            placeholder="Enter payroll item"
+            *ngIf="payrollItem === 'Create new'"
+          />
         </div>
       </div>
       <div class="grid align-items-center">

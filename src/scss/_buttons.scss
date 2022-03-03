@@ -8,7 +8,11 @@ a {
   }
 }
 .mat-button {
-  padding: 0px 6px !important;
+  padding: 0px 15px !important;
+  height: 44px !important;
+  min-width: 74px !important;
+  align-items: center !important;
+  font-family: "Rubik", sans-serif !important;
   &.print {
     mat-icon {
       color: $blue;
@@ -20,6 +24,7 @@ a {
   align-items: center;
   justify-content: center;
   font-weight: 300 !important;
+  font-family: "Rubik", sans-serif !important;
 }
 
 .mat-flat-button {

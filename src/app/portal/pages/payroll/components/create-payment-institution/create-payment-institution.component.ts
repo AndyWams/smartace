@@ -14,7 +14,7 @@ import {
 })
 export class CreatePaymentInstitutionComponent implements OnInit {
   queryString: string = '';
-  categoryType: string = 'predefined';
+  categoryType: string;
   constructor(private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
