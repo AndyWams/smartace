@@ -1,4 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnInit,
+  QueryList,
+  Renderer2,
+  ViewChildren,
+} from '@angular/core';
 import {
   getEmployeeDataMap,
   getInstitutionDataMap,
@@ -13,6 +21,7 @@ import {
   styleUrls: ['./table.component.scss'],
 })
 export class TableComponent implements OnInit {
+  @ViewChildren('tbl_Rows') tblRows: any;
   @Input() _tblHeader: any;
   @Input() _data: any;
   @Input() _identifier: string;
@@ -25,7 +34,7 @@ export class TableComponent implements OnInit {
   isDisabled: boolean = false;
   allChecked: boolean = false;
   indeterminate: boolean = false;
-  constructor() {}
+  constructor(private renderer: Renderer2) {}
 
   ngOnInit(): void {
     this.employeeData = getEmployeeDataMap(this._data);
@@ -34,9 +43,13 @@ export class TableComponent implements OnInit {
     this.payElementsData = getPayElementsDataMap(this._data);
     this.payScaleData = getPayScaleDataMap(this._data);
   }
+  ngAfterViewInit() {}
 
-  toggleCheck(event: any) {
+  toggleCheck(event: any, index) {
     let checkedItems = 0;
+
+    let i = index;
+
     let data = {
       ...event.source.value,
       isSelected: true,
@@ -45,21 +58,23 @@ export class TableComponent implements OnInit {
     if (event.checked) {
       this.selectedItems.push(data);
       checkedItems = this.selectedItems.filter((x) => x.isSelected).length;
-      this.checkSourceData('Employee');
-      this.checkSourceData('Institution');
-      this.checkSourceData('PayElements');
-      this.checkSourceData('PayScale');
-      this.checkSourceData('EmpOnPayScale');
+      this.checkSourceData('Employee', i);
+      this.checkSourceData('Institution', i);
+      this.checkSourceData('PayElements', i);
+      this.checkSourceData('PayScale', i);
+      this.checkSourceData('EmpOnPayScale', i);
     } else {
       checkedItems = this.selectedItems.filter((x) => x.isSelected).length;
       checkedItems = checkedItems - 1;
       if (checkedItems <= this.selectedItems.length) {
         this.allChecked = false;
         this.indeterminate = true;
+        this.removeTblBgRenderer(i);
       }
       if (checkedItems == 0) {
         this.indeterminate = null;
         this.allChecked = null;
+        this.removeTblBgRenderer(i);
       }
       let index = this.selectedItems.indexOf(data);
       if (index === -1) {
@@ -82,11 +97,20 @@ export class TableComponent implements OnInit {
         ? this.payScaleData
         : this._identifier === 'employees_on_payscale'
         ? this.employeesOnPayscaleData
-        : null;
+        : '';
     this.selectedItems = handleCheckedData(checked, source);
+    if (this.selectedItems.length) {
+      this.selectedItems.map((_, i) => {
+        this.addTblBgRenderer(i);
+      });
+    } else {
+      this.tblRows._results.map((x: any) => {
+        this.renderer.removeClass(x.nativeElement, 'bg-wrap');
+      });
+    }
   }
 
-  checkSourceData(type: string) {
+  checkSourceData(type: string, index) {
     let data: any;
     let checkedItems = this.selectedItems.filter((x) => x.isSelected).length;
     switch (type) {
@@ -94,44 +118,66 @@ export class TableComponent implements OnInit {
         data = this.employeeData;
         if (checkedItems < data.length) {
           this.indeterminate = true;
+          this.addTblBgRenderer(index);
         } else {
           this.allChecked = true;
           this.indeterminate = false;
+          this.addTblBgRenderer(index);
         }
       case (type = 'Institution'):
         data = this.institutionData;
         if (checkedItems < data.length) {
           this.indeterminate = true;
+          this.addTblBgRenderer(index);
         } else {
           this.allChecked = true;
           this.indeterminate = false;
+          this.addTblBgRenderer(index);
         }
       case (type = 'PayElements'):
         data = this.payElementsData;
         if (checkedItems < data.length) {
           this.indeterminate = true;
+          this.addTblBgRenderer(index);
         } else {
           this.allChecked = true;
           this.indeterminate = false;
+          this.addTblBgRenderer(index);
         }
       case (type = 'PayScale'):
         data = this.payScaleData;
         if (checkedItems < data.length) {
           this.indeterminate = true;
+          this.addTblBgRenderer(index);
         } else {
           this.allChecked = true;
           this.indeterminate = false;
+          this.addTblBgRenderer(index);
         }
       case (type = 'EmpOnPayScale'):
         data = this.employeesOnPayscaleData;
         if (checkedItems < data.length) {
           this.indeterminate = true;
+          this.addTblBgRenderer(index);
         } else {
           this.allChecked = true;
           this.indeterminate = false;
+          this.addTblBgRenderer(index);
         }
       default:
         return null;
     }
+  }
+  addTblBgRenderer(index: number) {
+    return this.renderer.addClass(
+      this.tblRows._results[index].nativeElement,
+      'bg-wrap'
+    );
+  }
+  removeTblBgRenderer(index: number) {
+    return this.renderer.removeClass(
+      this.tblRows._results[index].nativeElement,
+      'bg-wrap'
+    );
   }
 }

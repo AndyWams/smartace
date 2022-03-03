@@ -21,6 +21,7 @@ import { CreateNewEmployeeComponent } from './components/create-new-employee/cre
 import { CreatePayElementComponent } from './components/create-pay-element/create-pay-element.component';
 import { CreatePayScaleComponent } from './components/create-pay-scale/create-pay-scale.component';
 import { ViewPayscaleComponent } from './components/view-payscale/view-payscale.component';
+import { FileUploadComponent } from '../../components/file-upload/file-upload.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { ViewPayscaleComponent } from './components/view-payscale/view-payscale.
     PayscheduleSetupComponent,
     PayrollSettingsComponent,
     TableComponent,
+    FileUploadComponent,
     CreatePaymentInstitutionComponent,
     CreateNewEmployeeComponent,
     CreatePayElementComponent,

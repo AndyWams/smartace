@@ -130,12 +130,12 @@
       </thead>
       <tbody>
         <ng-container *ngIf="_identifier === 'inst_mgmt'">
-          <tr *ngFor="let item of institutionData">
+          <tr *ngFor="let item of institutionData; let i = index" #tbl_Rows>
             <td>
               <mat-checkbox
                 [value]="item"
                 [checked]="item.isSelected"
-                (change)="toggleCheck($event)"
+                (change)="toggleCheck($event, i)"
                 >{{ item.name }}</mat-checkbox
               >
             </td>
@@ -188,12 +188,12 @@
           </tr>
         </ng-container>
         <ng-container *ngIf="_identifier === 'pay_elements'">
-          <tr *ngFor="let item of payElementsData">
+          <tr *ngFor="let item of payElementsData; let i = index" #tbl_Rows>
             <td>
               <mat-checkbox
                 [value]="item"
                 [checked]="item.isSelected"
-                (change)="toggleCheck($event)"
+                (change)="toggleCheck($event, i)"
                 >{{ item.name }}</mat-checkbox
               >
             </td>
@@ -249,12 +249,12 @@
           </tr>
         </ng-container>
         <ng-container *ngIf="_identifier === 'pay_scale'">
-          <tr *ngFor="let item of payScaleData">
+          <tr *ngFor="let item of payScaleData; let i = index" #tbl_Rows>
             <td>
               <mat-checkbox
                 [value]="item"
                 [checked]="item.isSelected"
-                (change)="toggleCheck($event)"
+                (change)="toggleCheck($event, i)"
                 >{{ item.name }}</mat-checkbox
               >
             </td>
@@ -301,12 +301,12 @@
           </tr>
         </ng-container>
         <ng-container *ngIf="_identifier === 'employees'">
-          <tr *ngFor="let item of employeeData; let i = index">
+          <tr *ngFor="let item of employeeData; let i = index" #tbl_Rows>
             <td>
               <mat-checkbox
                 [value]="item"
                 [checked]="item.isSelected"
-                (change)="toggleCheck($event)"
+                (change)="toggleCheck($event, i)"
                 >{{ item.name }}</mat-checkbox
               >
             </td>
@@ -322,12 +322,15 @@
           </tr>
         </ng-container>
         <ng-container *ngIf="_identifier === 'employees_on_payscale'">
-          <tr *ngFor="let item of employeesOnPayscaleData; let i = index">
+          <tr
+            *ngFor="let item of employeesOnPayscaleData; let i = index"
+            #tbl_Rows
+          >
             <td>
               <mat-checkbox
                 [value]="item"
                 [checked]="item.isSelected"
-                (change)="toggleCheck($event)"
+                (change)="toggleCheck($event, i)"
                 >{{ item.name }}</mat-checkbox
               >
             </td>
@@ -754,3 +757,4 @@
     </div>
   </div>
 </div>
+<!-- <app-file-upload></app-file-upload> -->

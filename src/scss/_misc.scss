@@ -89,6 +89,13 @@
           padding-right: 1.5em;
         }
       }
+      &.bg-wrap {
+        background: #f5f5fa;
+        border-top: 1px solid #e6e6e6;
+        td {
+          border-top: 1px solid rgba(#ccc, 27%);
+        }
+      }
       &:last-child td {
         border-bottom: none;
       }
