@@ -1,0 +1,28 @@
+<div class="header d-flex align-items-center justify-content-between mb-4">
+  <div class="title">View Pay Scale</div>
+</div>
+<div class="bg-white">
+  <div class="w--500">
+    <div class="grid grid--repeat--two list-items">
+      <label>scale name</label>
+      <label><span>Test</span></label>
+      <label>pay elements</label>
+      <label><span>Test Element</span></label>
+      <label>pay frequency</label>
+      <label><span>Monthly</span></label>
+    </div>
+  </div>
+  <div class="title-sm px-5">Employees on Pay Scale</div>
+  <app-table
+    [_tblHeader]="['name', 'id', 'department', 'employee date']"
+    [_data]="data"
+    _identifier="employees_on_payscale"
+  ></app-table>
+  <div class="d-flex justify-content-start align-items-center pb-5 px-5">
+    <button mat-flat-button>Edit</button>
+    <button mat-stroked-button class="btn--danger mx-3">Delete</button>
+    <a routerLink="/portal/payroll/pay-scale" mat-button class="btn-link"
+      >Cancel</a
+    >
+  </div>
+</div>

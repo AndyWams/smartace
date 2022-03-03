@@ -20,6 +20,7 @@ export class TableComponent implements OnInit {
   institutionData: any[];
   payElementsData: any[];
   payScaleData: any[];
+  employeesOnPayscaleData: any[];
   selectedItems: any[] = [];
   isDisabled: boolean = false;
   allChecked: boolean = false;
@@ -28,6 +29,7 @@ export class TableComponent implements OnInit {
 
   ngOnInit(): void {
     this.employeeData = getEmployeeDataMap(this._data);
+    this.employeesOnPayscaleData = getEmployeeDataMap(this._data);
     this.institutionData = getInstitutionDataMap(this._data);
     this.payElementsData = getPayElementsDataMap(this._data);
     this.payScaleData = getPayScaleDataMap(this._data);
@@ -47,6 +49,7 @@ export class TableComponent implements OnInit {
       this.checkSourceData('Institution');
       this.checkSourceData('PayElements');
       this.checkSourceData('PayScale');
+      this.checkSourceData('EmpOnPayScale');
     } else {
       checkedItems = this.selectedItems.filter((x) => x.isSelected).length;
       checkedItems = checkedItems - 1;
@@ -77,6 +80,8 @@ export class TableComponent implements OnInit {
         ? this.payElementsData
         : this._identifier === 'pay_scale'
         ? this.payScaleData
+        : this._identifier === 'employees_on_payscale'
+        ? this.employeesOnPayscaleData
         : null;
     this.selectedItems = handleCheckedData(checked, source);
   }
@@ -111,6 +116,14 @@ export class TableComponent implements OnInit {
         }
       case (type = 'PayScale'):
         data = this.payScaleData;
+        if (checkedItems < data.length) {
+          this.indeterminate = true;
+        } else {
+          this.allChecked = true;
+          this.indeterminate = false;
+        }
+      case (type = 'EmpOnPayScale'):
+        data = this.employeesOnPayscaleData;
         if (checkedItems < data.length) {
           this.indeterminate = true;
         } else {

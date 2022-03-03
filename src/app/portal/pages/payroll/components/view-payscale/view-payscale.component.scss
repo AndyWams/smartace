@@ -1,0 +1,30 @@
+@import "src/scss/_vars.scss";
+.bg-white {
+  padding: 2em 0em;
+  background: #ffffff;
+  box-shadow: 0px 4px 25px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  .w--500 {
+    width: 500px;
+  }
+  .list-items {
+    padding: 0em 3em 3em;
+    label {
+      font-size: 14px;
+      font-weight: 500;
+      text-transform: uppercase;
+      span {
+        font-size: 16px;
+        color: $light-grey;
+        font-weight: 400;
+        text-transform: capitalize;
+      }
+    }
+  }
+  &.scroll {
+    height: 400px;
+    overflow-y: scroll;
+  }
+}

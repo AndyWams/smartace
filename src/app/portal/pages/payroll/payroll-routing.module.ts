@@ -15,6 +15,7 @@ import { PayscheduleSetupComponent } from './components/payschedule-setup/paysch
 import { QuickPayrollComponent } from './components/quick-payroll/quick-payroll.component';
 import { ReportComponent } from './components/report/report.component';
 import { TaxTypeComponent } from './components/tax-type/tax-type.component';
+import { ViewPayscaleComponent } from './components/view-payscale/view-payscale.component';
 import { PayrollComponent } from './payroll.component';
 
 const routes: Routes = [
@@ -53,6 +54,10 @@ const routes: Routes = [
       {
         path: 'pay-scale-setup',
         component: CreatePayScaleComponent,
+      },
+      {
+        path: 'view-payscale',
+        component: ViewPayscaleComponent,
       },
       {
         path: 'quick-payroll',

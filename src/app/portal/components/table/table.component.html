@@ -1,8 +1,8 @@
 <div class="overflow--wrap">
   <div class="table-wrapper tbl-wrap">
-    <div class="toolbar mb-5">
-      <div class="d-flex align-items-center justify-content-evenly">
-        <div class="d-flex align-items-center" style="width: fit-content">
+    <div class="toolbar mb-5 adjust-wrap">
+      <div class="d-flex align-items-center justify-content-start adjust-flex">
+        <div class="d-flex align-items-center mr-1" style="width: fit-content">
           <mat-checkbox
             [indeterminate]="indeterminate"
             [checked]="allChecked"
@@ -20,7 +20,7 @@
             </button>
           </mat-menu>
         </div>
-        <div class="search-input">
+        <div class="search-input mr-1">
           <span><mat-icon>search</mat-icon></span>
           <input type="text" placeholder="Search" />
         </div>
@@ -28,7 +28,7 @@
         <div *ngIf="_identifier === 'inst_mgmt'">
           <button
             mat-stroked-button
-            class="mat-stroked-secondary"
+            class="mat-stroked-secondary mr-1"
             data-bs-toggle="modal"
             data-bs-target="#instMgmtFilterBy"
           >
@@ -39,7 +39,7 @@
         <div *ngIf="_identifier === 'pay_elements'">
           <button
             mat-stroked-button
-            class="mat-stroked-secondary"
+            class="mat-stroked-secondary mr-1"
             data-bs-toggle="modal"
             data-bs-target="#payElementFilterBy"
           >
@@ -50,7 +50,7 @@
         <div *ngIf="_identifier === 'pay_scale'">
           <button
             mat-stroked-button
-            class="mat-stroked-secondary"
+            class="mat-stroked-secondary mr-1"
             data-bs-toggle="modal"
             data-bs-target="#payScaleFilterBy"
           >
@@ -58,17 +58,22 @@
           </button>
         </div>
         <!-- Employee Filter-->
-        <div *ngIf="_identifier === 'employees'">
+        <div
+          *ngIf="
+            _identifier === 'employees' ||
+            _identifier === 'employees_on_payscale'
+          "
+        >
           <button
             mat-stroked-button
-            class="mat-stroked-secondary"
+            class="mat-stroked-secondary mr-1"
             data-bs-toggle="modal"
             data-bs-target="#employeeFilterBy"
           >
             Filter <ion-icon name="options" class="mx-3"></ion-icon>
           </button>
         </div>
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center mr-1">
           <label class="me-3">Sort by</label>
           <button
             mat-stroked-button
@@ -86,12 +91,22 @@
             </button>
           </mat-menu>
         </div>
-        <div *ngIf="_identifier !== 'employees'">
-          <button mat-stroked-button class="mat-stroked-secondary">
+        <div
+          *ngIf="
+            _identifier !== 'employees' &&
+            _identifier !== 'employees_on_payscale'
+          "
+        >
+          <button mat-stroked-button class="mat-stroked-secondary mr-1">
             Export as
           </button>
         </div>
-        <div *ngIf="_identifier !== 'employees'">
+        <div
+          *ngIf="
+            _identifier !== 'employees' &&
+            _identifier !== 'employees_on_payscale'
+          "
+        >
           <button mat-button class="print">
             <mat-icon class="me-2">print</mat-icon> Print
           </button>
@@ -258,7 +273,13 @@
                   <ion-icon name="ellipsis-horizontal"></ion-icon>
                 </span>
                 <mat-menu #menu="matMenu">
-                  <button mat-menu-item>View</button>
+                  <button
+                    mat-menu-item
+                    [routerLink]="['/portal/payroll/view-payscale']"
+                    [queryParams]="{ id: item.id }"
+                  >
+                    View
+                  </button>
                   <button
                     mat-menu-item
                     [routerLink]="['/portal/payroll/pay-scale-setup']"
@@ -281,6 +302,27 @@
         </ng-container>
         <ng-container *ngIf="_identifier === 'employees'">
           <tr *ngFor="let item of employeeData; let i = index">
+            <td>
+              <mat-checkbox
+                [value]="item"
+                [checked]="item.isSelected"
+                (change)="toggleCheck($event)"
+                >{{ item.name }}</mat-checkbox
+              >
+            </td>
+            <td>
+              <span>{{ item.empId }}</span>
+            </td>
+            <td>
+              <span>{{ item.department }}</span>
+            </td>
+            <td>
+              <span>{{ item.dateCreated }}</span>
+            </td>
+          </tr>
+        </ng-container>
+        <ng-container *ngIf="_identifier === 'employees_on_payscale'">
+          <tr *ngFor="let item of employeesOnPayscaleData; let i = index">
             <td>
               <mat-checkbox
                 [value]="item"
@@ -570,34 +612,6 @@
     </div>
   </div>
 </div>
-<div class="modal fade" id="deactivate" role="dialog">
-  <div class="modal-dialog modal-wrapper">
-    <div class="modal-content-wrap">
-      <div class="modal-body">
-        <div
-          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
-        >
-          <div class="title">Deactivate Institution</div>
-          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
-        </div>
-        <div class="container">
-          <div class="pb-3">
-            <div class="center">
-              <p>
-                Are you sure you want to deactivate this item? They will no
-                longer be accessible.
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer d-flex justify-content-end align-items-center">
-          <button mat-flat-button class="me-3">Deactivate</button>
-          <button mat-stroked-button data-bs-dismiss="modal">Cancel</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 <div class="modal fade" id="viewPayElement" role="dialog">
   <div class="modal-dialog modal-wrapper">
     <div class="modal-content-wrap">
@@ -706,6 +720,34 @@
         </div>
         <div class="modal-footer d-flex justify-content-end align-items-center">
           <button mat-flat-button class="me-3">Delete</button>
+          <button mat-stroked-button data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="deactivate" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Deactivate Institution</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <div class="pb-3">
+            <div class="center">
+              <p>
+                Are you sure you want to deactivate this item? They will no
+                longer be accessible.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-end align-items-center">
+          <button mat-flat-button class="me-3">Deactivate</button>
           <button mat-stroked-button data-bs-dismiss="modal">Cancel</button>
         </div>
       </div>
