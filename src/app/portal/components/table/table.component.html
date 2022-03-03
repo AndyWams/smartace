@@ -115,9 +115,14 @@
       </thead>
       <tbody>
         <ng-container *ngIf="_identifier === 'inst_mgmt'">
-          <tr *ngFor="let item of _data">
+          <tr *ngFor="let item of institutionData">
             <td>
-              <mat-checkbox>{{ item.name }}</mat-checkbox>
+              <mat-checkbox
+                [value]="item"
+                [checked]="item.isSelected"
+                (change)="toggleCheck($event)"
+                >{{ item.name }}</mat-checkbox
+              >
             </td>
             <td>
               <span>{{ item.category }}</span>
@@ -168,9 +173,14 @@
           </tr>
         </ng-container>
         <ng-container *ngIf="_identifier === 'pay_elements'">
-          <tr *ngFor="let item of _data">
+          <tr *ngFor="let item of payElementsData">
             <td>
-              <mat-checkbox>{{ item.name }}</mat-checkbox>
+              <mat-checkbox
+                [value]="item"
+                [checked]="item.isSelected"
+                (change)="toggleCheck($event)"
+                >{{ item.name }}</mat-checkbox
+              >
             </td>
             <td>
               <span>{{ item.payType }}</span>
@@ -224,9 +234,14 @@
           </tr>
         </ng-container>
         <ng-container *ngIf="_identifier === 'pay_scale'">
-          <tr *ngFor="let item of _data">
+          <tr *ngFor="let item of payScaleData">
             <td>
-              <mat-checkbox>{{ item.name }}</mat-checkbox>
+              <mat-checkbox
+                [value]="item"
+                [checked]="item.isSelected"
+                (change)="toggleCheck($event)"
+                >{{ item.name }}</mat-checkbox
+              >
             </td>
             <td>
               <span>{{ item.payElement }}</span>
@@ -243,16 +258,10 @@
                   <ion-icon name="ellipsis-horizontal"></ion-icon>
                 </span>
                 <mat-menu #menu="matMenu">
+                  <button mat-menu-item>View</button>
                   <button
                     mat-menu-item
-                    data-bs-toggle="modal"
-                    data-bs-target="#viewPayElement"
-                  >
-                    View
-                  </button>
-                  <button
-                    mat-menu-item
-                    [routerLink]="['/portal/payroll/pay-element-setup']"
+                    [routerLink]="['/portal/payroll/pay-scale-setup']"
                     [queryParams]="{ query: 'edit' }"
                   >
                     Edit
@@ -261,7 +270,7 @@
                     mat-menu-item
                     class="txt-danger"
                     data-bs-toggle="modal"
-                    data-bs-target="#deletePayElement"
+                    data-bs-target="#deletePayScale"
                   >
                     Delete
                   </button>
@@ -319,6 +328,52 @@
           </li>
         </ul>
       </nav>
+    </div>
+  </div>
+</div>
+
+<!--Modal Components-->
+<div class="modal fade" id="employeeFilterBy" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Filter By</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <form class="pb-3">
+            <div class="form-wrap">
+              <div class="input">
+                <label>ID</label>
+                <input type="text" placeholder="Enter id" />
+              </div>
+              <div class="input">
+                <label>Department</label>
+                <select class="select" required>
+                  <option disabled="" selected="" value="">
+                    Select category
+                  </option>
+                </select>
+              </div>
+              <div class="input">
+                <label>Employement Date</label>
+                <input type="date" required />
+              </div>
+              <div class="d-flex align-items-center mt-5">
+                <button type="button" mat-flat-button class="me-3">
+                  Apply
+                </button>
+                <button mat-stroked-button data-bs-dismiss="modal">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -420,6 +475,50 @@
                     Select institution
                   </option>
                 </select>
+              </div>
+              <div class="d-flex align-items-center mt-5">
+                <button type="button" mat-flat-button class="me-3">
+                  Apply
+                </button>
+                <button mat-stroked-button data-bs-dismiss="modal">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="payScaleFilterBy" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Filter By</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <form class="pb-3">
+            <div class="form-wrap">
+              <div class="input">
+                <label>Scale Name</label>
+                <input type="text" placeholder="Enter scale name" />
+              </div>
+              <div class="input">
+                <label>Pay Elements</label>
+                <select class="select" required>
+                  <option disabled="" selected="" value="">
+                    Select pay elements
+                  </option>
+                </select>
+              </div>
+              <div class="input">
+                <label>Pay Frequency</label>
+                <input type="text" placeholder="Enter pay frequency" />
               </div>
               <div class="d-flex align-items-center mt-5">
                 <button type="button" mat-flat-button class="me-3">
@@ -565,6 +664,34 @@
           class="header-top d-flex justify-content-between align-items-center px-4 py-3"
         >
           <div class="title">Delete Pay Element</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <div class="pb-3">
+            <div class="center">
+              <p>
+                Are you sure you want to deactivate this item? They will no
+                longer be accessible.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-end align-items-center">
+          <button mat-flat-button class="me-3">Delete</button>
+          <button mat-stroked-button data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="deletePayScale" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Delete Pay Scale</div>
           <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
         </div>
         <div class="container">

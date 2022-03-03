@@ -200,6 +200,9 @@ mat-checkbox {
   .mat-ripple-element {
   background: $blue !important;
 }
+.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+  background: #9e9e9ea6 !important;
+}
 /* Material radio button style*/
 mat-radio-group {
   .mat-radio-button {

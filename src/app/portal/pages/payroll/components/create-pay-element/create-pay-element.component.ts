@@ -11,6 +11,7 @@ export class CreatePayElementComponent implements OnInit {
   queryString: string = '';
   predefinedPaymentMode: string = 'predefined';
   taxMode: string = 'default';
+  payType: string = 'Monthly';
   _isChecked: boolean = false;
   constructor(private route: ActivatedRoute, private router: Router) {}
 
@@ -33,5 +34,9 @@ export class CreatePayElementComponent implements OnInit {
   handleSlideToggle(event: any) {
     this._isChecked = event.checked;
     this.taxMode = 'default';
+  }
+  handlePayTypeSelect(event: any) {
+    console.log(event.target.value);
+    this.payType = event.target.value;
   }
 }

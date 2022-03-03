@@ -14,14 +14,22 @@
         <div class="input mb-0">
           <select class="select" required>
             <option disabled="" selected="" value="">Select item</option>
+            <option value="Statutory">Statutory</option>
+            <option value="Non-statutory">Non-statutory</option>
           </select>
         </div>
       </div>
       <div class="grid align-items-center">
-        <label>Payroll Type</label>
+        <label>Pay Type</label>
         <div class="input mb-0">
-          <select class="select" required>
+          <select
+            class="select"
+            required
+            (change)="handlePayTypeSelect($event)"
+          >
             <option disabled="" selected="" value="">Select type</option>
+            <option value="Monthly">Monthly</option>
+            <option value="Time-shift">Time-shift</option>
           </select>
         </div>
       </div>
@@ -31,13 +39,16 @@
           <input type="text" placeholder="Element name" />
         </div>
       </div>
-      <div class="grid align-items-center">
+      <div class="grid align-items-center" *ngIf="payType === 'Monthly'">
         <label>Element Category</label>
         <div class="input mb-0">
           <select class="select" required>
             <option disabled="" selected="" value="">
               Select element category
             </option>
+            <option value="Taxable">Taxable</option>
+            <option value="Non-Taxable">Non-Taxable</option>
+            <option value="Bonus">Bonus</option>
           </select>
         </div>
       </div>
@@ -48,10 +59,40 @@
             <option disabled="" selected="" value="">
               Select element type
             </option>
+            <option value="Earnings">Earnings</option>
+            <option value="Deduction">Deduction</option>
           </select>
         </div>
       </div>
-      <div class="grid align-items-center">
+      <div class="grid align-items-center" *ngIf="payType === 'Time-shift'">
+        <label>Earning Type</label>
+        <div class="input mb-0">
+          <select class="select" required>
+            <option disabled="" selected="" value="">
+              Select element type
+            </option>
+            <option value="Salary">Salary</option>
+            <option value="Wages">Wages</option>
+            <option value="Overtime">Overtime</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid align-items-center" *ngIf="payType === 'Time-shift'">
+        <label>Amount Per Hour</label>
+        <div class="input mb-0">
+          <input type="text" placeholder="Amount per hour" />
+        </div>
+      </div>
+      <div class="grid align-items-center" *ngIf="payType === 'Time-shift'">
+        <label
+          >No of Work Hours
+          <span class="italize txt-sm">(Optional)</span></label
+        >
+        <div class="input mb-0">
+          <input type="text" placeholder=" No of work hours" />
+        </div>
+      </div>
+      <div class="grid align-items-center" *ngIf="payType === 'Monthly'">
         <label>Payment Mode</label>
         <mat-radio-group aria-label="Select an option">
           <mat-radio-button
@@ -73,7 +114,7 @@
       <!--Variable-->
       <div
         class="grid align-items-center"
-        *ngIf="predefinedPaymentMode === 'variable'"
+        *ngIf="predefinedPaymentMode === 'variable' && payType === 'Monthly'"
       >
         <label>Variable</label>
         <div class="d-flex align-items-center">
@@ -82,8 +123,11 @@
           </div>
           <span class="mx-3 txt-sm">Of</span>
           <div class="input mb-0">
+            <!--Change to multi select-->
             <select class="select" required>
               <option disabled="" selected="" value="">Pay element</option>
+              <option value="Pay Element 1">Pay Element 1</option>
+              <option value="Pay Element 2">Pay Element 2</option>
             </select>
           </div>
         </div>
@@ -91,7 +135,7 @@
       <!--Amount-->
       <div
         class="grid align-items-center"
-        *ngIf="predefinedPaymentMode === 'predefined'"
+        *ngIf="predefinedPaymentMode === 'predefined' && payType === 'Monthly'"
       >
         <label>Amount</label>
         <div class="input mb-0">
@@ -143,9 +187,10 @@
         <label>Tax Type</label>
         <div class="input mb-0">
           <select class="select" required>
-            <option disabled="" selected="" value="">
-              Select category type
-            </option>
+            <option disabled="" selected="" value="">Select tax type</option>
+            <option value="Value Added Tax">Value Added Tax</option>
+            <option value="Withholding Tax">Withholding Tax</option>
+            <option value="Personal Income Tax">Personal Income Tax</option>
           </select>
         </div>
       </div>

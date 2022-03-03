@@ -1,4 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { filter } from 'rxjs/internal/operators/filter';
 import { employeeData } from 'src/assets/raw_data';
 
 @Component({
@@ -8,6 +10,7 @@ import { employeeData } from 'src/assets/raw_data';
 })
 export class CreatePayScaleComponent implements OnInit {
   @ViewChild('selectRef') selectRef: ElementRef;
+  queryString: string = '';
   _payElements: string[] = ['Item1', 'Item2', 'Item3', 'Item4'];
   _payFrequencies: string[] = [
     'Daily',
@@ -18,9 +21,18 @@ export class CreatePayScaleComponent implements OnInit {
   ];
   _selectedPayElements: string[] = [];
   data = employeeData;
-  constructor() {}
+  constructor(private route: ActivatedRoute, private router: Router) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.route.queryParams
+      .pipe(filter((params) => params.query))
+      .subscribe((params) => {
+        this.queryString = params.query;
+      });
+    if (this.queryString === '') {
+      this.router.navigate(['/portal/payroll/pay-scale']);
+    }
+  }
   hanglePayElementSelect(event: any) {
     if (event.target.value !== null) {
       this._selectedPayElements.push(event.target.value);
