@@ -14,6 +14,7 @@ import {
 })
 export class CreatePaymentInstitutionComponent implements OnInit {
   queryString: string = '';
+  categoryType: string = 'predefined';
   constructor(private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
@@ -25,5 +26,8 @@ export class CreatePaymentInstitutionComponent implements OnInit {
     if (this.queryString === '') {
       this.router.navigate(['/portal/payroll/institute-management']);
     }
+  }
+  handleCategorySelect(event: any) {
+    this.categoryType = event.target.value;
   }
 }

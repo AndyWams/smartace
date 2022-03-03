@@ -36,7 +36,6 @@ export class CreatePayElementComponent implements OnInit {
     this.taxMode = 'default';
   }
   handlePayTypeSelect(event: any) {
-    console.log(event.target.value);
     this.payType = event.target.value;
   }
 }

@@ -19,9 +19,22 @@
       <div class="grid align-items-center">
         <label>Category</label>
         <div class="input mb-0">
-          <select class="select" required>
+          <select
+            class="select"
+            required
+            (change)="handleCategorySelect($event)"
+          >
             <option disabled="" selected="" value="">Select category</option>
+            <option value="Tax">Tax</option>
+            <option value="Union">Union</option>
+            <option value="New">Create New</option>
           </select>
+        </div>
+      </div>
+      <div class="grid align-items-center" *ngIf="categoryType === 'New'">
+        <label>New Category</label>
+        <div class="input mb-0">
+          <input type="text" placeholder="Enter category name" />
         </div>
       </div>
       <div class="grid align-items-center">
