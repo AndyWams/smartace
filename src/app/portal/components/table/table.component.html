@@ -336,7 +336,7 @@
               <mat-checkbox
                 [value]="item"
                 [checked]="item.isSelected"
-                (change)="toggleCheck($event, i)"
+                (change)="toggleCheck($event, item.id, i)"
                 >{{ item.name }}</mat-checkbox
               >
             </td>
@@ -397,7 +397,7 @@
               <mat-checkbox
                 [value]="item"
                 [checked]="item.isSelected"
-                (change)="toggleCheck($event, i)"
+                (change)="toggleCheck($event, item.id, i)"
                 >{{ item.name }}</mat-checkbox
               >
             </td>
