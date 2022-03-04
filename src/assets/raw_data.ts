@@ -140,7 +140,7 @@ export const employeeData = [
 ];
 export const payscalePayrollData = [
   {
-    id: 1,
+    id: '1',
     name: 'Tolu Aina',
     empId: '2345',
     totalEarning: '₦250,000',
@@ -149,7 +149,7 @@ export const payscalePayrollData = [
     hoursWorked: '8',
   },
   {
-    id: 2,
+    id: '2',
     name: 'John Doe',
     empId: '2345',
     totalEarning: '₦250,000',
@@ -158,7 +158,7 @@ export const payscalePayrollData = [
     hoursWorked: '8',
   },
   {
-    id: 3,
+    id: '3',
     name: 'Jane Doe',
     empId: '2345',
     totalEarning: '₦250,000',
@@ -167,7 +167,7 @@ export const payscalePayrollData = [
     hoursWorked: '8',
   },
   {
-    id: 4,
+    id: '4',
     name: 'Andrew Wams',
     empId: '2345',
     totalEarning: '₦250,000',

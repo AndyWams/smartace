@@ -47,10 +47,11 @@ export class TableComponent implements OnInit {
   }
   ngAfterViewInit() {}
 
-  toggleCheck(event: any, index: number) {
+  toggleCheck(event: any, _id: any, _index: number) {
     let checkedItems = 0;
 
-    let i = index;
+    let id = parseInt(_id);
+    let index = _index;
 
     let data = {
       ...event.source.value,
@@ -59,34 +60,29 @@ export class TableComponent implements OnInit {
 
     if (event.checked) {
       this.selectedItems.push(data);
-      checkedItems = this.selectedItems.filter((x) => x.isSelected).length;
-      this.checkSourceData(_types.EMPLOYEES, i);
-      this.checkSourceData(_types.INSTITUTION, i);
-      this.checkSourceData(_types.PAYELEMENTS, i);
-      this.checkSourceData(_types.PAYSCALE, i);
-      this.checkSourceData(_types.EMPLOYEESONPAYSCALE, i);
-      this.checkSourceData(_types.EMPLOYEESONPAYSCALEPAYROLL, i);
-      this.checkSourceData(_types.EMPLOYEESONGROSSPAYROLL, i);
+      this.checkSourceData(_types.EMPLOYEES, index);
+      this.checkSourceData(_types.INSTITUTION, index);
+      this.checkSourceData(_types.PAYELEMENTS, index);
+      this.checkSourceData(_types.PAYSCALE, index);
+      this.checkSourceData(_types.EMPLOYEESONPAYSCALE, index);
+      this.checkSourceData(_types.EMPLOYEESONPAYSCALEPAYROLL, index);
+      this.checkSourceData(_types.EMPLOYEESONGROSSPAYROLL, index);
     } else {
-      checkedItems = this.selectedItems.filter((x) => x.isSelected).length;
-      checkedItems = checkedItems - 1;
-      if (checkedItems <= this.selectedItems.length) {
-        this.allChecked = false;
-        this.indeterminate = true;
-        this.removeTblBgRenderer(i);
-      }
-      if (checkedItems == 0) {
-        this.indeterminate = null;
+      let removeIndex = this.selectedItems
+        .map((item) => {
+          return parseInt(item.id);
+        })
+        .indexOf(id);
+      // remove object
+      this.selectedItems.splice(removeIndex, 1);
+      this.allChecked = false;
+      this.indeterminate = true;
+      this.removeTblBgRenderer(index);
+      if (this.selectedItems.length === 0) {
         this.allChecked = null;
-        this.removeTblBgRenderer(i);
-      }
-      let index = this.selectedItems.indexOf(data);
-      if (index === -1) {
-        this.selectedItems.splice(index, 1);
+        this.indeterminate = false;
       }
     }
-
-    return this.selectedItems;
   }
 
   setAll(checked: boolean) {
@@ -107,7 +103,7 @@ export class TableComponent implements OnInit {
         ? this.employeesOnGrossPayrollData
         : null;
     this.selectedItems = _helperFunc.handleCheckedData(checked, source);
-    if (this.selectedItems.length) {
+    if (this.selectedItems.length && checked) {
       this.selectedItems.map((_, i) => {
         this.addTblBgRenderer(i);
       });

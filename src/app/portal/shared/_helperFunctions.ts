@@ -95,7 +95,7 @@ export const getEmployeeGrossPayrollDataMap = (data: any) => {
 
 export const handleCheckedData = (chk: boolean, source: any) => {
   let selectedItems = [];
-  source.forEach((item) => {
+  source.forEach((item: any) => {
     item.isSelected = chk;
     let data = {
       ...item,
@@ -103,14 +103,10 @@ export const handleCheckedData = (chk: boolean, source: any) => {
     };
     if (chk) {
       selectedItems.push(data);
-
       let uniqList = [...new Set(selectedItems)];
       selectedItems = uniqList;
     } else {
-      let index = selectedItems.indexOf(data);
-      if (index === -1) {
-        selectedItems.splice(index, 1);
-      }
+      selectedItems.splice(-1, 1);
     }
   });
   return selectedItems;

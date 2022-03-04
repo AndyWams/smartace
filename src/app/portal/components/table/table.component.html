@@ -3,6 +3,7 @@
     <div class="toolbar mb-5 adjust-wrap">
       <div class="d-flex align-items-center justify-content-start adjust-flex">
         <div class="d-flex align-items-center mr-1" style="width: fit-content">
+          <!-- Master Checkbox-->
           <mat-checkbox
             [indeterminate]="indeterminate"
             [checked]="allChecked"
@@ -172,7 +173,7 @@
               <mat-checkbox
                 [value]="item"
                 [checked]="item.isSelected"
-                (change)="toggleCheck($event, i)"
+                (change)="toggleCheck($event, item.id, i)"
                 >{{ item.name }}</mat-checkbox
               >
             </td>
@@ -196,7 +197,7 @@
               <mat-checkbox
                 [value]="item"
                 [checked]="item.isSelected"
-                (change)="toggleCheck($event, i)"
+                (change)="toggleCheck($event, item.id, i)"
                 >{{ item.name }}</mat-checkbox
               >
             </td>
@@ -220,7 +221,7 @@
               <mat-checkbox
                 [value]="item"
                 [checked]="item.isSelected"
-                (change)="toggleCheck($event, i)"
+                (change)="toggleCheck($event, item.id, i)"
                 >{{ item.name }}</mat-checkbox
               >
             </td>
@@ -250,7 +251,7 @@
               <mat-checkbox
                 [value]="item"
                 [checked]="item.isSelected"
-                (change)="toggleCheck($event, i)"
+                (change)="toggleCheck($event, item.id, i)"
                 >{{ item.name }}</mat-checkbox
               >
             </td>
@@ -277,7 +278,7 @@
               <mat-checkbox
                 [value]="item"
                 [checked]="item.isSelected"
-                (change)="toggleCheck($event, i)"
+                (change)="toggleCheck($event, item.id, i)"
                 >{{ item.name }}</mat-checkbox
               >
             </td>
