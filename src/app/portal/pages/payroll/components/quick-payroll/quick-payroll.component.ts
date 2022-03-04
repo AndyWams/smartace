@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { payscalePayrollData, grossPayrollData } from 'src/assets/raw_data';
 
 @Component({
   selector: 'app-quick-payroll',
@@ -8,6 +9,8 @@ import { Component, OnInit } from '@angular/core';
 export class QuickPayrollComponent implements OnInit {
   runByItem: string = 'Payscale';
   payChannel: string = 'Master';
+  data = payscalePayrollData;
+  data_ = grossPayrollData;
   constructor() {}
 
   ngOnInit(): void {}

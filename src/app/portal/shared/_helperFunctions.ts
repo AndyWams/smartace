@@ -60,6 +60,38 @@ export const getPayScaleDataMap = (data: any) => {
   });
   return payScaleData;
 };
+export const getEmployeePayScalePayrollDataMap = (data: any) => {
+  let empPayScalePayrollData = [];
+  data.map((item: any) => {
+    const friendlyDataMap: any = {};
+    friendlyDataMap.id = item.id;
+    friendlyDataMap.name = item.name;
+    friendlyDataMap.empId = item.empId;
+    friendlyDataMap.totalEarning = item.totalEarning;
+    friendlyDataMap.totalDeduction = item.totalDeduction;
+    friendlyDataMap.netPay = item.netPay;
+    friendlyDataMap.hoursWorked = item.hoursWorked;
+    friendlyDataMap.isSelected = false;
+    empPayScalePayrollData.push(friendlyDataMap);
+  });
+  return empPayScalePayrollData;
+};
+export const getEmployeeGrossPayrollDataMap = (data: any) => {
+  let empGrossPayrollData = [];
+  data.map((item: any) => {
+    const friendlyDataMap: any = {};
+    friendlyDataMap.id = item.id;
+    friendlyDataMap.name = item.name;
+    friendlyDataMap.grossMothlySalary = item.grossMothlySalary;
+    friendlyDataMap.earnings = item.earnings;
+    friendlyDataMap.deductions = item.deductions;
+    friendlyDataMap.netSalary = item.netSalary;
+    friendlyDataMap.prorateDeduction = item.prorateDeduction;
+    friendlyDataMap.isSelected = false;
+    empGrossPayrollData.push(friendlyDataMap);
+  });
+  return empGrossPayrollData;
+};
 
 export const handleCheckedData = (chk: boolean, source: any) => {
   let selectedItems = [];

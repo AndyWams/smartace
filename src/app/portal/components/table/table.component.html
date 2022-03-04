@@ -25,7 +25,7 @@
           <input type="text" placeholder="Search" />
         </div>
         <!-- Institute Mgmt Filter-->
-        <div *ngIf="_identifier === 'inst_mgmt'">
+        <div *ngIf="_identifier === 'INSTITUTION'">
           <button
             mat-stroked-button
             class="mat-stroked-secondary mr-1"
@@ -36,7 +36,7 @@
           </button>
         </div>
         <!-- Pay Elements Filter-->
-        <div *ngIf="_identifier === 'pay_elements'">
+        <div *ngIf="_identifier === 'PAYELEMENTS'">
           <button
             mat-stroked-button
             class="mat-stroked-secondary mr-1"
@@ -47,7 +47,7 @@
           </button>
         </div>
         <!-- Pay Scale Filter-->
-        <div *ngIf="_identifier === 'pay_scale'">
+        <div *ngIf="_identifier === 'PAYSCALE'">
           <button
             mat-stroked-button
             class="mat-stroked-secondary mr-1"
@@ -57,11 +57,32 @@
             Filter <ion-icon name="options" class="mx-3"></ion-icon>
           </button>
         </div>
+        <!-- PayscalePayroll  Filter-->
+        <div *ngIf="_identifier === 'EMPLOYEESONPAYSCALEPAYROLL'">
+          <button
+            mat-stroked-button
+            class="mat-stroked-secondary mr-1"
+            data-bs-toggle="modal"
+            data-bs-target="#payscalePayrollFilterBy"
+          >
+            Filter <ion-icon name="options" class="mx-3"></ion-icon>
+          </button>
+        </div>
+        <!-- PayscalePayroll  Filter-->
+        <div *ngIf="_identifier === 'EMPLOYEESONGROSSPAYROLL'">
+          <button
+            mat-stroked-button
+            class="mat-stroked-secondary mr-1"
+            data-bs-toggle="modal"
+            data-bs-target="#grossPayrollFilterBy"
+          >
+            Filter <ion-icon name="options" class="mx-3"></ion-icon>
+          </button>
+        </div>
         <!-- Employee Filter-->
         <div
           *ngIf="
-            _identifier === 'employees' ||
-            _identifier === 'employees_on_payscale'
+            _identifier === 'EMPLOYEES' || _identifier === 'EMPLOYEESONPAYSCALE'
           "
         >
           <button
@@ -73,6 +94,7 @@
             Filter <ion-icon name="options" class="mx-3"></ion-icon>
           </button>
         </div>
+        <!-- Sort by -->
         <div class="d-flex align-items-center mr-1">
           <label class="me-3">Sort by</label>
           <button
@@ -91,27 +113,40 @@
             </button>
           </mat-menu>
         </div>
+        <!-- Export as-->
         <div
           *ngIf="
-            _identifier !== 'employees' &&
-            _identifier !== 'employees_on_payscale'
+            _identifier !== 'EMPLOYEES' &&
+            _identifier !== 'EMPLOYEESONPAYSCALE' &&
+            _identifier !== 'EMPLOYEESONGROSSPAYROLL' &&
+            _identifier !== 'EMPLOYEESONPAYSCALEPAYROLL'
           "
         >
           <button mat-stroked-button class="mat-stroked-secondary mr-1">
             Export as
           </button>
         </div>
+        <!-- Print-->
         <div
           *ngIf="
-            _identifier !== 'employees' &&
-            _identifier !== 'employees_on_payscale'
+            _identifier !== 'EMPLOYEES' &&
+            _identifier !== 'EMPLOYEESONPAYSCALE' &&
+            _identifier !== 'EMPLOYEESONGROSSPAYROLL' &&
+            _identifier !== 'EMPLOYEESONPAYSCALEPAYROLL'
           "
         >
           <button mat-button class="print">
             <mat-icon class="me-2">print</mat-icon> Print
           </button>
         </div>
-        <div *ngIf="_identifier === 'employees'">
+        <!--  Bulk upload-->
+        <div
+          *ngIf="
+            _identifier === 'EMPLOYEES' ||
+            _identifier === 'EMPLOYEESONPAYSCALEPAYROLL' ||
+            _identifier === 'EMPLOYEESONGROSSPAYROLL'
+          "
+        >
           <button
             mat-stroked-button
             class="mat-stroked-primary mat-stroked-secondary"
@@ -131,7 +166,112 @@
         </tr>
       </thead>
       <tbody>
-        <ng-container *ngIf="_identifier === 'inst_mgmt'">
+        <ng-container *ngIf="_identifier === 'EMPLOYEES'">
+          <tr *ngFor="let item of employeeData; let i = index" #tbl_Rows>
+            <td>
+              <mat-checkbox
+                [value]="item"
+                [checked]="item.isSelected"
+                (change)="toggleCheck($event, i)"
+                >{{ item.name }}</mat-checkbox
+              >
+            </td>
+            <td>
+              <span>{{ item.empId }}</span>
+            </td>
+            <td>
+              <span>{{ item.department }}</span>
+            </td>
+            <td>
+              <span>{{ item.dateCreated }}</span>
+            </td>
+          </tr>
+        </ng-container>
+        <ng-container *ngIf="_identifier === 'EMPLOYEESONPAYSCALE'">
+          <tr
+            *ngFor="let item of employeesOnPayscaleData; let i = index"
+            #tbl_Rows
+          >
+            <td>
+              <mat-checkbox
+                [value]="item"
+                [checked]="item.isSelected"
+                (change)="toggleCheck($event, i)"
+                >{{ item.name }}</mat-checkbox
+              >
+            </td>
+            <td>
+              <span>{{ item.empId }}</span>
+            </td>
+            <td>
+              <span>{{ item.department }}</span>
+            </td>
+            <td>
+              <span>{{ item.dateCreated }}</span>
+            </td>
+          </tr>
+        </ng-container>
+        <ng-container *ngIf="_identifier === 'EMPLOYEESONPAYSCALEPAYROLL'">
+          <tr
+            *ngFor="let item of employeesOnPayscalePayrollData; let i = index"
+            #tbl_Rows
+          >
+            <td>
+              <mat-checkbox
+                [value]="item"
+                [checked]="item.isSelected"
+                (change)="toggleCheck($event, i)"
+                >{{ item.name }}</mat-checkbox
+              >
+            </td>
+            <td>
+              <span>{{ item.empId }}</span>
+            </td>
+            <td>
+              <span>{{ item.totalEarning }}</span>
+            </td>
+            <td>
+              <span>{{ item.totalDeduction }}</span>
+            </td>
+            <td>
+              <span>{{ item.netPay }}</span>
+            </td>
+            <td>
+              <span>{{ item.hoursWorked }}</span>
+            </td>
+          </tr>
+        </ng-container>
+        <ng-container *ngIf="_identifier === 'EMPLOYEESONGROSSPAYROLL'">
+          <tr
+            *ngFor="let item of employeesOnGrossPayrollData; let i = index"
+            #tbl_Rows
+          >
+            <td>
+              <mat-checkbox
+                [value]="item"
+                [checked]="item.isSelected"
+                (change)="toggleCheck($event, i)"
+                >{{ item.name }}</mat-checkbox
+              >
+            </td>
+            <td>
+              <span>{{ item.grossMothlySalary }}</span>
+            </td>
+            <td>
+              <span>{{ item.earnings }}</span>
+            </td>
+            <td>
+              <span>{{ item.deductions }}</span>
+            </td>
+            <td>
+              <span>{{ item.netSalary }}</span>
+            </td>
+            <td>
+              <span>{{ item.prorateDeduction }}</span>
+            </td>
+          </tr>
+        </ng-container>
+        <ng-container *ngIf="_identifier === 'INSTITUTION'">
           <tr *ngFor="let item of institutionData; let i = index" #tbl_Rows>
             <td>
               <mat-checkbox
@@ -189,7 +329,7 @@
             </td>
           </tr>
         </ng-container>
-        <ng-container *ngIf="_identifier === 'pay_elements'">
+        <ng-container *ngIf="_identifier === 'PAYELEMENTS'">
           <tr *ngFor="let item of payElementsData; let i = index" #tbl_Rows>
             <td>
               <mat-checkbox
@@ -250,7 +390,7 @@
             </td>
           </tr>
         </ng-container>
-        <ng-container *ngIf="_identifier === 'pay_scale'">
+        <ng-container *ngIf="_identifier === 'PAYSCALE'">
           <tr *ngFor="let item of payScaleData; let i = index" #tbl_Rows>
             <td>
               <mat-checkbox
@@ -299,51 +439,6 @@
                   </button>
                 </mat-menu>
               </div>
-            </td>
-          </tr>
-        </ng-container>
-        <ng-container *ngIf="_identifier === 'employees'">
-          <tr *ngFor="let item of employeeData; let i = index" #tbl_Rows>
-            <td>
-              <mat-checkbox
-                [value]="item"
-                [checked]="item.isSelected"
-                (change)="toggleCheck($event, i)"
-                >{{ item.name }}</mat-checkbox
-              >
-            </td>
-            <td>
-              <span>{{ item.empId }}</span>
-            </td>
-            <td>
-              <span>{{ item.department }}</span>
-            </td>
-            <td>
-              <span>{{ item.dateCreated }}</span>
-            </td>
-          </tr>
-        </ng-container>
-        <ng-container *ngIf="_identifier === 'employees_on_payscale'">
-          <tr
-            *ngFor="let item of employeesOnPayscaleData; let i = index"
-            #tbl_Rows
-          >
-            <td>
-              <mat-checkbox
-                [value]="item"
-                [checked]="item.isSelected"
-                (change)="toggleCheck($event, i)"
-                >{{ item.name }}</mat-checkbox
-              >
-            </td>
-            <td>
-              <span>{{ item.empId }}</span>
-            </td>
-            <td>
-              <span>{{ item.department }}</span>
-            </td>
-            <td>
-              <span>{{ item.dateCreated }}</span>
             </td>
           </tr>
         </ng-container>
@@ -566,6 +661,102 @@
               <div class="input">
                 <label>Pay Frequency</label>
                 <input type="text" placeholder="Enter pay frequency" />
+              </div>
+              <div class="d-flex align-items-center mt-5">
+                <button type="button" mat-flat-button class="me-3">
+                  Apply
+                </button>
+                <button mat-stroked-button data-bs-dismiss="modal">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="payscalePayrollFilterBy" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Filter By</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <form class="pb-3">
+            <div class="form-wrap">
+              <div class="input">
+                <label>ID</label>
+                <input type="text" placeholder="Enter id" />
+              </div>
+              <div class="input">
+                <label>Total Earnings</label>
+                <input type="number" placeholder="Enter amount" />
+              </div>
+              <div class="input">
+                <label>Total Deductions</label>
+                <input type="number" placeholder="Enter amount" />
+              </div>
+              <div class="input">
+                <label>Net Pay</label>
+                <input type="number" placeholder="Enter amount" />
+              </div>
+              <div class="input">
+                <label>Hours Worked</label>
+                <input type="number" placeholder="Enter hours" />
+              </div>
+              <div class="d-flex align-items-center mt-5">
+                <button type="button" mat-flat-button class="me-3">
+                  Apply
+                </button>
+                <button mat-stroked-button data-bs-dismiss="modal">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="grossPayrollFilterBy" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Filter By</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <form class="pb-3">
+            <div class="form-wrap">
+              <div class="input">
+                <label>Gross Monthly Salary</label>
+                <input type="text" placeholder="Enter amount" />
+              </div>
+              <div class="input">
+                <label>Earnings</label>
+                <input type="number" placeholder="Enter amount" />
+              </div>
+              <div class="input">
+                <label>Deductions</label>
+                <input type="number" placeholder="Enter amount" />
+              </div>
+              <div class="input">
+                <label>Net Salary</label>
+                <input type="number" placeholder="Enter amount" />
+              </div>
+              <div class="input">
+                <label>Prorate Deduction</label>
+                <input type="number" placeholder="Enter hours" />
               </div>
               <div class="d-flex align-items-center mt-5">
                 <button type="button" mat-flat-button class="me-3">

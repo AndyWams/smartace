@@ -5,17 +5,12 @@ import {
   Input,
   OnInit,
   Output,
-  QueryList,
   Renderer2,
   ViewChildren,
 } from '@angular/core';
-import {
-  getEmployeeDataMap,
-  getInstitutionDataMap,
-  getPayElementsDataMap,
-  getPayScaleDataMap,
-  handleCheckedData,
-} from '../../shared/_helperFunctions';
+
+import * as _helperFunc from '../../shared';
+import * as _types from '../../shared';
 
 @Component({
   selector: 'app-table',
@@ -32,17 +27,23 @@ export class TableComponent implements OnInit {
   payElementsData: any[];
   payScaleData: any[];
   employeesOnPayscaleData: any[];
+  employeesOnGrossPayrollData: any[];
+  employeesOnPayscalePayrollData: any[];
   selectedItems: any[] = [];
   allChecked: boolean = false;
   indeterminate: boolean = false;
   constructor(private renderer: Renderer2) {}
 
   ngOnInit(): void {
-    this.employeeData = getEmployeeDataMap(this._data);
-    this.employeesOnPayscaleData = getEmployeeDataMap(this._data);
-    this.institutionData = getInstitutionDataMap(this._data);
-    this.payElementsData = getPayElementsDataMap(this._data);
-    this.payScaleData = getPayScaleDataMap(this._data);
+    this.employeeData = _helperFunc.getEmployeeDataMap(this._data);
+    this.employeesOnPayscaleData = _helperFunc.getEmployeeDataMap(this._data);
+    this.employeesOnPayscalePayrollData =
+      _helperFunc.getEmployeePayScalePayrollDataMap(this._data);
+    this.employeesOnGrossPayrollData =
+      _helperFunc.getEmployeeGrossPayrollDataMap(this._data);
+    this.institutionData = _helperFunc.getInstitutionDataMap(this._data);
+    this.payElementsData = _helperFunc.getPayElementsDataMap(this._data);
+    this.payScaleData = _helperFunc.getPayScaleDataMap(this._data);
   }
   ngAfterViewInit() {}
 
@@ -59,11 +60,13 @@ export class TableComponent implements OnInit {
     if (event.checked) {
       this.selectedItems.push(data);
       checkedItems = this.selectedItems.filter((x) => x.isSelected).length;
-      this.checkSourceData('Employee', i);
-      this.checkSourceData('Institution', i);
-      this.checkSourceData('PayElements', i);
-      this.checkSourceData('PayScale', i);
-      this.checkSourceData('EmpOnPayScale', i);
+      this.checkSourceData(_types.EMPLOYEES, i);
+      this.checkSourceData(_types.INSTITUTION, i);
+      this.checkSourceData(_types.PAYELEMENTS, i);
+      this.checkSourceData(_types.PAYSCALE, i);
+      this.checkSourceData(_types.EMPLOYEESONPAYSCALE, i);
+      this.checkSourceData(_types.EMPLOYEESONPAYSCALEPAYROLL, i);
+      this.checkSourceData(_types.EMPLOYEESONGROSSPAYROLL, i);
     } else {
       checkedItems = this.selectedItems.filter((x) => x.isSelected).length;
       checkedItems = checkedItems - 1;
@@ -88,18 +91,22 @@ export class TableComponent implements OnInit {
 
   setAll(checked: boolean) {
     let source =
-      this._identifier === 'inst_mgmt'
+      this._identifier === _types.INSTITUTION
         ? this.institutionData
-        : this._identifier === 'employees'
+        : this._identifier === _types.EMPLOYEES
         ? this.employeeData
-        : this._identifier === 'pay_elements'
+        : this._identifier === _types.PAYELEMENTS
         ? this.payElementsData
-        : this._identifier === 'pay_scale'
+        : this._identifier === _types.PAYSCALE
         ? this.payScaleData
-        : this._identifier === 'employees_on_payscale'
+        : this._identifier === _types.EMPLOYEESONPAYSCALE
         ? this.employeesOnPayscaleData
-        : '';
-    this.selectedItems = handleCheckedData(checked, source);
+        : this._identifier === _types.EMPLOYEESONPAYSCALEPAYROLL
+        ? this.employeesOnPayscalePayrollData
+        : this._identifier === _types.EMPLOYEESONGROSSPAYROLL
+        ? this.employeesOnGrossPayrollData
+        : null;
+    this.selectedItems = _helperFunc.handleCheckedData(checked, source);
     if (this.selectedItems.length) {
       this.selectedItems.map((_, i) => {
         this.addTblBgRenderer(i);
@@ -115,20 +122,26 @@ export class TableComponent implements OnInit {
     let data: any;
     let checkedItems = this.selectedItems.filter((x) => x.isSelected).length;
     switch (type) {
-      case (type = 'Employee'):
+      case (type = _types.EMPLOYEES):
         data = this.employeeData;
         this.getSwitch(checkedItems, data, index);
-      case (type = 'Institution'):
+      case (type = _types.INSTITUTION):
         data = this.institutionData;
         this.getSwitch(checkedItems, data, index);
-      case (type = 'PayElements'):
+      case (type = _types.PAYELEMENTS):
         data = this.payElementsData;
         this.getSwitch(checkedItems, data, index);
-      case (type = 'PayScale'):
+      case (type = _types.PAYSCALE):
         data = this.payScaleData;
         this.getSwitch(checkedItems, data, index);
-      case (type = 'EmpOnPayScale'):
+      case (type = _types.EMPLOYEESONPAYSCALE):
         data = this.employeesOnPayscaleData;
+        this.getSwitch(checkedItems, data, index);
+      case (type = _types.EMPLOYEESONPAYSCALEPAYROLL):
+        data = this.employeesOnPayscalePayrollData;
+        this.getSwitch(checkedItems, data, index);
+      case (type = _types.EMPLOYEESONGROSSPAYROLL):
+        data = this.employeesOnGrossPayrollData;
         this.getSwitch(checkedItems, data, index);
       default:
         return null;
