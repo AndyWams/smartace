@@ -9,7 +9,7 @@ body,
 html {
   margin: 0;
   font-family: "Rubik", sans-serif;
-  overflow-x: hidden;
+  // overflow-x: hidden;
 }
 
 .title {
@@ -21,6 +21,12 @@ html {
   font-size: 18px;
   font-weight: 500;
   color: $black;
+}
+.fw-400 {
+  font-weight: 400;
+}
+.fw-500 {
+  font-weight: 500;
 }
 .txt-sm {
   font-size: 12px;
@@ -47,8 +53,15 @@ html {
 
 .grid {
   display: grid;
+  &.grid-row-gap-20 {
+    grid-row-gap: 20px;
+  }
   &--1fr--1fr {
     grid-template-columns: 1fr 1fr;
+    grid-column-gap: 20px;
+  }
+  &--2fr--1fr {
+    grid-template-columns: 2fr 1fr;
     grid-column-gap: 20px;
   }
   &--repeat--two {
@@ -56,5 +69,8 @@ html {
     grid-column-gap: 20px;
     grid-row-gap: 30px;
     align-items: center;
+  }
+  &--repeat--four {
+    grid-template-columns: repeat(4, 25%);
   }
 }

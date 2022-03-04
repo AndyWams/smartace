@@ -32,6 +32,7 @@ export class TableComponent implements OnInit {
   selectedItems: any[] = [];
   allChecked: boolean = false;
   indeterminate: boolean = false;
+  selected: boolean = false;
   constructor(private renderer: Renderer2) {}
 
   ngOnInit(): void {
@@ -48,8 +49,6 @@ export class TableComponent implements OnInit {
   ngAfterViewInit() {}
 
   toggleCheck(event: any, _id: any, _index: number) {
-    let checkedItems = 0;
-
     let id = parseInt(_id);
     let index = _index;
 
@@ -80,7 +79,7 @@ export class TableComponent implements OnInit {
       this.removeTblBgRenderer(index);
       if (this.selectedItems.length === 0) {
         this.allChecked = null;
-        this.indeterminate = false;
+        this.indeterminate = null;
       }
     }
   }
@@ -103,11 +102,13 @@ export class TableComponent implements OnInit {
         ? this.employeesOnGrossPayrollData
         : null;
     this.selectedItems = _helperFunc.handleCheckedData(checked, source);
+
     if (this.selectedItems.length && checked) {
       this.selectedItems.map((_, i) => {
         this.addTblBgRenderer(i);
       });
     } else {
+      this.selected = false;
       this.tblRows._results.map((x: any) => {
         this.renderer.removeClass(x.nativeElement, 'bg-wrap');
       });

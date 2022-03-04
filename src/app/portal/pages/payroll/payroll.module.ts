@@ -22,6 +22,7 @@ import { CreatePayElementComponent } from './components/create-pay-element/creat
 import { CreatePayScaleComponent } from './components/create-pay-scale/create-pay-scale.component';
 import { ViewPayscaleComponent } from './components/view-payscale/view-payscale.component';
 import { FileUploadComponent } from '../../components/file-upload/file-upload.component';
+import { ReviewEmployeePayrollComponent } from './components/review-employee-payroll/review-employee-payroll.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { FileUploadComponent } from '../../components/file-upload/file-upload.co
     CreatePayElementComponent,
     CreatePayScaleComponent,
     ViewPayscaleComponent,
+    ReviewEmployeePayrollComponent,
   ],
   imports: [CommonModule, PayrollRoutingModule, AngularMaterialModule],
   exports: [PayrollComponent],

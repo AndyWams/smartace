@@ -1,0 +1,86 @@
+@import "src/scss/_vars.scss";
+.icon-circ {
+  border: 1px solid #ccc;
+  width: 25px;
+  height: 25px;
+  mat-icon {
+    font-size: 18px;
+  }
+}
+.bg-white {
+  padding: 2em;
+  &.colored-border {
+    border-radius: 5px 5px 5px 0px;
+    &.border-blue {
+      border-top: 4px solid $blue;
+    }
+    &.border-green {
+      position: sticky !important;
+      top: 14%;
+      border-top: 4px solid $green;
+      display: block;
+      height: fit-content;
+    }
+  }
+  .overview {
+    .avatar {
+      border-radius: 50%;
+      img {
+        width: 40px;
+        height: 40px;
+      }
+    }
+    .grid {
+      &.w--full {
+        width: 100%;
+        grid-row-gap: 21px;
+      }
+
+      label {
+        font-size: 16px;
+        font-weight: 400;
+        span {
+          display: block;
+          font-size: 14px;
+          padding-bottom: 5px;
+          font-weight: 300;
+        }
+      }
+    }
+  }
+  section .grid {
+    .d-flex {
+      label {
+        font-weight: 100;
+      }
+      &:last-child label:last-child {
+        font-weight: bold;
+      }
+    }
+  }
+  .total {
+    padding: 1em 3em;
+    background: rgba($blue, 0.1);
+    margin-top: 3em;
+    border-radius: 4px;
+    .d-flex {
+      padding-right: 3em;
+      label:last-child {
+        font-weight: bold;
+        font-size: 20px;
+      }
+    }
+    &.adjust {
+      padding: 1em;
+      .d-flex {
+        padding-right: 0em;
+        label {
+          font-size: 16px;
+          &:last-child {
+            font-weight: bold;
+          }
+        }
+      }
+    }
+  }
+}

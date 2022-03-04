@@ -108,6 +108,9 @@ a {
   color: $blue !important;
   text-decoration: underline !important;
 }
+.btn--primary {
+  color: $blue;
+}
 .txt-danger {
   color: $red;
 }
@@ -115,4 +118,7 @@ a {
 .mat-flat-white {
   background: $white !important;
   color: $blue !important;
+}
+.fit-content {
+  width: fit-content;
 }
