@@ -29,14 +29,7 @@ export class CreatePayScaleComponent implements OnInit {
   constructor(private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
-    this.route.queryParams
-      .pipe(filter((params) => params.query))
-      .subscribe((params) => {
-        this.queryString = params.query;
-      });
-    if (this.queryString === '') {
-      this.router.navigate(['/portal/payroll/pay-scale']);
-    }
+    this.getRoutes();
   }
   hanglePayElementSelect(event: any) {
     if (event.target.value !== null) {
@@ -46,5 +39,15 @@ export class CreatePayScaleComponent implements OnInit {
   dropItem(index: number) {
     this._selectedPayElements.splice(index, 1);
     this.selectRef.nativeElement.value = '';
+  }
+  getRoutes() {
+    this.route.queryParams
+      .pipe(filter((params) => params.query))
+      .subscribe((params) => {
+        this.queryString = params.query;
+      });
+    if (this.queryString === '') {
+      this.router.navigate(['/portal/payroll/pay-scale']);
+    }
   }
 }

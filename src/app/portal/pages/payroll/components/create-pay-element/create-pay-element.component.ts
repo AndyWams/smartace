@@ -17,14 +17,7 @@ export class CreatePayElementComponent implements OnInit {
   constructor(private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
-    this.route.queryParams
-      .pipe(filter((params) => params.query))
-      .subscribe((params) => {
-        this.queryString = params.query;
-      });
-    if (this.queryString === '') {
-      this.router.navigate(['/portal/payroll/pay-elements']);
-    }
+    this.getRoutes();
   }
   handlePaymentModeToggle(event: any) {
     this.predefinedPaymentMode = event.value;
@@ -41,5 +34,15 @@ export class CreatePayElementComponent implements OnInit {
   }
   handlePayrollItemSelect(event: any) {
     this.payrollItem = event.target.value;
+  }
+  getRoutes() {
+    this.route.queryParams
+      .pipe(filter((params) => params.query))
+      .subscribe((params) => {
+        this.queryString = params.query;
+      });
+    if (this.queryString === '') {
+      this.router.navigate(['/portal/payroll/pay-elements']);
+    }
   }
 }

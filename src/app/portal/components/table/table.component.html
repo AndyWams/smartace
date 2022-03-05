@@ -243,7 +243,8 @@
             </td>
             <td>
               <a
-                routerLink="/portal/payroll/review-payroll"
+                [routerLink]="['/portal/payroll/review-payroll']"
+                [queryParams]="{ query: 'payscale' }"
                 mat-button
                 class="btn-link"
                 >View</a
@@ -279,7 +280,16 @@
             <td>
               <span>{{ item.prorateDeduction }}</span>
             </td>
-            <td><button mat-button class="btn-link">View</button></td>
+            <td>
+              <button
+                mat-button
+                [routerLink]="['/portal/payroll/review-payroll']"
+                [queryParams]="{ query: 'gross' }"
+                class="btn-link"
+              >
+                View
+              </button>
+            </td>
           </tr>
         </ng-container>
         <ng-container *ngIf="_identifier === 'INSTITUTION'">

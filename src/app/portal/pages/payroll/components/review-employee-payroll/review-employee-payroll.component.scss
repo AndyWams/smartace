@@ -59,7 +59,7 @@
     }
   }
   .total {
-    padding: 1em 3em;
+    padding: 1em 2em;
     background: rgba($blue, 0.1);
     margin-top: 3em;
     border-radius: 4px;
@@ -80,6 +80,29 @@
             font-weight: bold;
           }
         }
+      }
+    }
+  }
+
+  @media screen and (min-width: 320px) and (max-width: 991px) {
+    padding: 1em;
+    .overview {
+      .avatar {
+        &.me-3 {
+          margin: 0em 0em 2em !important;
+        }
+      }
+      .d-flex {
+        flex-direction: column;
+      }
+      .grid {
+        grid-template-columns: auto auto;
+      }
+    }
+    .total {
+      padding: 1em;
+      .d-flex {
+        padding-right: 0em;
       }
     }
   }
