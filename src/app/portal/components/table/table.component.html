@@ -5,10 +5,11 @@
         <div class="d-flex align-items-center mr-1" style="width: fit-content">
           <!-- Master Checkbox-->
           <mat-checkbox
+            #masterCheck
             [indeterminate]="indeterminate"
             [value]="allChecked"
             [checked]="allChecked"
-            (change)="setAll($event.checked)"
+            (change)="masterChecked($event.checked)"
           ></mat-checkbox>
           <button mat-icon-button [matMenuTriggerFor]="menu">
             <mat-icon>more_vert</mat-icon>

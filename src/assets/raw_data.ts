@@ -1,6 +1,6 @@
 export const iManagement = [
   {
-    id: 1,
+    id: '1',
     name: 'Pencom',
     category: 'Pension',
     accountName: '*******',
@@ -9,7 +9,7 @@ export const iManagement = [
     createdDate: '23rd Nov 1999',
   },
   {
-    id: 2,
+    id: '2',
     name: 'Pencom',
     category: 'Pension',
     accountName: '*******',
@@ -18,7 +18,7 @@ export const iManagement = [
     createdDate: '23rd Nov 1999',
   },
   {
-    id: 3,
+    id: '3',
     name: 'Pencom',
     category: 'Pension',
     accountName: '*******',
@@ -27,7 +27,7 @@ export const iManagement = [
     createdDate: '23rd Nov 1999',
   },
   {
-    id: 4,
+    id: '4',
     name: 'Pencom',
     category: 'Pension',
     accountName: '*******',
@@ -38,7 +38,7 @@ export const iManagement = [
 ];
 export const payElementData = [
   {
-    id: 1,
+    id: '1',
     name: 'Test',
     payType: 'Monthly Pay',
     elementName: 'Test Element',
@@ -48,7 +48,7 @@ export const payElementData = [
     institution: 'Pencom',
   },
   {
-    id: 2,
+    id: '2',
     name: 'Test',
     payType: 'Monthly Pay',
     elementName: 'Test Element',
@@ -58,7 +58,7 @@ export const payElementData = [
     institution: 'Pencom',
   },
   {
-    id: 3,
+    id: '3',
     name: 'Test',
     payType: 'Monthly Pay',
     elementName: 'Test Element',
@@ -68,7 +68,7 @@ export const payElementData = [
     institution: 'Pencom',
   },
   {
-    id: 4,
+    id: '4',
     name: 'Test',
     payType: 'Monthly Pay',
     elementName: 'Test Element',
@@ -80,28 +80,28 @@ export const payElementData = [
 ];
 export const payScaleData = [
   {
-    id: 1,
+    id: '1',
     name: 'Test Scale',
     payElement: 'Test Element, test 2',
     payFrequency: 'Monthly',
     noOfEmployees: '34',
   },
   {
-    id: 2,
+    id: '2',
     name: 'Test Scale',
     payElement: 'Test Element, test 2',
     payFrequency: 'Monthly',
     noOfEmployees: '34',
   },
   {
-    id: 3,
+    id: '3',
     name: 'Test Scale',
     payElement: 'Test Element, test 2',
     payFrequency: 'Monthly',
     noOfEmployees: '34',
   },
   {
-    id: 4,
+    id: '4',
     name: 'Test Scale',
     payElement: 'Test Element, test 2',
     payFrequency: 'Monthly',
@@ -110,28 +110,28 @@ export const payScaleData = [
 ];
 export const employeeData = [
   {
-    id: 1,
+    id: '1',
     name: 'John Doe',
     empId: '2345',
     department: 'Products',
     dateCreated: '23rd Nov 1999',
   },
   {
-    id: 2,
+    id: '2',
     name: 'Jane Doe',
     empId: '2346',
     department: 'Products',
     dateCreated: '23rd Nov 1999',
   },
   {
-    id: 3,
+    id: '3',
     name: 'Smith Davidson',
     empId: '2347',
     department: 'Research',
     dateCreated: '23rd Nov 1999',
   },
   {
-    id: 4,
+    id: '4',
     name: 'Andrew Wams',
     empId: '2348',
     department: 'Development',
@@ -178,7 +178,7 @@ export const payscalePayrollData = [
 ];
 export const grossPayrollData = [
   {
-    id: 1,
+    id: '1',
     name: 'Tolu Aina',
     grossMothlySalary: '₦95,768.34',
     earnings: '₦95,768.34',
@@ -187,7 +187,7 @@ export const grossPayrollData = [
     prorateDeduction: '0',
   },
   {
-    id: 2,
+    id: '2',
     name: 'John Doe',
     grossMothlySalary: '₦95,768.34',
     earnings: '₦95,768.34',
@@ -196,7 +196,7 @@ export const grossPayrollData = [
     prorateDeduction: '0',
   },
   {
-    id: 3,
+    id: '3',
     name: 'Jane Doe',
     grossMothlySalary: '₦95,768.34',
     earnings: '₦95,768.34',
@@ -205,7 +205,7 @@ export const grossPayrollData = [
     prorateDeduction: '0',
   },
   {
-    id: 4,
+    id: '4',
     name: 'Andrew Wams',
     grossMothlySalary: '₦95,768.34',
     earnings: '₦95,768.34',

@@ -6,6 +6,7 @@ import {
   OnInit,
   Output,
   Renderer2,
+  ViewChild,
   ViewChildren,
 } from '@angular/core';
 
@@ -19,6 +20,7 @@ import * as _types from '../../shared';
 })
 export class TableComponent implements OnInit {
   @ViewChildren('tbl_Rows') tblRows: any;
+  @ViewChild('masterCheck') masterCheck: any;
   @Input() _tblHeader: any;
   @Input() _data: any;
   @Input() _identifier: string;
@@ -32,7 +34,6 @@ export class TableComponent implements OnInit {
   selectedItems: any[] = [];
   allChecked: boolean = false;
   indeterminate: boolean = false;
-  selected: boolean = false;
   constructor(private renderer: Renderer2) {}
 
   ngOnInit(): void {
@@ -51,70 +52,47 @@ export class TableComponent implements OnInit {
   toggleCheck(event: any, _id: any, _index: number) {
     let id = parseInt(_id);
     let index = _index;
-
     let data = {
       ...event.source.value,
       isSelected: true,
     };
-
+    let dataLngth = this._data.length;
+    this.setMaterCheckboxStateOnSingleTap(event.checked);
     if (event.checked) {
       this.selectedItems.push(data);
-      this.checkSourceData(_types.EMPLOYEES, index);
-      this.checkSourceData(_types.INSTITUTION, index);
-      this.checkSourceData(_types.PAYELEMENTS, index);
-      this.checkSourceData(_types.PAYSCALE, index);
-      this.checkSourceData(_types.EMPLOYEESONPAYSCALE, index);
-      this.checkSourceData(_types.EMPLOYEESONPAYSCALEPAYROLL, index);
-      this.checkSourceData(_types.EMPLOYEESONGROSSPAYROLL, index);
+      let unique = this.selectedItems.filter(
+        (v, i, a) => a.findIndex((t) => t.id === v.id) === i
+      );
+      this.selectedItems = unique;
+      this.setCheckedSourceData(_types, index);
     } else {
       let removeIndex = this.selectedItems
         .map((item) => {
           return parseInt(item.id);
         })
         .indexOf(id);
-      // remove object
       this.selectedItems.splice(removeIndex, 1);
-      this.allChecked = false;
-      this.indeterminate = true;
       this.removeTblBgRenderer(index);
-      if (this.selectedItems.length === 0) {
-        this.allChecked = null;
-        this.indeterminate = null;
-      }
     }
-  }
 
-  setAll(checked: boolean) {
-    let source =
-      this._identifier === _types.INSTITUTION
-        ? this.institutionData
-        : this._identifier === _types.EMPLOYEES
-        ? this.employeeData
-        : this._identifier === _types.PAYELEMENTS
-        ? this.payElementsData
-        : this._identifier === _types.PAYSCALE
-        ? this.payScaleData
-        : this._identifier === _types.EMPLOYEESONPAYSCALE
-        ? this.employeesOnPayscaleData
-        : this._identifier === _types.EMPLOYEESONPAYSCALEPAYROLL
-        ? this.employeesOnPayscalePayrollData
-        : this._identifier === _types.EMPLOYEESONGROSSPAYROLL
-        ? this.employeesOnGrossPayrollData
-        : null;
-    this.selectedItems = _helperFunc.handleCheckedData(checked, source);
-
-    if (this.selectedItems.length && checked) {
-      this.selectedItems.map((_, i) => {
-        this.addTblBgRenderer(i);
-      });
+    if (this.selectedItems === undefined || this.selectedItems.length == 0) {
+      this.allChecked = null;
+      this.masterCheck._indeterminate = null;
     } else {
-      this.selected = false;
-      this.tblRows._results.map((x: any) => {
-        this.renderer.removeClass(x.nativeElement, 'bg-wrap');
-      });
+      this.masterCheck._indeterminate = true;
+      this.masterCheck.value = true;
+      this.masterCheck._checked = true;
+    }
+    if (this.selectedItems.length === dataLngth) {
+      this.masterCheck._indeterminate = null;
     }
   }
 
+  masterChecked(checked: boolean) {
+    let source = this.verifySource();
+    this.selectedItems = _helperFunc.handleCheckedData(checked, source);
+    this.setMasterCheckboxStateOnMaterTap(checked);
+  }
   checkSourceData(type: string, index: number) {
     let data: any;
     let checkedItems = this.selectedItems.filter((x) => x.isSelected).length;
@@ -165,5 +143,60 @@ export class TableComponent implements OnInit {
       this.indeterminate = false;
       this.addTblBgRenderer(index);
     }
+  }
+  verifySource() {
+    let source =
+      this._identifier === _types.INSTITUTION
+        ? this.institutionData
+        : this._identifier === _types.EMPLOYEES
+        ? this.employeeData
+        : this._identifier === _types.PAYELEMENTS
+        ? this.payElementsData
+        : this._identifier === _types.PAYSCALE
+        ? this.payScaleData
+        : this._identifier === _types.EMPLOYEESONPAYSCALE
+        ? this.employeesOnPayscaleData
+        : this._identifier === _types.EMPLOYEESONPAYSCALEPAYROLL
+        ? this.employeesOnPayscalePayrollData
+        : this._identifier === _types.EMPLOYEESONGROSSPAYROLL
+        ? this.employeesOnGrossPayrollData
+        : null;
+    return source;
+  }
+  setMaterCheckboxStateOnSingleTap(event: any) {
+    if (event) {
+      this.masterCheck._indeterminate = null;
+      this.masterCheck.value = true;
+      this.masterCheck._checked = true;
+    } else {
+      this.masterCheck.value = true;
+      this.masterCheck._checked = true;
+      this.masterCheck._indeterminate = true;
+    }
+  }
+  setMasterCheckboxStateOnMaterTap(event: any) {
+    if (event) {
+      this.masterCheck.value = true;
+      this.masterCheck._indeterminate = null;
+      this.allChecked = this.masterCheck.value;
+      this.selectedItems.map((_, i) => {
+        this.addTblBgRenderer(i);
+      });
+    } else {
+      this.masterCheck.value = false;
+      this.masterCheck._checked = false;
+      this.tblRows._results.map((x: any) => {
+        this.renderer.removeClass(x.nativeElement, 'bg-wrap');
+      });
+    }
+  }
+  setCheckedSourceData(types: any, index) {
+    this.checkSourceData(types.EMPLOYEES, index);
+    this.checkSourceData(types.INSTITUTION, index);
+    this.checkSourceData(types.PAYELEMENTS, index);
+    this.checkSourceData(types.PAYSCALE, index);
+    this.checkSourceData(types.EMPLOYEESONPAYSCALE, index);
+    this.checkSourceData(types.EMPLOYEESONPAYSCALEPAYROLL, index);
+    this.checkSourceData(types.EMPLOYEESONGROSSPAYROLL, index);
   }
 }

@@ -103,11 +103,14 @@ export const handleCheckedData = (chk: boolean, source: any) => {
     };
     if (chk) {
       selectedItems.push(data);
-      let uniqList = [...new Set(selectedItems)];
+      let uniqList = selectedItems.filter(
+        (v, i, a) => a.findIndex((t) => t.id === v.id) === i
+      );
       selectedItems = uniqList;
     } else {
       selectedItems.splice(-1, 1);
     }
   });
+
   return selectedItems;
 };

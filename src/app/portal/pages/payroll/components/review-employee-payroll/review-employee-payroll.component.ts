@@ -23,12 +23,6 @@ export class ReviewEmployeePayrollComponent implements OnInit, AfterViewInit {
   queryString: string;
   payElementDuration: string = 'oneOff';
   _selectedPayElements: string[] = [];
-  _payElements: string[] = [
-    'Test Element 1',
-    'Test Element 2',
-    'Test Element 3',
-    'Test Element 4',
-  ];
   options = [
     { value: 'Pay Element 1', label: 'Pay Element 1' },
     { value: 'Pay Element 2', label: 'Pay Element 2' },
