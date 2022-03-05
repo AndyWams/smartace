@@ -328,6 +328,13 @@ mat-radio-group {
     padding-left: 12px;
   }
 }
+
+mat-select {
+  border: 1px solid;
+  border-radius: 4px;
+  padding: 0.688em 1.5em;
+  border: 1px solid #cbcbcd;
+}
 /* Material slide-toggle button style*/
 .mat-slide-toggle.mat-checked {
   .mat-slide-toggle-thumb {

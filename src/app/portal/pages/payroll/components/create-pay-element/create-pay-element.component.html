@@ -135,11 +135,34 @@
           <span class="mx-3 txt-sm">Of</span>
           <div class="input mb-0">
             <!--Change to multi select-->
-            <select class="select" required>
-              <option disabled="" selected="" value="">Pay element</option>
-              <option value="Pay Element 1">Pay Element 1</option>
-              <option value="Pay Element 2">Pay Element 2</option>
-            </select>
+            <mat-select
+              placeholder="Pay element"
+              multiple
+              #matSelect
+              [(value)]="selectedItems"
+              (selectionChange)="handlePayElementChange($event)"
+            >
+              <mat-select-trigger>
+                {{ payElments ? payElments[0] : "" }}
+                <span *ngIf="payElments.length > 1">
+                  +{{ payElments.length - 1 }}
+                </span>
+              </mat-select-trigger>
+              <mat-option
+                #allSelected
+                (click)="toggleAllSelection()"
+                [value]="0"
+                >All</mat-option
+              >
+              <mat-option
+                #options
+                *ngFor="let option of options"
+                [value]="option.value"
+                (click)="toggleOne()"
+              >
+                {{ option.label }}
+              </mat-option>
+            </mat-select>
           </div>
         </div>
       </div>
