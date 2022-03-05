@@ -319,22 +319,40 @@
         </div>
         <div class="container">
           <form class="pb-3">
-            <div class="form-wrap">
+            <div class="form-wrap w--500">
               <div class="input">
-                <label>Pay Elements</label>
-                <select
-                  class="select"
-                  required
-                  (change)="hanglePayElementSelect($event)"
-                  #selectRef
+                <mat-select
+                  placeholder="Pay element"
+                  multiple
+                  #matSelect
+                  (selectionChange)="handlePayElementChange($event)"
                 >
-                  <option disabled="" selected="" value="">
-                    Select pay element
-                  </option>
-                  <option *ngFor="let item of _payElements">
-                    {{ item }}
-                  </option>
-                </select>
+                  <mat-select-trigger>
+                    {{
+                      _selectedPayElements
+                        ? _selectedPayElements.slice(0, 2)
+                        : ""
+                    }}
+                    <span class="more" *ngIf="_selectedPayElements.length > 2">
+                      +{{ _selectedPayElements.slice(0, 2).length - 1 }} other
+                      item
+                    </span>
+                  </mat-select-trigger>
+                  <mat-option
+                    #allSelected
+                    (click)="toggleAllSelection()"
+                    [value]="0"
+                    >All</mat-option
+                  >
+                  <mat-option
+                    #options
+                    *ngFor="let option of options"
+                    [value]="option.value"
+                    (click)="toggleOne()"
+                  >
+                    {{ option.label }}
+                  </mat-option>
+                </mat-select>
               </div>
               <ng-container *ngIf="_selectedPayElements.length !== 0">
                 <div class="chips_wrap d-flex align-items-center">

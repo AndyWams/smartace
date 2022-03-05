@@ -1,4 +1,10 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { filter } from 'rxjs/internal/operators/filter';
 import { employeeData } from 'src/assets/raw_data';
@@ -9,13 +15,14 @@ import { employeeData } from 'src/assets/raw_data';
   styleUrls: ['./create-pay-scale.component.scss'],
 })
 export class CreatePayScaleComponent implements OnInit {
-  @ViewChild('selectRef') selectRef: ElementRef;
+  @ViewChild('matSelect') select: any;
+  @ViewChild('allSelected') allSelected: any;
+  @ViewChildren('options') _options: any;
   queryString: string = '';
-  _payElements: string[] = [
-    'Test Element 1',
-    'Test Element 2',
-    'Test Element 3',
-    'Test Element 4',
+  options = [
+    { value: 'Pay Element 1', label: 'Pay Element 1' },
+    { value: 'Pay Element 2', label: 'Pay Element 2' },
+    { value: 'Pay Element 3', label: 'Pay Element 3' },
   ];
   _payFrequencies: string[] = [
     'Daily',
@@ -37,8 +44,32 @@ export class CreatePayScaleComponent implements OnInit {
     }
   }
   dropItem(index: number) {
-    this._selectedPayElements.splice(index, 1);
-    this.selectRef.nativeElement.value = '';
+    let x = index;
+    this.allSelected.deselect();
+    this._options._results[x].deselect();
+    this._options._results.splice(x, 1);
+  }
+  toggleAllSelection() {
+    if (this.allSelected.selected) {
+      this.select.options._results.map((item) => {
+        item.select();
+      });
+    } else {
+      this.select.options._results.map((item) => {
+        item.deselect();
+      });
+    }
+  }
+  handlePayElementChange(event: any) {
+    let result = event.source._value.filter((t) => t !== 0);
+    this._selectedPayElements = result;
+  }
+
+  toggleOne() {
+    if (this.allSelected.selected) {
+      this.allSelected.deselect();
+      return false;
+    }
   }
   getRoutes() {
     this.route.queryParams

@@ -5,6 +5,7 @@ import {
   OnInit,
   Renderer2,
   ViewChild,
+  ViewChildren,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { filter } from 'rxjs/internal/operators/filter';
@@ -15,8 +16,10 @@ import { filter } from 'rxjs/internal/operators/filter';
   styleUrls: ['./review-employee-payroll.component.scss'],
 })
 export class ReviewEmployeePayrollComponent implements OnInit, AfterViewInit {
-  @ViewChild('selectRef') selectRef: ElementRef;
   @ViewChild('txtDate') txtDate: any;
+  @ViewChild('allSelected') allSelected: any;
+  @ViewChildren('options') _options: any;
+  @ViewChild('matSelect') select: any;
   queryString: string;
   payElementDuration: string = 'oneOff';
   _selectedPayElements: string[] = [];
@@ -25,6 +28,11 @@ export class ReviewEmployeePayrollComponent implements OnInit, AfterViewInit {
     'Test Element 2',
     'Test Element 3',
     'Test Element 4',
+  ];
+  options = [
+    { value: 'Pay Element 1', label: 'Pay Element 1' },
+    { value: 'Pay Element 2', label: 'Pay Element 2' },
+    { value: 'Pay Element 3', label: 'Pay Element 3' },
   ];
 
   constructor(
@@ -40,14 +48,12 @@ export class ReviewEmployeePayrollComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.onDateLoad();
   }
-  hanglePayElementSelect(event: any) {
-    if (event.target.value !== null) {
-      this._selectedPayElements.push(event.target.value);
-    }
-  }
+
   dropItem(index: number) {
-    this._selectedPayElements.splice(index, 1);
-    this.selectRef.nativeElement.value = '';
+    let x = index;
+    this.allSelected.deselect();
+    this._options._results[x].deselect();
+    this._options._results.splice(x, 1);
   }
   handleToggle(event: any) {
     this.payElementDuration = event.value;
@@ -72,6 +78,28 @@ export class ReviewEmployeePayrollComponent implements OnInit, AfterViewInit {
       });
     if (this.queryString === '') {
       this.router.navigate(['/portal/payroll/quick-payroll']);
+    }
+  }
+  toggleAllSelection() {
+    if (this.allSelected.selected) {
+      this.select.options._results.map((item) => {
+        item.select();
+      });
+    } else {
+      this.select.options._results.map((item) => {
+        item.deselect();
+      });
+    }
+  }
+  handlePayElementChange(event: any) {
+    let result = event.source._value.filter((t) => t !== 0);
+    this._selectedPayElements = result;
+  }
+
+  toggleOne() {
+    if (this.allSelected.selected) {
+      this.allSelected.deselect();
+      return false;
     }
   }
   onDateChange() {}

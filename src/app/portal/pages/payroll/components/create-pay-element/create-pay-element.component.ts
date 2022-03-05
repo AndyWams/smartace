@@ -40,7 +40,6 @@ export class CreatePayElementComponent implements OnInit {
     { value: 'Pay Element 2', label: 'Pay Element 2' },
     { value: 'Pay Element 3', label: 'Pay Element 3' },
   ];
-  selectedPayElements = ['Pay Element 1', 'Pay Element 2'];
   getRoutes() {
     this.route.queryParams
       .pipe(filter((params) => params.query))
@@ -82,9 +81,6 @@ export class CreatePayElementComponent implements OnInit {
   handlePayElementChange(event: any) {
     let result = event.source._value.filter((t) => t !== 0);
     this.payElments = result;
-    // if (this.payElments.length === this.options.length) {
-    //   this.allSelected.select();
-    // }
   }
 
   toggleOne() {
@@ -93,5 +89,4 @@ export class CreatePayElementComponent implements OnInit {
       return false;
     }
   }
-  handleOptionChanage(event: any) {}
 }

@@ -332,8 +332,21 @@ mat-radio-group {
 mat-select {
   border: 1px solid;
   border-radius: 4px;
-  padding: 0.688em 1.5em;
+  padding: 0.9em 1.5em;
   border: 1px solid #cbcbcd;
+  font-size: 14px;
+  font-family: "Rubik", sans-serif;
+}
+mat-select-trigger {
+  .more {
+    margin-left: 9px;
+    font-size: 12px;
+    font-style: italic;
+    color: $blue;
+  }
+}
+.mat-pseudo-checkbox-checked {
+  background: $blue !important;
 }
 /* Material slide-toggle button style*/
 .mat-slide-toggle.mat-checked {
@@ -399,16 +412,6 @@ mat-select {
           font-weight: 500;
         }
       }
-      h3 {
-        font-size: 24px;
-        font-weight: bold;
-        line-height: 22px;
-        text-align: center;
-        &.md-txt {
-          padding: 0em 2em;
-          line-height: 29px;
-        }
-      }
       p {
         color: $light-grey;
         font-size: 18px;
@@ -434,6 +437,9 @@ mat-select {
         box-shadow: 0px 4px 25px rgba(0, 0, 0, 0.1);
         border-radius: 4px;
         min-width: 500px;
+        &.w--500 {
+          width: 502px;
+        }
         .action {
           span {
             font-size: 12px;
@@ -571,7 +577,6 @@ mat-select {
 }
 .chips_wrap {
   flex-wrap: wrap;
-  width: 420px;
 }
 .hideDate {
   display: none;

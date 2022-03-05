@@ -134,18 +134,16 @@
           </div>
           <span class="mx-3 txt-sm">Of</span>
           <div class="input mb-0">
-            <!--Change to multi select-->
             <mat-select
               placeholder="Pay element"
               multiple
               #matSelect
-              [(value)]="selectedItems"
               (selectionChange)="handlePayElementChange($event)"
             >
               <mat-select-trigger>
-                {{ payElments ? payElments[0] : "" }}
-                <span *ngIf="payElments.length > 1">
-                  +{{ payElments.length - 1 }}
+                {{ payElments ? payElments.slice(0, 2) : "" }}
+                <span class="more" *ngIf="payElments.length > 2">
+                  +{{ payElments.slice(0, 2).length - 1 }} other item
                 </span>
               </mat-select-trigger>
               <mat-option

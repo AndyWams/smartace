@@ -10,3 +10,7 @@ html {
   margin: 0;
   font-family: "Rubik", sans-serif;
 }
+.cdk-global-overlay-wrapper,
+.cdk-overlay-container {
+  z-index: 99999 !important;
+}
