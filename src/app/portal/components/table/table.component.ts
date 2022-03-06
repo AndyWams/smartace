@@ -74,7 +74,7 @@ export class TableComponent implements OnInit {
       this.selectedItems.splice(removeIndex, 1);
       this.removeTblBgRenderer(index);
     }
-    this.setToggleState();
+    this.setToggleState(event.checked);
   }
 
   masterChecked(checked: boolean) {
@@ -188,22 +188,22 @@ export class TableComponent implements OnInit {
     this.checkSourceData(types.EMPLOYEESONPAYSCALEPAYROLL, index);
     this.checkSourceData(types.EMPLOYEESONGROSSPAYROLL, index);
   }
-  setToggleState() {
+  setToggleState(event: any) {
     let dataLngth = this._data.length;
+    if (event) {
+      if (this.selectedItems.length === dataLngth) {
+        this.masterCheck.value = true;
+        this.masterCheck._checked = true;
+        this.masterCheck._indeterminate = false;
+      }
+    } else {
+      this.masterCheck.value = null;
+      this.masterCheck._checked = null;
+    }
     if (this.selectedItems === undefined || this.selectedItems.length == 0) {
-      this.allChecked = null;
       this.masterCheck._indeterminate = null;
     } else {
       this.masterCheck._indeterminate = true;
-      this.masterCheck.value = true;
-      this.masterCheck._checked = true;
-    }
-    if (this.selectedItems.length === dataLngth) {
-      this.masterCheck.value = true;
-      this.masterCheck._checked = true;
-      this.allChecked = true;
-      this.masterCheck._indeterminate = null;
-    } else if (this.selectedItems.length !== dataLngth) {
       this.masterCheck.value = true;
       this.masterCheck._checked = true;
     }
