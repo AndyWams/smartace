@@ -56,7 +56,7 @@ export class TableComponent implements OnInit {
       ...event.source.value,
       isSelected: true,
     };
-    let dataLngth = this._data.length;
+
     this.setMaterCheckboxStateOnSingleTap(event.checked);
     if (event.checked) {
       this.selectedItems.push(data);
@@ -74,18 +74,7 @@ export class TableComponent implements OnInit {
       this.selectedItems.splice(removeIndex, 1);
       this.removeTblBgRenderer(index);
     }
-
-    if (this.selectedItems === undefined || this.selectedItems.length == 0) {
-      this.allChecked = null;
-      this.masterCheck._indeterminate = null;
-    } else {
-      this.masterCheck._indeterminate = true;
-      this.masterCheck.value = true;
-      this.masterCheck._checked = true;
-    }
-    if (this.selectedItems.length === dataLngth) {
-      this.masterCheck._indeterminate = null;
-    }
+    this.setToggleState();
   }
 
   masterChecked(checked: boolean) {
@@ -198,5 +187,25 @@ export class TableComponent implements OnInit {
     this.checkSourceData(types.EMPLOYEESONPAYSCALE, index);
     this.checkSourceData(types.EMPLOYEESONPAYSCALEPAYROLL, index);
     this.checkSourceData(types.EMPLOYEESONGROSSPAYROLL, index);
+  }
+  setToggleState() {
+    let dataLngth = this._data.length;
+    if (this.selectedItems === undefined || this.selectedItems.length == 0) {
+      this.allChecked = null;
+      this.masterCheck._indeterminate = null;
+    } else {
+      this.masterCheck._indeterminate = true;
+      this.masterCheck.value = true;
+      this.masterCheck._checked = true;
+    }
+    if (this.selectedItems.length === dataLngth) {
+      this.masterCheck.value = true;
+      this.masterCheck._checked = true;
+      this.allChecked = true;
+      this.masterCheck._indeterminate = null;
+    } else if (this.selectedItems.length !== dataLngth) {
+      this.masterCheck.value = true;
+      this.masterCheck._checked = true;
+    }
   }
 }
