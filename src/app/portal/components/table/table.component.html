@@ -6,10 +6,7 @@
           <!-- Master Checkbox-->
           <mat-checkbox
             #masterCheck
-            [indeterminate]="indeterminate"
-            [value]="allChecked"
-            [checked]="allChecked"
-            (change)="masterChecked($event.checked)"
+            (change)="masterChecked($event)"
           ></mat-checkbox>
           <button mat-icon-button [matMenuTriggerFor]="menu">
             <mat-icon>more_vert</mat-icon>

@@ -107,20 +107,20 @@ export const getEmployeeGrossPayrollDataMap = (data: any) => {
   return empGrossPayrollData;
 };
 
-export const handleCheckedData = (chk: boolean, source: any) => {
+export const handleCheckedData = (event: any, source: any) => {
   let selectedItems = [];
   source.forEach((item: any) => {
-    item.isSelected = chk;
-    let data = {
-      ...item,
-      isSelected: chk,
-    };
-    if (chk) {
+    item.isSelected = event.checked;
+
+    if (event.checked) {
+      let data = {
+        ...item,
+        isSelected: event.checked,
+      };
       selectedItems.push(data);
       let uniqList = selectedItems.filter(
         (v, i, a) => a.findIndex((t) => t.id === v.id) === i
       );
-
       selectedItems = uniqList;
     } else {
       selectedItems.splice(-1, 1);

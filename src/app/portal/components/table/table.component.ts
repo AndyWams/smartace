@@ -32,8 +32,7 @@ export class TableComponent implements OnInit {
   employeesOnGrossPayrollData: any[];
   employeesOnPayscalePayrollData: any[];
   selectedItems: any[] = [];
-  allChecked: boolean = false;
-  indeterminate: boolean = false;
+
   constructor(private renderer: Renderer2) {}
 
   ngOnInit(): void {
@@ -52,13 +51,13 @@ export class TableComponent implements OnInit {
   toggleCheck(event: any, _id: any, _index: number) {
     let id = parseInt(_id);
     let index = _index;
-    let data = {
-      ...event.source.value,
-      isSelected: true,
-    };
-
-    this.setMaterCheckboxStateOnSingleTap(event.checked);
+    let data: object;
     if (event.checked) {
+      data = {
+        ...event.source.value,
+        isSelected: event.checked,
+      };
+
       this.selectedItems.push(data);
       let unique = this.selectedItems.filter(
         (v, i, a) => a.findIndex((t) => t.id === v.id) === i
@@ -77,10 +76,10 @@ export class TableComponent implements OnInit {
     this.setToggleState(event.checked);
   }
 
-  masterChecked(checked: boolean) {
+  masterChecked(event: any) {
     let source = this.verifySource();
-    this.selectedItems = _helperFunc.handleCheckedData(checked, source);
-    this.setMasterCheckboxStateOnMaterTap(checked);
+    this.selectedItems = _helperFunc.handleCheckedData(event, source);
+    this.setMasterCheckboxToggleState(event);
   }
   checkSourceData(type: string, index: number) {
     let data: any;
@@ -150,19 +149,8 @@ export class TableComponent implements OnInit {
         : null;
     return source;
   }
-  setMaterCheckboxStateOnSingleTap(event: any) {
-    if (event) {
-      this.masterCheck._indeterminate = null;
-      this.masterCheck.value = true;
-      this.masterCheck._checked = true;
-    } else {
-      this.masterCheck.value = true;
-      this.masterCheck._checked = true;
-      this.masterCheck._indeterminate = true;
-    }
-  }
-  setMasterCheckboxStateOnMaterTap(event: any) {
-    if (event) {
+  setMasterCheckboxToggleState(event: any) {
+    if (event.checked) {
       this.masterCheck.value = true;
       this.masterCheck._checked = true;
       this.masterCheck._indeterminate = null;
@@ -195,15 +183,18 @@ export class TableComponent implements OnInit {
         this.masterCheck._checked = false;
         this.masterCheck._indeterminate = true;
       }
-      if (this.selectedItems.length == dataLngth) {
-        this.masterCheck.value = true;
-        this.masterCheck._checked = true;
+      if (this.selectedItems.length === dataLngth) {
         this.masterCheck._indeterminate = null;
       }
     } else {
+      if (this.selectedItems.length !== dataLngth) {
+        this.masterCheck.value = true;
+        this.masterCheck._checked = true;
+        this.masterCheck._indeterminate = true;
+      }
       if (this.selectedItems.length < dataLngth) {
+        this.masterCheck.value = false;
         this.masterCheck._checked = false;
-        this.masterCheck._indeterminate = false;
         this.masterCheck._indeterminate = true;
       }
       if (this.selectedItems.length === 0) {
