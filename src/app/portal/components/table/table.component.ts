@@ -194,18 +194,28 @@ export class TableComponent implements OnInit {
       if (this.selectedItems.length === dataLngth) {
         this.masterCheck.value = true;
         this.masterCheck._checked = true;
-        this.masterCheck._indeterminate = false;
+        this.indeterminate = false;
+      }
+      if (this.selectedItems === undefined || this.selectedItems.length == 0) {
+        this.masterCheck._indeterminate = null;
+      }
+      if (this.selectedItems.length !== dataLngth) {
+        this.masterCheck._indeterminate = true;
       }
     } else {
       this.masterCheck.value = null;
       this.masterCheck._checked = null;
-    }
-    if (this.selectedItems === undefined || this.selectedItems.length == 0) {
       this.masterCheck._indeterminate = null;
-    } else {
-      this.masterCheck._indeterminate = true;
-      this.masterCheck.value = true;
-      this.masterCheck._checked = true;
+      if (this.selectedItems.length !== dataLngth) {
+        this.masterCheck._indeterminate = true;
+        this.masterCheck.value = true;
+        this.masterCheck._checked = true;
+      }
+      if (this.selectedItems === undefined || this.selectedItems.length == 0) {
+        this.masterCheck._indeterminate = null;
+        this.masterCheck.value = null;
+        this.masterCheck._checked = null;
+      }
     }
   }
 }
