@@ -88,25 +88,25 @@ export class TableComponent implements OnInit {
     switch (type) {
       case (type = _types.EMPLOYEES):
         data = this.employeeData;
-        this.getSwitch(checkedItems, data, index);
+        this.setTableRowHighlighlightColor(checkedItems, data, index);
       case (type = _types.INSTITUTION):
         data = this.institutionData;
-        this.getSwitch(checkedItems, data, index);
+        this.setTableRowHighlighlightColor(checkedItems, data, index);
       case (type = _types.PAYELEMENTS):
         data = this.payElementsData;
-        this.getSwitch(checkedItems, data, index);
+        this.setTableRowHighlighlightColor(checkedItems, data, index);
       case (type = _types.PAYSCALE):
         data = this.payScaleData;
-        this.getSwitch(checkedItems, data, index);
+        this.setTableRowHighlighlightColor(checkedItems, data, index);
       case (type = _types.EMPLOYEESONPAYSCALE):
         data = this.employeesOnPayscaleData;
-        this.getSwitch(checkedItems, data, index);
+        this.setTableRowHighlighlightColor(checkedItems, data, index);
       case (type = _types.EMPLOYEESONPAYSCALEPAYROLL):
         data = this.employeesOnPayscalePayrollData;
-        this.getSwitch(checkedItems, data, index);
+        this.setTableRowHighlighlightColor(checkedItems, data, index);
       case (type = _types.EMPLOYEESONGROSSPAYROLL):
         data = this.employeesOnGrossPayrollData;
-        this.getSwitch(checkedItems, data, index);
+        this.setTableRowHighlighlightColor(checkedItems, data, index);
       default:
         return null;
     }
@@ -123,13 +123,10 @@ export class TableComponent implements OnInit {
       'bg-wrap'
     );
   }
-  getSwitch(checkedItems: any, data: any, index) {
+  setTableRowHighlighlightColor(checkedItems: any, data: any, index) {
     if (checkedItems < data.length) {
-      this.indeterminate = true;
       this.addTblBgRenderer(index);
     } else {
-      this.allChecked = true;
-      this.indeterminate = false;
       this.addTblBgRenderer(index);
     }
   }
@@ -137,7 +134,8 @@ export class TableComponent implements OnInit {
     let source =
       this._identifier === _types.INSTITUTION
         ? this.institutionData
-        : this._identifier === _types.EMPLOYEES
+        : this._identifier === _types.EMPLOYEES ||
+          this._identifier === _types.EMPLOYEEPAYSCALE
         ? this.employeeData
         : this._identifier === _types.PAYELEMENTS
         ? this.payElementsData
@@ -166,14 +164,15 @@ export class TableComponent implements OnInit {
   setMasterCheckboxStateOnMaterTap(event: any) {
     if (event) {
       this.masterCheck.value = true;
+      this.masterCheck._checked = true;
       this.masterCheck._indeterminate = null;
-      this.allChecked = this.masterCheck.value;
       this.selectedItems.map((_, i) => {
         this.addTblBgRenderer(i);
       });
     } else {
       this.masterCheck.value = false;
       this.masterCheck._checked = false;
+      this.masterCheck._indeterminate = null;
       this.tblRows._results.map((x: any) => {
         this.renderer.removeClass(x.nativeElement, 'bg-wrap');
       });
@@ -191,30 +190,26 @@ export class TableComponent implements OnInit {
   setToggleState(event: any) {
     let dataLngth = this._data.length;
     if (event) {
-      if (this.selectedItems.length === dataLngth) {
+      if (this.selectedItems.length < dataLngth) {
+        this.masterCheck.value = false;
+        this.masterCheck._checked = false;
+        this.masterCheck._indeterminate = true;
+      }
+      if (this.selectedItems.length == dataLngth) {
         this.masterCheck.value = true;
         this.masterCheck._checked = true;
-        this.indeterminate = false;
-      }
-      if (this.selectedItems === undefined || this.selectedItems.length == 0) {
         this.masterCheck._indeterminate = null;
-      }
-      if (this.selectedItems.length !== dataLngth) {
-        this.masterCheck._indeterminate = true;
       }
     } else {
-      this.masterCheck.value = null;
-      this.masterCheck._checked = null;
-      this.masterCheck._indeterminate = null;
-      if (this.selectedItems.length !== dataLngth) {
+      if (this.selectedItems.length < dataLngth) {
+        this.masterCheck._checked = false;
+        this.masterCheck._indeterminate = false;
         this.masterCheck._indeterminate = true;
-        this.masterCheck.value = true;
-        this.masterCheck._checked = true;
       }
-      if (this.selectedItems === undefined || this.selectedItems.length == 0) {
-        this.masterCheck._indeterminate = null;
+      if (this.selectedItems.length === 0) {
         this.masterCheck.value = null;
         this.masterCheck._checked = null;
+        this.masterCheck._indeterminate = null;
       }
     }
   }

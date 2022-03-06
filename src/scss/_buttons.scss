@@ -113,6 +113,9 @@ a {
 }
 .txt-danger {
   color: $red;
+  &.underline {
+    text-decoration: underline !important;
+  }
 }
 
 .mat-flat-white {

@@ -1,0 +1,38 @@
+<div class="header d-flex align-items-center justify-content-between mb-4">
+  <div class="title">Assign Pay Scale</div>
+</div>
+<div class="d-flex align-items-center mb-4">
+  <a href="javascript:window.history.go(-1)" mat-button>
+    <span class="icon-circ me-3"
+      ><mat-icon mat-icon-button>arrow_back</mat-icon></span
+    >
+    Back
+  </a>
+</div>
+<div class="bg-white pb-5">
+  <app-table
+    [_tblHeader]="['Name', 'Id', 'Department', 'Employment Date', '']"
+    [_data]="data"
+    _identifier="EMPLOYEEPAYSCALE"
+  ></app-table>
+  <div class="d-flex align-items-center justify-content-center mt-4">
+    <a
+      mat-flat-button
+      class="me-3"
+      [routerLink]="['/portal/payroll/review-payroll']"
+      [queryParams]="{ query: 'payscale' }"
+      *ngIf="queryString === 'payscale'"
+      >Continue</a
+    >
+    <a
+      mat-flat-button
+      class="me-3"
+      [routerLink]="['/portal/payroll/review-payroll']"
+      [queryParams]="{ query: 'gross' }"
+      *ngIf="queryString === 'gross'"
+      >Continue</a
+    >
+
+    <a href="javascript:window.history.go(-1)" mat-stroked-button>Cancel</a>
+  </div>
+</div>

@@ -17,6 +17,7 @@ import { filter } from 'rxjs/internal/operators/filter';
 })
 export class ReviewEmployeePayrollComponent implements OnInit, AfterViewInit {
   @ViewChild('txtDate') txtDate: any;
+  @ViewChild('txtDate_') txtDate_: any;
   @ViewChild('allSelected') allSelected: any;
   @ViewChildren('options') _options: any;
   @ViewChild('matSelect') select: any;
@@ -63,6 +64,8 @@ export class ReviewEmployeePayrollComponent implements OnInit, AfterViewInit {
 
     this.renderer.setAttribute(this.txtDate.nativeElement, 'min', maxDate);
     this.renderer.setProperty(this.txtDate.nativeElement, 'value', maxDate);
+    this.renderer.setAttribute(this.txtDate_.nativeElement, 'min', maxDate);
+    this.renderer.setProperty(this.txtDate_.nativeElement, 'value', maxDate);
   }
   getRoutes() {
     this.route.queryParams
