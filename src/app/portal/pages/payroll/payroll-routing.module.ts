@@ -13,6 +13,7 @@ import { PayrollRunlogComponent } from './components/payroll-runlog/payroll-runl
 import { PayrollSettingsComponent } from './components/payroll-settings/payroll-settings.component';
 import { PayscaleSetupComponent } from './components/payscale-setup/payscale-setup.component';
 import { PayscheduleSetupComponent } from './components/payschedule-setup/payschedule-setup.component';
+import { PayslipComponent } from './components/payslip/payslip.component';
 import { QuickPayrollComponent } from './components/quick-payroll/quick-payroll.component';
 import { ReportComponent } from './components/report/report.component';
 import { ReviewEmployeePayrollComponent } from './components/review-employee-payroll/review-employee-payroll.component';
@@ -72,6 +73,10 @@ const routes: Routes = [
       {
         path: 'assign-payscale',
         component: AssignPayscaleComponent,
+      },
+      {
+        path: 'view-payslip',
+        component: PayslipComponent,
       },
       {
         path: 'payroll-run-log',
