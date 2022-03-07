@@ -62,10 +62,10 @@ export class CreatePayElementComponent implements OnInit {
     this.taxMode = 'default';
   }
   handlePayTypeSelect(event: any) {
-    this.payType = event.target.value;
+    this.payType = event.source._value;
   }
   handlePayrollItemSelect(event: any) {
-    this.payrollItem = event.target.value;
+    this.payrollItem = event.source._value;
   }
   toggleAllSelection() {
     if (this.allSelected.selected) {

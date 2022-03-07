@@ -106,7 +106,6 @@ export class ChartGraphComponent implements OnInit {
     {
       hoverBorderWidth: 0,
       backgroundColor: ['#2D9CDB', '#F2994A', '#27AE60'],
-      // hoverBackgroundColor: ['#2D9CDB', '#F2994A', '#27AE60'],
     },
   ];
   public lineChartOptions: any = {

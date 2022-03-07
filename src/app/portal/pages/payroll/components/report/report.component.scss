@@ -1,0 +1,33 @@
+.form-wrap {
+  padding: 3em;
+  &.w--700 {
+    width: 700px;
+  }
+  form {
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      margin-bottom: 1.5em;
+    }
+  }
+
+  @media screen and (min-width: 320px) and (max-width: 991px) {
+    &.w--700,
+    &.w--850 {
+      width: auto;
+    }
+    padding: 1em;
+    form .grid {
+      grid-template-columns: auto;
+      .d-flex {
+        flex-direction: column;
+        button {
+          &.me-4 {
+            margin-right: 0 !important;
+            margin-bottom: 1em;
+          }
+        }
+      }
+    }
+  }
+}

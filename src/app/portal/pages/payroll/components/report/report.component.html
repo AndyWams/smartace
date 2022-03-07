@@ -1,1 +1,85 @@
-<p>report works!</p>
+<div class="header d-flex align-items-center justify-content-between mb-4">
+  <div class="title" *ngIf="screen == 1">Report</div>
+  <div class="title" *ngIf="screen == 2">{{ reportType }}</div>
+</div>
+<div class="bg-white" *ngIf="screen == 1">
+  <div class="form-wrap w--700">
+    <form>
+      <div class="grid align-items-center">
+        <label>Report</label>
+        <div class="input mb-0">
+          <mat-select
+            placeholder="Select report"
+            class="select"
+            (selectionChange)="handleReportSelect($event)"
+            required
+          >
+            <mat-option disabled="" selected="" value="">
+              Select report
+            </mat-option>
+            <mat-option *ngFor="let item of _reports" [value]="item">
+              {{ item }}
+            </mat-option>
+          </mat-select>
+        </div>
+      </div>
+      <div class="grid align-items-center">
+        <label>Report Mode</label>
+        <mat-radio-group aria-label="Select an option">
+          <mat-radio-button
+            class="me-4"
+            value="Period"
+            (change)="handleReportMode($event)"
+            checked
+            id="Period"
+            >Period</mat-radio-button
+          >
+          <mat-radio-button
+            value="All"
+            (change)="handleReportMode($event)"
+            id="All"
+            >All</mat-radio-button
+          >
+        </mat-radio-group>
+      </div>
+      <ng-container *ngIf="reportMode !== 'All'">
+        <div class="grid align-items-center">
+          <label>Period</label>
+          <div class="d-flex align-items-center">
+            <div class="input mb-0 me-3">
+              <label for="">From</label>
+              <input type="date" required />
+            </div>
+            <div class="input mb-0">
+              <label for="">To</label>
+              <input type="date" required />
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <div class="grid">
+        <span>&nbsp;</span>
+        <div class="mt-3">
+          <button
+            mat-flat-button
+            type="button"
+            [disabled]="reportType === ''"
+            (click)="gotoView('next')"
+          >
+            Run Report
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="d-flex align-items-center mb-4" *ngIf="screen == 2">
+  <button (click)="gotoView('prev')" mat-button>
+    <span class="icon-circ me-3"
+      ><mat-icon mat-icon-button>arrow_back</mat-icon></span
+    >
+    Back
+  </button>
+</div>
+
+<!-- <app-table [_data]="data" _identifier="PAYSLIPANALYSIS"></app-table> -->

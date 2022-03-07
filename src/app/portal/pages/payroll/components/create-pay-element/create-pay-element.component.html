@@ -16,7 +16,7 @@
             class="select"
             placeholder="Payroll item"
             required
-            (change)="handlePayrollItemSelect($event)"
+            (selectionChange)="handlePayrollItemSelect($event)"
             *ngIf="payrollItem !== 'Create new'"
           >
             <mat-option disabled="" selected="" value=""
@@ -39,8 +39,9 @@
           <mat-select
             class="select"
             placeholder="Pay type"
+            [value]="payType"
             required
-            (change)="handlePayTypeSelect($event)"
+            (selectionChange)="handlePayTypeSelect($event)"
           >
             <mat-option disabled="" selected="" value=""
               >Select type</mat-option
@@ -84,14 +85,14 @@
       <div class="grid align-items-center" *ngIf="payType === 'Time-shift'">
         <label>Earning Type</label>
         <div class="input mb-0">
-          <select class="select" required>
-            <option disabled="" selected="" value="">
+          <mat-select placeholder="Select earning type" class="select" required>
+            <mat-option disabled="" selected="" value="">
               Select element type
-            </option>
-            <option value="Salary">Salary</option>
-            <option value="Wages">Wages</option>
-            <option value="Overtime">Overtime</option>
-          </select>
+            </mat-option>
+            <mat-option value="Salary">Salary</mat-option>
+            <mat-option value="Wages">Wages</mat-option>
+            <mat-option value="Overtime">Overtime</mat-option>
+          </mat-select>
         </div>
       </div>
       <div class="grid align-items-center" *ngIf="payType === 'Time-shift'">

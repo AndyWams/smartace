@@ -64,6 +64,7 @@ export class CreatePayScaleComponent implements OnInit {
     let result = event.source._value.filter((t) => t !== 0);
     this._selectedPayElements = result;
   }
+  handlePayFrequencyChange(event: any) {}
 
   toggleOne() {
     if (this.allSelected.selected) {

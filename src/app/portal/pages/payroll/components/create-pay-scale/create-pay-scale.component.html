@@ -61,11 +61,16 @@
       <div class="grid align-items-center">
         <label>Pay Frequency</label>
         <div class="input mb-0">
-          <mat-select placeholder="Pay frequency" class="select" required>
+          <mat-select
+            placeholder="Pay frequency"
+            class="select"
+            (selectionChange)="handlePayFrequencyChange($event)"
+            required
+          >
             <mat-option disabled="" selected="" value="">
               Select pay frequencies
             </mat-option>
-            <mat-option *ngFor="let item of _payFrequencies">
+            <mat-option *ngFor="let item of _payFrequencies" [value]="item">
               {{ item }}
             </mat-option>
           </mat-select>
