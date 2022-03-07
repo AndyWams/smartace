@@ -113,7 +113,10 @@ export class ChartGraphComponent implements OnInit {
     },
   };
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log(this._chartType);
+  }
+
   setFilterItem(val: string) {
     val === 'last-month'
       ? (this.filterItem = 'Last Month')

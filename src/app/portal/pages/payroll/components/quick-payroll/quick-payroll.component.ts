@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { payscalePayrollData, grossPayrollData } from 'src/assets/raw_data';
 
 @Component({
@@ -9,6 +9,7 @@ import { payscalePayrollData, grossPayrollData } from 'src/assets/raw_data';
 export class QuickPayrollComponent implements OnInit {
   runByItem: string = 'Payscale';
   payChannel: string = 'Master';
+  @Output() outputToModal = new EventEmitter<any>();
   data = payscalePayrollData;
   data_ = grossPayrollData;
   constructor() {}

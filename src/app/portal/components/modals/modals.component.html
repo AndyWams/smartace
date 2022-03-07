@@ -1,0 +1,768 @@
+<div class="modal fade" id="employeeFilterBy" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Filter By</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <form class="pb-3">
+            <div class="form-wrap w--400">
+              <div class="input">
+                <label>ID</label>
+                <input type="text" placeholder="Enter id" />
+              </div>
+              <div class="input">
+                <label>Department</label>
+                <mat-select placeholder="Department" class="select" required>
+                  <mat-option disabled="" selected="" value="">
+                    Select category
+                  </mat-option>
+                </mat-select>
+              </div>
+              <div class="input">
+                <label>Employement Date</label>
+                <input type="date" required />
+              </div>
+              <div class="d-flex align-items-center mt-5">
+                <button type="button" mat-flat-button class="me-3">
+                  Apply
+                </button>
+                <button
+                  type="button"
+                  mat-stroked-button
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="instMgmtFilterBy" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Filter By</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <form class="pb-3">
+            <div class="form-wrap w--400">
+              <div class="input">
+                <label>Category</label>
+                <mat-select placeholder="Category" class="select" required>
+                  <mat-option disabled="" selected="" value="">
+                    Select category
+                  </mat-option>
+                </mat-select>
+              </div>
+              <div class="input">
+                <label>Bank</label>
+                <mat-select placeholder="Select bank" class="select" required>
+                  <mat-option disabled="" selected="" value="">
+                    Select bank
+                  </mat-option>
+                </mat-select>
+              </div>
+              <div class="input">
+                <label>Date Created</label>
+                <input type="date" required />
+              </div>
+              <div class="d-flex align-items-center mt-5">
+                <button type="button" mat-flat-button class="me-3">
+                  Apply
+                </button>
+                <button
+                  type="button"
+                  mat-stroked-button
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="payElementFilterBy" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Filter By</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <form class="pb-3">
+            <div class="form-wrap w--400 scroll">
+              <div class="input">
+                <label>Pay Type</label>
+                <mat-select
+                  placeholder="Select pay type"
+                  class="select"
+                  required
+                >
+                  <mat-option disabled="" selected="" value="">
+                    Select pay type
+                  </mat-option>
+                </mat-select>
+              </div>
+              <div class="input">
+                <label>Element Name</label>
+                <input type="text" placeholder="Element name" />
+              </div>
+              <div class="input">
+                <label>Element Category</label>
+                <mat-select
+                  placeholder="Select category"
+                  class="select"
+                  required
+                >
+                  <mat-option disabled="" selected="" value="">
+                    Select category
+                  </mat-option>
+                </mat-select>
+              </div>
+              <div class="input">
+                <label>Element Type</label>
+                <mat-select
+                  placeholder="Select element type"
+                  class="select"
+                  required
+                >
+                  <mat-option disabled="" selected="" value="">
+                    Select element type
+                  </mat-option>
+                </mat-select>
+              </div>
+              <div class="input">
+                <label>Amount</label>
+                <input type="text" placeholder="Amount" />
+              </div>
+              <div class="input">
+                <label>Institution</label>
+                <mat-select
+                  placeholder="Select institution"
+                  class="select"
+                  required
+                >
+                  <mat-option disabled="" selected="" value="">
+                    Select institution
+                  </mat-option>
+                </mat-select>
+              </div>
+              <div class="d-flex align-items-center mt-5">
+                <button type="button" mat-flat-button class="me-3">
+                  Apply
+                </button>
+                <button
+                  type="button"
+                  mat-stroked-button
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="payScaleFilterBy" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Filter By</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <form class="pb-3">
+            <div class="form-wrap w--400">
+              <div class="input">
+                <label>Scale Name</label>
+                <input type="text" placeholder="Enter scale name" />
+              </div>
+              <div class="input">
+                <label>Pay Elements</label>
+                <mat-select
+                  placeholder="Select pay element"
+                  class="select"
+                  required
+                >
+                  <mat-option disabled="" selected="" value="">
+                    Select pay element
+                  </mat-option>
+                </mat-select>
+              </div>
+              <div class="input">
+                <label>Pay Frequency</label>
+                <input type="text" placeholder="Enter pay frequency" />
+              </div>
+              <div class="d-flex align-items-center mt-5">
+                <button type="button" mat-flat-button class="me-3">
+                  Apply
+                </button>
+                <button
+                  type="button"
+                  mat-stroked-button
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="payscalePayrollFilterBy" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Filter By</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <form class="pb-3">
+            <div class="form-wrap">
+              <div class="input">
+                <label>ID</label>
+                <input type="text" placeholder="Enter id" />
+              </div>
+              <div class="input">
+                <label>Total Earnings</label>
+                <input type="number" placeholder="Enter amount" />
+              </div>
+              <div class="input">
+                <label>Total Deductions</label>
+                <input type="number" placeholder="Enter amount" />
+              </div>
+              <div class="input">
+                <label>Net Pay</label>
+                <input type="number" placeholder="Enter amount" />
+              </div>
+              <div class="input">
+                <label>Hours Worked</label>
+                <input type="number" placeholder="Enter hours" />
+              </div>
+              <div class="d-flex align-items-center mt-5">
+                <button type="button" mat-flat-button class="me-3">
+                  Apply
+                </button>
+                <button
+                  type="button"
+                  mat-stroked-button
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="grossPayrollFilterBy" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Filter By</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <form class="pb-3">
+            <div class="form-wrap">
+              <div class="input">
+                <label>Gross Monthly Salary</label>
+                <input type="text" placeholder="Enter amount" />
+              </div>
+              <div class="input">
+                <label>Earnings</label>
+                <input type="number" placeholder="Enter amount" />
+              </div>
+              <div class="input">
+                <label>Deductions</label>
+                <input type="number" placeholder="Enter amount" />
+              </div>
+              <div class="input">
+                <label>Net Salary</label>
+                <input type="number" placeholder="Enter amount" />
+              </div>
+              <div class="input">
+                <label>Prorate Deduction</label>
+                <input type="number" placeholder="Enter hours" />
+              </div>
+              <div class="d-flex align-items-center mt-5">
+                <button type="button" mat-flat-button class="me-3">
+                  Apply
+                </button>
+                <button
+                  type="button"
+                  mat-stroked-button
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="viewInstMgt" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Institution Management</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <div class="pb-3">
+            <div class="bg-white w--400 m-3">
+              <div class="grid grid--repeat--two list-items">
+                <label>Name</label>
+                <label><span>Tola Folaranmi</span></label>
+                <label>Category </label>
+                <label><span>Pension</span></label>
+                <label>Account Name </label>
+                <label><span>*******</span></label>
+                <label>Account Number </label>
+                <label><span>0099496452</span></label>
+                <label>Bank </label>
+                <label><span>UBA</span></label>
+              </div>
+              <div class="pt-4 mt-auto">
+                <button mat-flat-button data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="viewPayElement" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">View Pay Element</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <div class="pb-3">
+            <div class="bg-white w--400 scroll m-3">
+              <div class="grid grid--repeat--two list-items">
+                <label>Name</label>
+                <label><span>Test</span></label>
+                <label>Pay Type </label>
+                <label><span>Standard</span></label>
+                <label>Element Name </label>
+                <label><span>AGM</span></label>
+                <label>Element Type </label>
+                <label><span>Transport</span></label>
+                <label>Element Category </label>
+                <label><span>Taxable</span></label>
+                <label>Amount </label>
+                <label><span>₦20,000.00</span></label>
+                <label>Payment institution </label>
+                <label><span>Pencom</span></label>
+                <label>Variable </label>
+                <label><span>True</span></label>
+                <label>Ratio </label>
+                <label><span>32%</span></label>
+                <label>Pay Element </label>
+                <label><span>32</span></label>
+                <label>Taxable </label>
+                <label><span>False</span></label>
+              </div>
+              <div class="d-flex align-items-center pt-5 mt-auto">
+                <button mat-flat-button>Edit</button>
+                <button
+                  mat-stroked-button
+                  class="btn--danger mx-3"
+                  data-bs-toggle="modal"
+                  data-bs-target="#deletePayElement"
+                >
+                  Delete
+                </button>
+                <button mat-button data-bs-dismiss="modal" class="btn-link">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="deletePayElement" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Delete Pay Element</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <div class="pb-3">
+            <div class="center">
+              <p>
+                Are you sure you want to deactivate this item? They will no
+                longer be accessible.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-end align-items-center">
+          <button mat-flat-button class="me-3">Delete</button>
+          <button mat-stroked-button data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="deletePayScale" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Delete Pay Scale</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <div class="pb-3">
+            <div class="center">
+              <p>
+                Are you sure you want to deactivate this item? They will no
+                longer be accessible.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-end align-items-center">
+          <button mat-flat-button class="me-3">Delete</button>
+          <button mat-stroked-button data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="deactivate" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Deactivate Institution</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <div class="pb-3">
+            <div class="center">
+              <p>
+                Are you sure you want to deactivate this item? They will no
+                longer be accessible.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-end align-items-center">
+          <button mat-flat-button class="me-3">Deactivate</button>
+          <button mat-stroked-button data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="bulkUpload" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div class="container">
+          <div class="file__content">
+            <div class="d-flex justify-content-between align-items-center">
+              <button mat-button color="primary">
+                <mat-icon class="me-2">backup</mat-icon> Download sample file
+              </button>
+              <button mat-icon-button data-bs-dismiss="modal">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+            <figure>
+              <div class="dashed-border">
+                <div
+                  class="d-flex justify-content-center align-items-center flex-column"
+                >
+                  <div class="mb-3 mt-2">
+                    <img src="assets/img/file-upload-ico.svg" alt="" />
+                  </div>
+                  <button mat-stroked-button>Add File</button>
+                  <label class="txt-md txt-grey mt-2"
+                    >or drop files to upload</label
+                  >
+                </div>
+              </div>
+              <div class="d-flex justify-content-end mt-3">
+                <button mat-flat-button>Submit</button>
+              </div>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="assignPayScale" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Select payscale</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <form class="pb-3">
+            <div class="form-wrap w--400">
+              <div class="input">
+                <label>Pay Scale</label>
+                <mat-select
+                  placeholder="Select payscale"
+                  class="select"
+                  required
+                  (selectionChange)="handlePayAssignee($event)"
+                >
+                  <mat-option disabled="" selected="" value="">
+                    Select payscale
+                  </mat-option>
+                  <mat-option value="Test scale 1">Test Scale 1</mat-option>
+                  <mat-option value="Test scale 2">Test Scale 2</mat-option>
+                  <mat-option value="Test scale 3">Test Scale 3</mat-option>
+                  <mat-option value="Test scale 4">Test Scale 4</mat-option>
+                </mat-select>
+              </div>
+              <ng-container *ngIf="payScale !== ''">
+                <label class="fw-600 txt-md-md my-3">{{ payScale }}</label>
+                <ng-container>
+                  <div class="d-flex align-items-center mb-4">
+                    <div class="input mb-0">
+                      <label>Pension</label>
+                      <input type="text" placeholder="Enter value" />
+                    </div>
+                    <div class="d-flex flex-column mx-2">
+                      <span>&nbsp;</span>
+                      <button
+                        type="button"
+                        mat-button
+                        class="txt-danger underline"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center mb-4">
+                    <div class="input mb-0">
+                      <label>Pension</label>
+                      <input type="text" placeholder="Enter value" />
+                    </div>
+                    <div class="d-flex flex-column mx-2">
+                      <span>&nbsp;</span>
+                      <button
+                        type="button"
+                        mat-button
+                        class="txt-danger underline"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center mb-4">
+                    <div class="input mb-0">
+                      <label>Pension</label>
+                      <input type="text" placeholder="Enter value" />
+                    </div>
+                    <div class="d-flex flex-column mx-2">
+                      <span>&nbsp;</span>
+                      <button
+                        type="button"
+                        mat-button
+                        class="txt-danger underline"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                </ng-container>
+              </ng-container>
+              <div class="d-flex align-items-center mt-5">
+                <button type="button" mat-flat-button class="me-3">
+                  Assign
+                </button>
+                <button
+                  type="button"
+                  mat-stroked-button
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="runPayroll" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Note</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <div class="pb-3 px-2">
+            <div class="my-4">
+              <label class="title-sm fw-light"
+                >5 employees do not have a Pay scale</label
+              >
+            </div>
+            <div class="scroll">
+              <div class="list--wrap w--500">
+                <div class="item d-flex px-3">
+                  <div class="avatar">
+                    <img src="assets/img/profile.png" alt="profile" />
+                  </div>
+                  <div class="grid grid--repeat--three w-full">
+                    <label>Animashaun Kiki<span>1234</span></label>
+                    <label>Group head</label>
+                    <label>Marketing</label>
+                  </div>
+                </div>
+                <div class="item d-flex px-3">
+                  <div class="avatar">
+                    <img src="assets/img/profile.png" alt="profile" />
+                  </div>
+                  <div class="grid grid--repeat--three w-full">
+                    <label>Animashaun Kiki<span>1234</span></label>
+                    <label>Group head</label>
+                    <label>Marketing</label>
+                  </div>
+                </div>
+                <div class="item d-flex px-3">
+                  <div class="avatar">
+                    <img src="assets/img/profile.png" alt="profile" />
+                  </div>
+                  <div class="grid grid--repeat--three w-full">
+                    <label>Animashaun Kiki<span>1234</span></label>
+                    <label>Group head</label>
+                    <label>Marketing</label>
+                  </div>
+                </div>
+                <div class="item d-flex px-3">
+                  <div class="avatar">
+                    <img src="assets/img/profile.png" alt="profile" />
+                  </div>
+                  <div class="grid grid--repeat--three w-full">
+                    <label>Animashaun Kiki<span>1234</span></label>
+                    <label>Group head</label>
+                    <label>Marketing</label>
+                  </div>
+                </div>
+                <div class="item d-flex px-3">
+                  <div class="avatar">
+                    <img src="assets/img/profile.png" alt="profile" />
+                  </div>
+                  <div class="grid grid--repeat--three w-full">
+                    <label>Animashaun Kiki<span>1234</span></label>
+                    <label>Group head</label>
+                    <label>Marketing</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex justify-content-center align-items-center mt-4">
+              <button
+                mat-flat-button
+                class="me-3"
+                data-bs-toggle="modal"
+                data-bs-target="#assignPayScale"
+              >
+                Continue to run payroll
+              </button>
+              <a
+                [routerLink]="['/portal/payroll/assign-payscale']"
+                [queryParams]="{ query: 'payscale' }"
+                mat-stroked-button
+                data-bs-dismiss="modal"
+                class="btn--primary"
+                *ngIf="runByItem === 'Payscale'"
+              >
+                Resolve Issue
+              </a>
+              <a
+                [routerLink]="['/portal/payroll/assign-payscale']"
+                [queryParams]="{ query: 'gross' }"
+                mat-stroked-button
+                data-bs-dismiss="modal"
+                class="btn--primary"
+                *ngIf="runByItem === 'Gross/net'"
+              >
+                Resolve Issue
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

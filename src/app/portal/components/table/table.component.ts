@@ -15,33 +15,6 @@ import * as _types from '../../shared';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material/table';
 
-const ELEMENT_DATA = [
-  {
-    id: '1',
-    name: 'Test Scale',
-    payElement: 'Test Element, test 2',
-    payFrequency: 'Monthly',
-    noOfEmployees: '34',
-  },
-  {
-    name: 'Test Scale',
-    payElement: 'Test Element, test 2',
-    payFrequency: 'Monthly',
-    noOfEmployees: '34',
-  },
-  {
-    name: 'Test Scale',
-    payElement: 'Test Element, test 2',
-    payFrequency: 'Monthly',
-    noOfEmployees: '34',
-  },
-  {
-    name: 'Test Scale',
-    payElement: 'Test Element, test 2',
-    payFrequency: 'Monthly',
-    noOfEmployees: '34',
-  },
-];
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
@@ -50,8 +23,10 @@ const ELEMENT_DATA = [
 export class TableComponent implements OnInit {
   @Input() _data: any;
   @Input() _identifier: string;
-
+  @Input() runByItem;
   selectedItems: any[] = [];
+  payScale: string = '';
+  runBy: string;
   public dataSource: MatTableDataSource<any> = new MatTableDataSource();
   public selection = new SelectionModel(true, []);
   displayedColumns: string[];
@@ -65,6 +40,7 @@ export class TableComponent implements OnInit {
 
   ngAfterViewInit() {}
 
+  //Grab checkbox value here...
   toggleCheck(event: any, index: any) {}
 
   isAllSelected() {
@@ -92,5 +68,8 @@ export class TableComponent implements OnInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+  handlePayAssignee(event: any) {
+    this.payScale = event.source._value;
   }
 }

@@ -91,12 +91,14 @@
     <app-table
       [_data]="data_"
       _identifier="EMPLOYEESONGROSSPAYROLL"
+      [runByItem]="runByItem"
     ></app-table>
   </ng-container>
   <ng-container *ngIf="runByItem === 'Payscale'">
     <app-table
       [_data]="data"
       _identifier="EMPLOYEESONPAYSCALEPAYROLL"
+      [runByItem]="runByItem"
     ></app-table>
   </ng-container>
 
@@ -119,109 +121,5 @@
     >
       Run Payroll
     </button>
-  </div>
-</div>
-
-<!--Modal-->
-<div class="modal fade" id="runPayroll" role="dialog">
-  <div class="modal-dialog modal-wrapper">
-    <div class="modal-content-wrap">
-      <div class="modal-body">
-        <div
-          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
-        >
-          <div class="title">Note</div>
-          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
-        </div>
-        <div class="container">
-          <div class="pb-3 px-2">
-            <div class="my-4">
-              <label class="title-sm fw-light"
-                >5 employees do not have a Pay scale</label
-              >
-            </div>
-            <div class="scroll">
-              <div class="list--wrap w--500">
-                <div class="item d-flex px-3">
-                  <div class="avatar">
-                    <img src="assets/img/profile.png" alt="profile" />
-                  </div>
-                  <div class="grid grid--repeat--three w-full">
-                    <label>Animashaun Kiki<span>1234</span></label>
-                    <label>Group head</label>
-                    <label>Marketing</label>
-                  </div>
-                </div>
-                <div class="item d-flex px-3">
-                  <div class="avatar">
-                    <img src="assets/img/profile.png" alt="profile" />
-                  </div>
-                  <div class="grid grid--repeat--three w-full">
-                    <label>Animashaun Kiki<span>1234</span></label>
-                    <label>Group head</label>
-                    <label>Marketing</label>
-                  </div>
-                </div>
-                <div class="item d-flex px-3">
-                  <div class="avatar">
-                    <img src="assets/img/profile.png" alt="profile" />
-                  </div>
-                  <div class="grid grid--repeat--three w-full">
-                    <label>Animashaun Kiki<span>1234</span></label>
-                    <label>Group head</label>
-                    <label>Marketing</label>
-                  </div>
-                </div>
-                <div class="item d-flex px-3">
-                  <div class="avatar">
-                    <img src="assets/img/profile.png" alt="profile" />
-                  </div>
-                  <div class="grid grid--repeat--three w-full">
-                    <label>Animashaun Kiki<span>1234</span></label>
-                    <label>Group head</label>
-                    <label>Marketing</label>
-                  </div>
-                </div>
-                <div class="item d-flex px-3">
-                  <div class="avatar">
-                    <img src="assets/img/profile.png" alt="profile" />
-                  </div>
-                  <div class="grid grid--repeat--three w-full">
-                    <label>Animashaun Kiki<span>1234</span></label>
-                    <label>Group head</label>
-                    <label>Marketing</label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="d-flex justify-content-center align-items-center mt-4">
-              <button mat-flat-button class="me-3">
-                Continue to run payroll
-              </button>
-              <a
-                [routerLink]="['/portal/payroll/assign-payscale']"
-                [queryParams]="{ query: 'payscale' }"
-                mat-stroked-button
-                data-bs-dismiss="modal"
-                class="btn--primary"
-                *ngIf="runByItem === 'Payscale'"
-              >
-                Resolve Issue
-              </a>
-              <a
-                [routerLink]="['/portal/payroll/assign-payscale']"
-                [queryParams]="{ query: 'gross' }"
-                mat-stroked-button
-                data-bs-dismiss="modal"
-                class="btn--primary"
-                *ngIf="runByItem === 'Gross/net'"
-              >
-                Resolve Issue
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </div>

@@ -19,10 +19,12 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTableModule } from '@angular/material/table';
+import { MatDividerModule } from '@angular/material/divider';
 @NgModule({
   imports: [
     CommonModule,
     MatButtonModule,
+    MatDividerModule,
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
@@ -43,6 +45,7 @@ import { MatTableModule } from '@angular/material/table';
   ],
   exports: [
     MatButtonModule,
+    MatDividerModule,
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
