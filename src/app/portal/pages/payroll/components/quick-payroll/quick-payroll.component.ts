@@ -17,7 +17,6 @@ export class QuickPayrollComponent implements OnInit {
 
   handleRunBy(event: any) {
     this.runByItem = event.source._value;
-    console.log(event.source._value);
   }
   handlePayChannel(event: any) {
     this.payChannel = event.source._value;

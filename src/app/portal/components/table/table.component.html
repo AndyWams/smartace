@@ -441,7 +441,7 @@
         style="width: 100%"
       >
         <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef>NAME</th>
+          <th mat-header-cell *matHeaderCellDef>SCALE NAME</th>
           <td mat-cell *matCellDef="let row">
             <mat-checkbox
               [value]="row"
@@ -457,7 +457,7 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="payElement">
-          <th mat-header-cell *matHeaderCellDef>PAY ELEMENT</th>
+          <th mat-header-cell *matHeaderCellDef>PAY ELEMENTS</th>
           <td mat-cell *matCellDef="let element">{{ element.payElement }}</td>
         </ng-container>
         <ng-container matColumnDef="payFrequency">
