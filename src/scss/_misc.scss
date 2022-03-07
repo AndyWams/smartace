@@ -60,7 +60,7 @@
     grid-column-gap: 20px;
   }
   &--repeat--two {
-    grid-template-columns: auto auto;
+    grid-template-columns: 1fr 1fr;
     grid-column-gap: 20px;
     grid-row-gap: 30px;
     align-items: center;
@@ -71,6 +71,9 @@
   }
   &--repeat--four {
     grid-template-columns: repeat(4, 25%);
+  }
+  &--repeat--five {
+    grid-template-columns: repeat(5, 20%);
   }
   &.grid-column-gap-30 {
     grid-column-gap: 30px;
@@ -159,21 +162,21 @@
           font-size: 14px;
           font-weight: 400;
           &.tag {
-            padding: 5px 15px;
+            padding: 12px 15px;
             border-radius: 4px;
-            font-size: 12px;
+            font-size: 14px;
+            font-weight: 500;
             width: 110.28px;
             display: block;
             text-align: center;
-            text-transform: capitalize;
 
-            &.status-open {
-              background: rgba(#cca43c, 0.1);
-              color: #cca43c;
+            &.status-approved {
+              background: rgba($green, 0.1);
+              color: $green;
             }
-            &.status-closed {
-              background: rgba(#0aa81c, 0.1);
-              color: #0aa81c;
+            &.status-pending {
+              background: rgba($red, 0.1);
+              color: $red;
             }
           }
         }
@@ -197,6 +200,16 @@
         border-top: 1px solid #e6e6e6;
         td {
           border-top: 1px solid rgba(#ccc, 27%);
+        }
+      }
+      &.border-red {
+        td:first-child {
+          border-left: 2px solid $red;
+        }
+      }
+      &.border-green {
+        td:first-child {
+          border-left: 2px solid $green;
         }
       }
       &:last-child td {
@@ -377,6 +390,21 @@ mat-select-trigger {
     font-size: 12px;
     font-style: italic;
     color: $blue;
+  }
+}
+
+.mat-menu-content:not(:empty) {
+  display: flex;
+  flex-direction: column;
+  // padding: 1em 0em !important;
+  &.padded-menu {
+    padding: 1em !important;
+  }
+  .mat-flat-button {
+    margin-bottom: 1em;
+    &:last-child {
+      margin-bottom: 0em;
+    }
   }
 }
 .mat-pseudo-checkbox-checked {

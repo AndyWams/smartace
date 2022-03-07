@@ -67,6 +67,16 @@ a {
     font-weight: bold;
     min-width: 195px !important;
   }
+  &.btn-orange {
+    background: $orange !important;
+  }
+  &.btn-light-blue {
+    background: #2f80ed !important;
+  }
+  &.btn-danger {
+    background: rgba($red, 0.1) !important;
+    color: $red;
+  }
 }
 .mat-stroked-button {
   min-width: 128px !important;
@@ -111,6 +121,7 @@ a {
 .btn--primary {
   color: $blue;
 }
+
 .txt-danger {
   color: $red;
   &.underline {

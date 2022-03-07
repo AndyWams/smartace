@@ -25,6 +25,7 @@ import { ReviewEmployeePayrollComponent } from './components/review-employee-pay
 import { AssignPayscaleComponent } from './components/assign-payscale/assign-payscale.component';
 import { ModalsComponent } from '../../components/modals/modals.component';
 import { PayslipComponent } from './components/payslip/payslip.component';
+import { PayrollDetailsComponent } from './components/payroll-details/payroll-details.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { PayslipComponent } from './components/payslip/payslip.component';
     AssignPayscaleComponent,
     ModalsComponent,
     PayslipComponent,
+    PayrollDetailsComponent,
   ],
   imports: [CommonModule, PayrollRoutingModule, AngularMaterialModule],
   exports: [PayrollComponent],

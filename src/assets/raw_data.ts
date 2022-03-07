@@ -214,3 +214,42 @@ export const grossPayrollData = [
     prorateDeduction: '0',
   },
 ];
+
+export const payrollRunLog = [
+  {
+    id: '1',
+    name: 'Test Pay',
+    refNo: '#0282091-IG',
+    period: '1st Dec - 25th Dec',
+    dateApproved: '25th Dec',
+    approvedBy: 'Tolu Allen',
+    status: 'Approved',
+  },
+  {
+    id: '2',
+    name: 'Test Pay',
+    refNo: '#0282091-IG',
+    period: '1st Dec - 25th Dec',
+    dateApproved: '25th Dec',
+    approvedBy: 'Tolu Allen',
+    status: 'Pending',
+  },
+  {
+    id: '3',
+    name: 'Test Pay',
+    refNo: '#0282091-IG',
+    period: '1st Dec - 25th Dec',
+    dateApproved: '25th Dec',
+    approvedBy: 'Tolu Allen',
+    status: 'Pending',
+  },
+  {
+    id: '4',
+    name: 'Test Pay',
+    refNo: '#0282091-IG',
+    period: '1st Dec - 25th Dec',
+    dateApproved: '25th Dec',
+    approvedBy: 'Tolu Allen',
+    status: 'Approved',
+  },
+];

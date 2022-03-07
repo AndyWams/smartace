@@ -62,6 +62,16 @@ export const getTableColumn = (identifier: string) => {
         'prorateDeduction',
         'action',
       ]);
+    case (identifier = _types.PAYROLLRUNLOG):
+      return (column = [
+        'name',
+        'refNo',
+        'period',
+        'dateApproved',
+        'approvedBy',
+        'status',
+        'actions',
+      ]);
 
     default:
       return column;

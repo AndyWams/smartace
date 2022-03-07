@@ -1,0 +1,444 @@
+<ng-container>
+  <div class="header d-flex align-items-center justify-content-between mb-4">
+    <div class="title">Payroll Details - Test Pay</div>
+  </div>
+  <div class="d-flex align-items-center mb-4">
+    <a href="javascript:window.history.go(-1)" mat-button>
+      <span class="icon-circ me-3"
+        ><mat-icon mat-icon-button>arrow_back</mat-icon></span
+      >
+      Back
+    </a>
+  </div>
+  <div class="bg-white">
+    <div class="title-sm mb-5">Overview</div>
+    <div class="overview">
+      <div class="grid grid--repeat--five w--full">
+        <div class="d-flex">
+          <label><span>Payroll Period</span>1st Dec - 25th Dec</label>
+        </div>
+        <label><span>Payroll Schedule</span>Monthly</label>
+        <label><span>Payroll Channel</span>Bank transfer</label>
+        <label><span>Bank Balance</span>NGN350,000.00</label>
+        <label
+          ><span>Status</span
+          ><span
+            class="tag"
+            [ngClass]="{
+              'status-approved': queryString === 'Approved',
+              'status-pending': queryString === 'Pending'
+            }"
+            >{{ queryString }}</span
+          ></label
+        >
+        <label><span>Last pay date</span>1st Dec - 25th Dec</label>
+        <label><span>No of Employees</span>234</label>
+        <label><span>Date Initiated</span>25th Dec.</label>
+        <label><span>Initiated By</span>Tolu Allen</label>
+      </div>
+    </div>
+  </div>
+  <div class="grid grid--2fr--1fr mt-4">
+    <div class="bg-white colored-border border-blue">
+      <div class="d-flex align-items-center justify-content-between mb-4">
+        <div class="title-sm">Pay Element Breakdown</div>
+        <button
+          mat-button
+          class="btn--primary"
+          data-bs-toggle="modal"
+          data-bs-target="#addPayElement"
+          *ngIf="queryString === 'Pending'"
+        >
+          <mat-icon class="me-2">add</mat-icon>
+          Add Pay Element
+        </button>
+      </div>
+      <section>
+        <div class="title-md fw-500 mb-3">Earnings</div>
+        <div class="grid grid--repeat--two list-items grid-row-gap-20">
+          <div class="d-flex justify-content-between">
+            <label>Basic</label>
+            <label>₦ 78,768.81</label>
+          </div>
+          <div class="d-flex justify-content-center">
+            <button
+              mat-button
+              class="btn--primary"
+              data-bs-toggle="modal"
+              data-bs-target="#editPayElement"
+              *ngIf="queryString === 'Pending'"
+            >
+              Edit
+            </button>
+          </div>
+          <div class="d-flex justify-content-between">
+            <label>Transport</label>
+            <label>₦ 78,768.81</label>
+          </div>
+          <div class="d-flex justify-content-center">
+            <button
+              mat-button
+              class="btn--primary"
+              data-bs-toggle="modal"
+              data-bs-target="#editPayElement"
+              *ngIf="queryString === 'Pending'"
+            >
+              Edit
+            </button>
+          </div>
+          <div class="d-flex justify-content-between">
+            <label>Feeding</label>
+            <label>₦ 56,000.81</label>
+          </div>
+          <div class="d-flex justify-content-center">
+            <button
+              mat-button
+              class="btn--primary"
+              data-bs-toggle="modal"
+              data-bs-target="#editPayElement"
+              *ngIf="queryString === 'Pending'"
+            >
+              Edit
+            </button>
+          </div>
+          <div class="d-flex justify-content-between mt-4">
+            <label>TOTAL EARNINGS</label>
+            <label>₦ 576,768.81</label>
+          </div>
+        </div>
+      </section>
+      <section class="mt-5 pt-4">
+        <div class="title-md fw-500 mb-3">Deductions</div>
+        <div class="grid grid--repeat--two list-items grid-row-gap-20">
+          <div class="d-flex justify-content-between">
+            <label>Pension</label>
+            <label>₦ 98,543.81</label>
+          </div>
+          <div class="d-flex justify-content-center">
+            <button
+              mat-button
+              class="btn--primary"
+              data-bs-toggle="modal"
+              data-bs-target="#editPayElement"
+              *ngIf="queryString === 'Pending'"
+            >
+              Edit
+            </button>
+          </div>
+          <div class="d-flex justify-content-between">
+            <label>Tax</label>
+            <label>₦ 21,800.81</label>
+          </div>
+          <div class="d-flex justify-content-center">
+            <button
+              mat-button
+              class="btn--primary"
+              data-bs-toggle="modal"
+              data-bs-target="#editPayElement"
+              *ngIf="queryString === 'Pending'"
+            >
+              Edit
+            </button>
+          </div>
+          <div class="d-flex justify-content-between">
+            <label>Loan</label>
+            <label>₦ 2,050.81</label>
+          </div>
+          <div class="d-flex justify-content-center">
+            <button
+              mat-button
+              class="btn--primary"
+              data-bs-toggle="modal"
+              data-bs-target="#editPayElement"
+              *ngIf="queryString === 'Pending'"
+            >
+              Edit
+            </button>
+          </div>
+          <div class="d-flex justify-content-between">
+            <label>Loan</label>
+            <label>₦ 2,050.81</label>
+          </div>
+          <div class="d-flex justify-content-center">
+            <button
+              mat-button
+              class="btn--primary"
+              data-bs-toggle="modal"
+              data-bs-target="#editPayElement"
+              *ngIf="queryString === 'Pending'"
+            >
+              Edit
+            </button>
+          </div>
+          <div class="d-flex justify-content-between">
+            <label>Loan</label>
+            <label>₦ 2,050.81</label>
+          </div>
+          <div class="d-flex justify-content-center">
+            <button
+              mat-button
+              class="btn--primary"
+              data-bs-toggle="modal"
+              data-bs-target="#editPayElement"
+              *ngIf="queryString === 'Pending'"
+            >
+              Edit
+            </button>
+          </div>
+          <div class="d-flex justify-content-between mt-4">
+            <label>TOTAL DEDUCTIONS</label>
+            <label>₦ 576,768.81</label>
+          </div>
+        </div>
+      </section>
+      <div class="total">
+        <div class="d-flex justify-content-between align-items-center">
+          <label>TOTAL (GROSS)</label>
+          <label>₦ 576,768.81</label>
+        </div>
+      </div>
+    </div>
+    <div class="sticky">
+      <div class="bg-white colored-border border-green">
+        <section>
+          <div class="title-md fw-500 mb-4">Summary</div>
+          <div class="grid grid--1fr--1fr grid-row-gap-20">
+            <label>Total Earnings</label>
+            <label>₦ 78,768.81</label>
+            <label>Total Deductions</label>
+            <label>₦ 76,532.81</label>
+          </div>
+          <div class="total adjust">
+            <div class="d-flex justify-content-between align-items-center">
+              <label>TOTAL (GROSS)</label>
+              <label>₦ 576,768.81</label>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+  <div class="d-flex align-items-center mt-5" *ngIf="queryString === 'Pending'">
+    <button mat-flat-button>Approved</button>
+    <button mat-flat-button class="btn-danger mx-3">Decline Payroll</button>
+    <button mat-stroked-button>Rerun Payroll</button>
+  </div>
+</ng-container>
+<!--Modal-->
+<div class="modal fade" id="addPayElement" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Add Pay Element</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <form class="pb-3">
+            <div class="form-wrap w--500">
+              <div class="input">
+                <mat-select
+                  placeholder="Pay element"
+                  multiple
+                  #matSelect
+                  (selectionChange)="handlePayElementChange($event)"
+                >
+                  <mat-select-trigger>
+                    {{
+                      _selectedPayElements
+                        ? _selectedPayElements.slice(0, 2)
+                        : ""
+                    }}
+                    <span class="more" *ngIf="_selectedPayElements.length > 2">
+                      +{{ _selectedPayElements.slice(0, 2).length - 1 }} other
+                      item
+                    </span>
+                  </mat-select-trigger>
+                  <mat-option
+                    #allSelected
+                    (click)="toggleAllSelection()"
+                    [value]="0"
+                    >All</mat-option
+                  >
+                  <mat-option
+                    #options
+                    *ngFor="let option of options"
+                    [value]="option.value"
+                    (click)="toggleOne()"
+                  >
+                    {{ option.label }}
+                  </mat-option>
+                </mat-select>
+              </div>
+              <ng-container *ngIf="_selectedPayElements.length !== 0">
+                <div class="chips_wrap d-flex align-items-center">
+                  <div
+                    class="_chips animate__animated animate__bounceIn"
+                    *ngFor="let chip of _selectedPayElements; let i = index"
+                  >
+                    <span>{{ chip }}</span>
+                    <span (click)="dropItem(i)"
+                      ><ion-icon name="close"></ion-icon
+                    ></span>
+                  </div>
+                </div>
+              </ng-container>
+              <div class="input">
+                <mat-radio-group aria-label="Select an option">
+                  <mat-radio-button
+                    class="me-4"
+                    value="oneOff"
+                    (change)="handleToggle($event)"
+                    checked
+                    id="oneOff"
+                    >One Off</mat-radio-button
+                  >
+                  <mat-radio-button
+                    value="recurrent"
+                    (change)="handleToggle($event)"
+                    id="recurrent"
+                    >Recurrent</mat-radio-button
+                  >
+                </mat-radio-group>
+              </div>
+              <ng-container>
+                <div
+                  class="hideDate animate__animated animate__fadeIn"
+                  [ngClass]="{ show_date: payElementDuration === 'recurrent' }"
+                >
+                  <div class="input mb-0 me-3">
+                    <label for="">Start Date</label>
+                    <input type="date" (change)="onDateChange()" #txtDate />
+                  </div>
+                  <div class="input mb-0">
+                    <label for=""
+                      >End Date
+                      <span class="txt-sm italize">(Optional)</span></label
+                    >
+                    <input type="date" (change)="onDateChange()" />
+                  </div>
+                </div>
+              </ng-container>
+              <div class="d-flex align-items-center mt-5">
+                <button type="button" mat-flat-button class="me-3">Add</button>
+                <button
+                  type="button"
+                  mat-stroked-button
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="editPayElement" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Edit Pay Element</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <form class="pb-3">
+            <div class="form-wrap w--500">
+              <div class="d-flex align-items-center mb-4">
+                <div class="input mb-0">
+                  <label>Pension</label>
+                  <input type="text" placeholder="Enter value" />
+                </div>
+                <div class="d-flex flex-column mx-2">
+                  <span>&nbsp;</span>
+                  <button type="button" mat-button class="txt-danger underline">
+                    Delete
+                  </button>
+                </div>
+              </div>
+              <div class="d-flex align-items-center mb-4">
+                <div class="input mb-0">
+                  <label>Pension</label>
+                  <input type="text" placeholder="Enter value" />
+                </div>
+                <div class="d-flex flex-column mx-2">
+                  <span>&nbsp;</span>
+                  <button type="button" mat-button class="txt-danger underline">
+                    Delete
+                  </button>
+                </div>
+              </div>
+              <div class="d-flex align-items-center mb-4">
+                <div class="input mb-0">
+                  <label>Pension</label>
+                  <input type="text" placeholder="Enter value" />
+                </div>
+                <div class="d-flex flex-column mx-2">
+                  <span>&nbsp;</span>
+                  <button type="button" mat-button class="txt-danger underline">
+                    Delete
+                  </button>
+                </div>
+              </div>
+              <div class="input">
+                <mat-radio-group aria-label="Select an option">
+                  <mat-radio-button
+                    class="me-4"
+                    value="oneOff"
+                    (change)="handleToggle($event)"
+                    checked
+                    id="oneOff"
+                    >One Off</mat-radio-button
+                  >
+                  <mat-radio-button
+                    value="recurrent"
+                    (change)="handleToggle($event)"
+                    id="recurrent"
+                    >Recurrent</mat-radio-button
+                  >
+                </mat-radio-group>
+              </div>
+              <ng-container>
+                <div
+                  class="hideDate animate__animated animate__fadeIn"
+                  [ngClass]="{ show_date: payElementDuration === 'recurrent' }"
+                >
+                  <div class="input mb-0 me-3">
+                    <label for="">Start Date</label>
+                    <input type="date" (change)="onDateChange()" #txtDate_ />
+                  </div>
+                  <div class="input mb-0">
+                    <label for=""
+                      >End Date
+                      <span class="txt-sm italize">(Optional)</span></label
+                    >
+                    <input type="date" (change)="onDateChange()" />
+                  </div>
+                </div>
+              </ng-container>
+              <div class="d-flex align-items-center mt-5">
+                <button type="button" mat-flat-button class="me-3">
+                  Update
+                </button>
+                <button
+                  type="button"
+                  mat-stroked-button
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

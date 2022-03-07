@@ -87,6 +87,17 @@
             Filter <ion-icon name="options" class="mx-3"></ion-icon>
           </button>
         </div>
+        <!-- PayrollRunlog  Filter-->
+        <div *ngIf="_identifier === 'PAYROLLRUNLOG'">
+          <button
+            mat-stroked-button
+            class="mat-stroked-secondary mr-1"
+            data-bs-toggle="modal"
+            data-bs-target="#payrollRunLogFilterBy"
+          >
+            Filter <ion-icon name="options" class="mx-3"></ion-icon>
+          </button>
+        </div>
         <!-- Employee Filter-->
         <div
           *ngIf="
@@ -130,7 +141,8 @@
             _identifier !== 'EMPLOYEESONPAYSCALE' &&
             _identifier !== 'EMPLOYEESONGROSSPAYROLL' &&
             _identifier !== 'EMPLOYEESONPAYSCALEPAYROLL' &&
-            _identifier !== 'EMPLOYEEPAYSCALE'
+            _identifier !== 'EMPLOYEEPAYSCALE' &&
+            _identifier !== 'PAYROLLRUNLOG'
           "
         >
           <button mat-stroked-button class="mat-stroked-secondary mr-1">
@@ -144,7 +156,8 @@
             _identifier !== 'EMPLOYEESONPAYSCALE' &&
             _identifier !== 'EMPLOYEESONGROSSPAYROLL' &&
             _identifier !== 'EMPLOYEESONPAYSCALEPAYROLL' &&
-            _identifier !== 'EMPLOYEEPAYSCALE'
+            _identifier !== 'EMPLOYEEPAYSCALE' &&
+            _identifier !== 'PAYROLLRUNLOG'
           "
         >
           <button mat-button class="print">
@@ -441,6 +454,102 @@
         ></tr>
       </table>
     </ng-container>
+    <ng-container *ngIf="_identifier === 'INSTITUTION'">
+      <table
+        mat-table
+        [dataSource]="dataSource"
+        class="table custom-table w--100"
+        style="width: 100%"
+      >
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>NAME</th>
+          <td mat-cell *matCellDef="let row">
+            <mat-checkbox
+              [value]="row"
+              (click)="$event.stopPropagation()"
+              (change)="
+                $event ? selection.toggle(row) : null; toggleCheck($event, i)
+              "
+              [checked]="selection.isSelected(row)"
+              [aria-label]="checkboxLabel(row)"
+            >
+              {{ row.name }}
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="category">
+          <th mat-header-cell *matHeaderCellDef>CATEGORY</th>
+          <td mat-cell *matCellDef="let element">{{ element.category }}</td>
+        </ng-container>
+        <ng-container matColumnDef="accountName">
+          <th mat-header-cell *matHeaderCellDef>ACCOUNT NAME</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.accountName }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="accountNumber">
+          <th mat-header-cell *matHeaderCellDef>ACCOUNT NUMBER</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.accountNumber }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="bank">
+          <th mat-header-cell *matHeaderCellDef>BANK</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.bank }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="dateCreated">
+          <th mat-header-cell *matHeaderCellDef>DATE CREATED</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.dateCreated }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef>&nbsp;</th>
+          <td mat-cell *matCellDef="let element">
+            <div class="dropdown">
+              <span class="dropdown-toggle" [matMenuTriggerFor]="menu">
+                <ion-icon name="ellipsis-horizontal"></ion-icon>
+              </span>
+              <mat-menu #menu="matMenu">
+                <button
+                  type="button"
+                  mat-menu-item
+                  data-bs-toggle="modal"
+                  data-bs-target="#viewInstMgt"
+                >
+                  View
+                </button>
+                <button
+                  mat-menu-item
+                  [routerLink]="['/portal/payroll/institution-payment-setup']"
+                  [queryParams]="{ query: 'edit' }"
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  mat-menu-item
+                  class="txt-danger"
+                  data-bs-toggle="modal"
+                  data-bs-target="#deactivate"
+                >
+                  Deactivate
+                </button>
+              </mat-menu>
+            </div>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          #tbl_Rows
+          [ngClass]="{ 'bg-wrap': selection.isSelected(row) }"
+        ></tr>
+      </table>
+    </ng-container>
     <ng-container *ngIf="_identifier === 'PAYSCALE'">
       <table
         mat-table
@@ -622,7 +731,7 @@
         ></tr>
       </table>
     </ng-container>
-    <ng-container *ngIf="_identifier === 'INSTITUTION'">
+    <ng-container *ngIf="_identifier === 'PAYROLLRUNLOG'">
       <table
         mat-table
         [dataSource]="dataSource"
@@ -630,7 +739,7 @@
         style="width: 100%"
       >
         <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef>NAME</th>
+          <th mat-header-cell *matHeaderCellDef>Name</th>
           <td mat-cell *matCellDef="let row">
             <mat-checkbox
               [value]="row"
@@ -645,65 +754,59 @@
             </mat-checkbox>
           </td>
         </ng-container>
-        <ng-container matColumnDef="category">
-          <th mat-header-cell *matHeaderCellDef>CATEGORY</th>
-          <td mat-cell *matCellDef="let element">{{ element.category }}</td>
+        <ng-container matColumnDef="refNo">
+          <th mat-header-cell *matHeaderCellDef>Ref No</th>
+          <td mat-cell *matCellDef="let element">{{ element.refNo }}</td>
         </ng-container>
-        <ng-container matColumnDef="accountName">
-          <th mat-header-cell *matHeaderCellDef>ACCOUNT NAME</th>
+        <ng-container matColumnDef="period">
+          <th mat-header-cell *matHeaderCellDef>Period</th>
+          <td mat-cell *matCellDef="let element">{{ element.period }}</td>
+        </ng-container>
+        <ng-container matColumnDef="dateApproved">
+          <th mat-header-cell *matHeaderCellDef>Date Approved</th>
           <td mat-cell *matCellDef="let element">
-            {{ element.accountName }}
+            {{ element.dateApproved }}
           </td>
         </ng-container>
-        <ng-container matColumnDef="accountNumber">
-          <th mat-header-cell *matHeaderCellDef>ACCOUNT NUMBER</th>
+        <ng-container matColumnDef="approvedBy">
+          <th mat-header-cell *matHeaderCellDef>Approved By</th>
           <td mat-cell *matCellDef="let element">
-            {{ element.accountNumber }}
+            {{ element.approvedBy }}
           </td>
         </ng-container>
-        <ng-container matColumnDef="bank">
-          <th mat-header-cell *matHeaderCellDef>BANK</th>
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
           <td mat-cell *matCellDef="let element">
-            {{ element.bank }}
+            <span
+              class="tag"
+              [ngClass]="{
+                'status-approved': element.status === 'Approved',
+                'status-pending': element.status === 'Pending'
+              }"
+            >
+              {{ element.status }}</span
+            >
           </td>
         </ng-container>
-        <ng-container matColumnDef="dateCreated">
-          <th mat-header-cell *matHeaderCellDef>DATE CREATED</th>
-          <td mat-cell *matCellDef="let element">
-            {{ element.dateCreated }}
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="action">
+        <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef>&nbsp;</th>
           <td mat-cell *matCellDef="let element">
             <div class="dropdown">
               <span class="dropdown-toggle" [matMenuTriggerFor]="menu">
                 <ion-icon name="ellipsis-horizontal"></ion-icon>
               </span>
-              <mat-menu #menu="matMenu">
-                <button
-                  type="button"
-                  mat-menu-item
-                  data-bs-toggle="modal"
-                  data-bs-target="#viewInstMgt"
+              <mat-menu #menu="matMenu" class="mat-menu-content padded-menu">
+                <a
+                  [routerLink]="['/portal/payroll/payroll-details']"
+                  [queryParams]="{ query: element.status }"
+                  mat-flat-button
+                  class="btn-orange"
                 >
-                  View
-                </button>
-                <button
-                  mat-menu-item
-                  [routerLink]="['/portal/payroll/institution-payment-setup']"
-                  [queryParams]="{ query: 'edit' }"
-                >
-                  Edit
-                </button>
-                <button
-                  type="button"
-                  mat-menu-item
-                  class="txt-danger"
-                  data-bs-toggle="modal"
-                  data-bs-target="#deactivate"
-                >
-                  Deactivate
+                  View Details
+                </a>
+                <button mat-flat-button>Payslip Analysis</button>
+                <button type="button" mat-flat-button class="btn-light-blue">
+                  Payroll Analysis
                 </button>
               </mat-menu>
             </div>
@@ -714,10 +817,15 @@
           mat-row
           *matRowDef="let row; columns: displayedColumns"
           #tbl_Rows
-          [ngClass]="{ 'bg-wrap': selection.isSelected(row) }"
+          [ngClass]="{
+            'bg-wrap': selection.isSelected(row),
+            'border-green': row.status === 'Approved',
+            'border-red': row.status === 'Pending'
+          }"
         ></tr>
       </table>
     </ng-container>
+    <!--Pagination-->
     <div class="d-flex justify-content-between align-items-center px-4">
       <span class="tbl_count">Showing 10 of 320</span>
       <nav>

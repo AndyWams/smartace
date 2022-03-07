@@ -9,6 +9,7 @@ import { GrossNetpayComponent } from './components/gross-netpay/gross-netpay.com
 import { InstituteManagementComponent } from './components/institute-management/institute-management.component';
 import { PayElementsComponent } from './components/pay-elements/pay-elements.component';
 import { PayScaleComponent } from './components/pay-scale/pay-scale.component';
+import { PayrollDetailsComponent } from './components/payroll-details/payroll-details.component';
 import { PayrollRunlogComponent } from './components/payroll-runlog/payroll-runlog.component';
 import { PayrollSettingsComponent } from './components/payroll-settings/payroll-settings.component';
 import { PayscaleSetupComponent } from './components/payscale-setup/payscale-setup.component';
@@ -81,6 +82,10 @@ const routes: Routes = [
       {
         path: 'payroll-run-log',
         component: PayrollRunlogComponent,
+      },
+      {
+        path: 'payroll-details',
+        component: PayrollDetailsComponent,
       },
       {
         path: 'gross-netpay',
