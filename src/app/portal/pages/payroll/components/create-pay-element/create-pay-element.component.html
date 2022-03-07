@@ -12,17 +12,20 @@
       <div class="grid align-items-center">
         <label>Payroll Item</label>
         <div class="input mb-0">
-          <select
+          <mat-select
             class="select"
+            placeholder="Payroll item"
             required
             (change)="handlePayrollItemSelect($event)"
             *ngIf="payrollItem !== 'Create new'"
           >
-            <option disabled="" selected="" value="">Select item</option>
-            <option value="Statutory">Statutory</option>
-            <option value="Non-statutory">Non-statutory</option>
-            <option value="Create new">Create new</option>
-          </select>
+            <mat-option disabled="" selected="" value=""
+              >Select item</mat-option
+            >
+            <mat-option value="Statutory">Statutory</mat-option>
+            <mat-option value="Non-statutory">Non-statutory</mat-option>
+            <mat-option value="Create new">Create new</mat-option>
+          </mat-select>
           <input
             type="text"
             placeholder="Enter payroll item"
@@ -33,15 +36,18 @@
       <div class="grid align-items-center">
         <label>Pay Type</label>
         <div class="input mb-0">
-          <select
+          <mat-select
             class="select"
+            placeholder="Pay type"
             required
             (change)="handlePayTypeSelect($event)"
           >
-            <option disabled="" selected="" value="">Select type</option>
-            <option value="Monthly">Monthly</option>
-            <option value="Time-shift">Time-shift</option>
-          </select>
+            <mat-option disabled="" selected="" value=""
+              >Select type</mat-option
+            >
+            <mat-option value="Monthly">Monthly</mat-option>
+            <mat-option value="Time-shift">Time-shift</mat-option>
+          </mat-select>
         </div>
       </div>
       <div class="grid align-items-center">
@@ -53,26 +59,26 @@
       <div class="grid align-items-center" *ngIf="payType === 'Monthly'">
         <label>Element Category</label>
         <div class="input mb-0">
-          <select class="select" required>
-            <option disabled="" selected="" value="">
+          <mat-select placeholder="Element category" class="select" required>
+            <mat-option disabled="" selected="" value="">
               Select element category
-            </option>
-            <option value="Taxable">Taxable</option>
-            <option value="Non-Taxable">Non-Taxable</option>
-            <option value="Bonus">Bonus</option>
-          </select>
+            </mat-option>
+            <mat-option value="Taxable">Taxable</mat-option>
+            <mat-option value="Non-Taxable">Non-Taxable</mat-option>
+            <mat-option value="Bonus">Bonus</mat-option>
+          </mat-select>
         </div>
       </div>
       <div class="grid align-items-center">
         <label>Element Type</label>
         <div class="input mb-0">
-          <select class="select" required>
-            <option disabled="" selected="" value="">
+          <mat-select placeholder="Element type" class="select" required>
+            <mat-option disabled="" selected="" value="">
               Select element type
-            </option>
-            <option value="Earnings">Earnings</option>
-            <option value="Deduction">Deduction</option>
-          </select>
+            </mat-option>
+            <mat-option value="Earnings">Earnings</mat-option>
+            <mat-option value="Deduction">Deduction</mat-option>
+          </mat-select>
         </div>
       </div>
       <div class="grid align-items-center" *ngIf="payType === 'Time-shift'">
@@ -136,6 +142,7 @@
           <div class="input mb-0">
             <mat-select
               placeholder="Pay element"
+              class="select"
               multiple
               #matSelect
               (selectionChange)="handlePayElementChange($event)"
@@ -177,11 +184,15 @@
       <div class="grid align-items-center">
         <label>Payment Institution</label>
         <div class="input mb-0">
-          <select class="select" required>
-            <option disabled="" selected="" value="">
+          <mat-select
+            placeholder="Payment insititution"
+            class="select"
+            required
+          >
+            <mat-option disabled="" selected="" value="">
               Select payment institution
-            </option>
-          </select>
+            </mat-option>
+          </mat-select>
         </div>
       </div>
       <div class="grid align-items-center">
@@ -218,12 +229,16 @@
       >
         <label>Tax Type</label>
         <div class="input mb-0">
-          <select class="select" required>
-            <option disabled="" selected="" value="">Select tax type</option>
-            <option value="Value Added Tax">Value Added Tax</option>
-            <option value="Withholding Tax">Withholding Tax</option>
-            <option value="Personal Income Tax">Personal Income Tax</option>
-          </select>
+          <mat-select placeholder="Tax type" class="select" required>
+            <mat-option disabled="" selected="" value=""
+              >Select tax type</mat-option
+            >
+            <mat-option value="Value Added Tax">Value Added Tax</mat-option>
+            <mat-option value="Withholding Tax">Withholding Tax</mat-option>
+            <mat-option value="Personal Income Tax"
+              >Personal Income Tax</mat-option
+            >
+          </mat-select>
         </div>
       </div>
       <div

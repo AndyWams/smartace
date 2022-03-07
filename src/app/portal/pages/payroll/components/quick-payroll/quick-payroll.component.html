@@ -20,49 +20,59 @@
       <div class="grid align-items-center">
         <label>Payroll Schedule</label>
         <div class="input mb-0">
-          <select class="select" required>
-            <option disabled="" selected="" value="">
+          <mat-select placeholder="Payroll schedule" class="select" required>
+            <mat-option disabled="" selected="" value="">
               Select payroll schedule
-            </option>
-            <option value="">Option One</option>
-            <option value="">Option Two</option>
-          </select>
+            </mat-option>
+            <mat-option value="">Option One</mat-option>
+            <mat-option value="">Option Two</mat-option>
+          </mat-select>
         </div>
       </div>
       <div class="grid align-items-center">
         <label>Payment Channel</label>
         <div class="input mb-0">
-          <select class="select" required (change)="handlePayChannel($event)">
-            <option disabled="" selected="" value="">
+          <mat-select
+            placeholder="Payment channel"
+            class="select"
+            required
+            (selectionChange)="handlePayChannel($event)"
+          >
+            <mat-option disabled="" selected="" value="">
               Select payment channel
-            </option>
-            <option value="Master">Master Card</option>
-            <option value="Bank">Bank Payment</option>
-          </select>
+            </mat-option>
+            <mat-option value="Master">Master Card</mat-option>
+            <mat-option value="Bank">Bank Payment</mat-option>
+          </mat-select>
         </div>
       </div>
       <div class="grid align-items-center">
         <label>Run By</label>
         <div class="input mb-0">
-          <select class="select" required (change)="handleRunBy($event)">
-            <option disabled="" selected="" value="">
+          <mat-select
+            placeholder="Run by"
+            class="select"
+            required
+            (selectionChange)="handleRunBy($event)"
+          >
+            <mat-option disabled="" selected="" value="">
               Select payment channel
-            </option>
-            <option value="Payscale">By Payscale</option>
-            <option value="Gross/net">By Gross/Net Pay</option>
-          </select>
+            </mat-option>
+            <mat-option value="Payscale">By Payscale</mat-option>
+            <mat-option value="Gross/net">By Gross/Net Pay</mat-option>
+          </mat-select>
         </div>
       </div>
       <div class="grid align-items-center" *ngIf="runByItem === 'Payscale'">
         <label>Select Payscale</label>
         <div class="input mb-0">
-          <select class="select" required>
-            <option disabled="" selected="" value="">
+          <mat-select class="select" placeholder="Select pay scale" required>
+            <mat-option disabled="" selected="" value="">
               Select payment channel
-            </option>
-            <option value="">Payscale One</option>
-            <option value="">Payscale Two</option>
-          </select>
+            </mat-option>
+            <mat-option value="">Payscale One</mat-option>
+            <mat-option value="">Payscale Two</mat-option>
+          </mat-select>
         </div>
       </div>
     </form>

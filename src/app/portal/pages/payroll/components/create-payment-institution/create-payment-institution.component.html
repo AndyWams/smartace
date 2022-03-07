@@ -19,17 +19,20 @@
       <div class="grid align-items-center">
         <label>Category</label>
         <div class="input mb-0">
-          <select
+          <mat-select
             class="select"
             required
+            placeholder="Select category"
             (change)="handleCategorySelect($event)"
             *ngIf="categoryType !== 'New'"
           >
-            <option disabled="" selected="" value="">Select category</option>
-            <option value="Tax">Tax</option>
-            <option value="Union">Union</option>
-            <option value="New">Create New</option>
-          </select>
+            <mat-option disabled="" selected="" value=""
+              >Select category</mat-option
+            >
+            <mat-option value="Tax">Tax</mat-option>
+            <mat-option value="Union">Union</mat-option>
+            <mat-option value="New">Create New</mat-option>
+          </mat-select>
           <input
             type="text"
             placeholder="Input category name"
@@ -52,9 +55,11 @@
       <div class="grid align-items-center">
         <label>Bank</label>
         <div class="input mb-0">
-          <select class="select" required>
-            <option disabled="" selected="" value="">Select bank</option>
-          </select>
+          <mat-select class="select" placeholder="Select bank" required>
+            <mat-option disabled="" selected="" value=""
+              >Select bank</mat-option
+            >
+          </mat-select>
         </div>
       </div>
       <div class="grid align-items-center">

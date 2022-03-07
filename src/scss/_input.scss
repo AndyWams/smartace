@@ -64,7 +64,6 @@
     }
   }
   .select {
-    padding: 0.5em 24px;
     background: url("/assets/img/dropdown-arrow.svg") 95% center no-repeat !important;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -126,4 +125,7 @@
     left: 13px;
     color: #95a8b8;
   }
+}
+.mat-select-arrow-wrapper {
+  visibility: hidden;
 }

@@ -16,9 +16,10 @@ export class QuickPayrollComponent implements OnInit {
   ngOnInit(): void {}
 
   handleRunBy(event: any) {
-    this.runByItem = event.target.value;
+    this.runByItem = event.source._value;
+    console.log(event.source._value);
   }
   handlePayChannel(event: any) {
-    this.payChannel = event.target.value;
+    this.payChannel = event.source._value;
   }
 }
