@@ -8,14 +8,4 @@
     <ion-icon name="add"></ion-icon>Add New Pay Scale
   </button>
 </div>
-<app-table
-  [_tblHeader]="[
-    'scale name',
-    'pay elements',
-    'pay frequency',
-    'no of employees',
-    ''
-  ]"
-  [_data]="data"
-  _identifier="PAYSCALE"
-></app-table>
+<app-table [_data]="data" _identifier="PAYSCALE"></app-table>

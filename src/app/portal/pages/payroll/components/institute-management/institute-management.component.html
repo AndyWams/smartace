@@ -8,16 +8,4 @@
     <ion-icon name="add"></ion-icon>Add Institution
   </button>
 </div>
-<app-table
-  [_tblHeader]="[
-    'Name',
-    'Category',
-    'Account Name',
-    'Account Number',
-    'Bank',
-    'Date Created',
-    ''
-  ]"
-  [_data]="data"
-  _identifier="INSTITUTION"
-></app-table>
+<app-table [_data]="data" _identifier="INSTITUTION"></app-table>

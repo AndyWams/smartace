@@ -8,17 +8,4 @@
     <ion-icon name="add"></ion-icon>Add Pay Element
   </button>
 </div>
-<app-table
-  [_tblHeader]="[
-    'name',
-    'pay type',
-    'element name',
-    'element category',
-    'element type',
-    'amount',
-    'institution',
-    ''
-  ]"
-  [_data]="data"
-  _identifier="PAYELEMENTS"
-></app-table>
+<app-table [_data]="data" _identifier="PAYELEMENTS"></app-table>

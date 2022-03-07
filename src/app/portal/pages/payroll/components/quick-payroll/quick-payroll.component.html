@@ -79,30 +79,12 @@
   <div class="title-sm px-5">Select Employees</div>
   <ng-container *ngIf="runByItem === 'Gross/net'">
     <app-table
-      [_tblHeader]="[
-        'name',
-        'gross monthly salary',
-        'earnings',
-        'deductions',
-        'net salary',
-        'prorate deduction',
-        ''
-      ]"
       [_data]="data_"
       _identifier="EMPLOYEESONGROSSPAYROLL"
     ></app-table>
   </ng-container>
   <ng-container *ngIf="runByItem === 'Payscale'">
     <app-table
-      [_tblHeader]="[
-        'name',
-        'id',
-        'total earnings',
-        'total deduction',
-        'net pay',
-        'hours worked',
-        ''
-      ]"
       [_data]="data"
       _identifier="EMPLOYEESONPAYSCALEPAYROLL"
     ></app-table>
