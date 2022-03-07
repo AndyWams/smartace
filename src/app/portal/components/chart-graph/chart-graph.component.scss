@@ -1,22 +1,20 @@
 @import "src/scss/_vars.scss";
-.header {
-  .filter_wrap {
+.filter_wrap {
+  display: flex;
+  align-items: center;
+  border: 4px;
+  border: 0.5px solid #cccccc;
+  border-radius: 4px;
+  cursor: pointer;
+  span {
     display: flex;
-    align-items: center;
-    border: 4px;
-    border: 0.5px solid #cccccc;
-    border-radius: 4px;
-    cursor: pointer;
-    span {
-      display: flex;
-      &:first-child {
-        padding: 10px 1em;
-        font-size: 14px;
-        border-right: 1px solid #ccc;
-      }
-      &:last-child {
-        padding: 10px;
-      }
+    &:first-child {
+      padding: 10px 1em;
+      font-size: 14px;
+      border-right: 1px solid #ccc;
+    }
+    &:last-child {
+      padding: 10px;
     }
   }
 }

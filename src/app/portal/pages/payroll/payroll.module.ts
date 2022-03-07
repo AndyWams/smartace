@@ -26,6 +26,9 @@ import { AssignPayscaleComponent } from './components/assign-payscale/assign-pay
 import { ModalsComponent } from '../../components/modals/modals.component';
 import { PayslipComponent } from './components/payslip/payslip.component';
 import { PayrollDetailsComponent } from './components/payroll-details/payroll-details.component';
+import { PayslipAnalysisComponent } from './components/payslip-analysis/payslip-analysis.component';
+import { PayrollAnalysisComponent } from './components/payroll-analysis/payroll-analysis.component';
+import { ChartGraphModule } from '../../components/chart-graph/chart-graph.module';
 
 @NgModule({
   declarations: [
@@ -52,8 +55,15 @@ import { PayrollDetailsComponent } from './components/payroll-details/payroll-de
     ModalsComponent,
     PayslipComponent,
     PayrollDetailsComponent,
+    PayslipAnalysisComponent,
+    PayrollAnalysisComponent,
   ],
-  imports: [CommonModule, PayrollRoutingModule, AngularMaterialModule],
+  imports: [
+    CommonModule,
+    PayrollRoutingModule,
+    AngularMaterialModule,
+    ChartGraphModule,
+  ],
   exports: [PayrollComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

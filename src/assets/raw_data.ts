@@ -253,3 +253,37 @@ export const payrollRunLog = [
     status: 'Approved',
   },
 ];
+export const payslipAnalysis = [
+  {
+    id: '1',
+    name: 'Tara Badmus',
+    empId: '3451',
+    earnings: '₦ 78,768.81',
+    deductions: '₦ 78,768.81',
+    netPay: '₦ 78,768.81',
+  },
+  {
+    id: '2',
+    name: 'John Doe',
+    empId: '3451',
+    earnings: '₦ 78,768.81',
+    deductions: '₦ 78,768.81',
+    netPay: '₦ 78,768.81',
+  },
+  {
+    id: '3',
+    name: 'Jane Doe',
+    empId: '3451',
+    earnings: '₦ 78,768.81',
+    deductions: '₦ 78,768.81',
+    netPay: '₦ 78,768.81',
+  },
+  {
+    id: '4',
+    name: 'Steve Jobs',
+    empId: '3451',
+    earnings: '₦ 78,768.81',
+    deductions: '₦ 78,768.81',
+    netPay: '₦ 78,768.81',
+  },
+];

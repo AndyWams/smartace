@@ -5,23 +5,16 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from './dashboard.component';
 import { AngularMaterialModule } from '../../shared/angular-material.module';
 import { OverviewComponent } from './components/overview/overview.component';
-import { ChartGraphComponent } from './components/chart-graph/chart-graph.component';
 import { PayrollEventsComponent } from './components/payroll-events/payroll-events.component';
-import { ChartsModule, WavesModule } from 'angular-bootstrap-md';
+import { ChartGraphModule } from '../../components/chart-graph/chart-graph.module';
 
 @NgModule({
-  declarations: [
-    DashboardComponent,
-    OverviewComponent,
-    ChartGraphComponent,
-    PayrollEventsComponent,
-  ],
+  declarations: [DashboardComponent, OverviewComponent, PayrollEventsComponent],
   imports: [
     CommonModule,
     DashboardRoutingModule,
     AngularMaterialModule,
-    ChartsModule,
-    WavesModule,
+    ChartGraphModule,
   ],
   exports: [DashboardComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

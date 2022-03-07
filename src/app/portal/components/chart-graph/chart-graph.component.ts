@@ -9,6 +9,7 @@ import { ChartOptions, ChartType } from 'chart.js';
 export class ChartGraphComponent implements OnInit {
   @Input() _chartType;
   filterItem: string;
+  public barChartType: ChartType = 'bar';
   public lineChartType: ChartType = 'line';
   public pieChartType: ChartType = 'pie';
 
@@ -35,6 +36,12 @@ export class ChartGraphComponent implements OnInit {
       tension: 0.4,
     },
   ];
+  public barChartDatasets: Array<any> = [
+    {
+      barThickness: 150,
+      data: [50, 150, 200, 250, 100, 300],
+    },
+  ];
   public pieChartData: Array<any> = ['300', '50', '100'];
   public lineChartLabels: Array<any> = [
     'Jan',
@@ -47,7 +54,15 @@ export class ChartGraphComponent implements OnInit {
     'Aug',
     'Sep',
     'Oct',
-    'Noc',
+    'Nov',
+    'Dec',
+  ];
+  public barChartLabels: Array<any> = [
+    'Jan',
+    'Feb',
+    'Jun',
+    'Oct',
+    'Nov',
     'Dec',
   ];
   public pieChartLabels: Array<any> = ['Net Pay', 'Deductions', 'Earnings'];
@@ -87,7 +102,31 @@ export class ChartGraphComponent implements OnInit {
       hoverBackgroundColor: ['#4847e0', '#e2d136', '#2e9cda'],
     },
   ];
+  public barChartColors: Array<any> = [
+    {
+      hoverBorderWidth: 0,
+      backgroundColor: ['#2D9CDB', '#F2994A', '#27AE60'],
+      // hoverBackgroundColor: ['#2D9CDB', '#F2994A', '#27AE60'],
+    },
+  ];
   public lineChartOptions: any = {
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+    responsive: true,
+    scaleShowVerticalLines: false,
+    scales: {
+      y: {
+        grid: {
+          beginAtZero: true,
+          color: 'transparent',
+        },
+      },
+    },
+  };
+  public barChartOptions: any = {
     plugins: {
       legend: {
         display: false,
@@ -113,9 +152,7 @@ export class ChartGraphComponent implements OnInit {
     },
   };
 
-  ngOnInit(): void {
-    console.log(this._chartType);
-  }
+  ngOnInit(): void {}
 
   setFilterItem(val: string) {
     val === 'last-month'

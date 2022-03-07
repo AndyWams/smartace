@@ -72,6 +72,15 @@ export const getTableColumn = (identifier: string) => {
         'status',
         'actions',
       ]);
+    case (identifier = _types.PAYSLIPANALYSIS):
+      return (column = [
+        'name',
+        'empId',
+        'earnings',
+        'deductions',
+        'netPay',
+        'action',
+      ]);
 
     default:
       return column;

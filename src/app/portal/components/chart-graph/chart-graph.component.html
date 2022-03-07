@@ -39,7 +39,7 @@
 <ng-container *ngIf="_chartType === 'line'">
   <div class="card">
     <div class="header d-flex justify-content-between align-items-center">
-      <div class="title-sm">Payroll History Graph</div>
+      <div class="title-sm">Payroll Line Chart</div>
       <div class="filter_wrap" [matMenuTriggerFor]="filterOne">
         <span>{{ filterItem || "Filter items" }}</span
         ><span><ion-icon name="chevron-down"></ion-icon></span>
@@ -76,6 +76,48 @@
       <label>Taxes</label>
       <label>Pension</label>
       <label>Health</label>
+    </div>
+  </div>
+</ng-container>
+<ng-container *ngIf="_chartType === 'bar'">
+  <div class="card">
+    <div class="header d-flex justify-content-between align-items-center">
+      <div class="title-sm">Payroll Bar Chart</div>
+      <div class="filter_wrap" [matMenuTriggerFor]="filterOne">
+        <span>{{ filterItem || "Filter items" }}</span
+        ><span><ion-icon name="chevron-down"></ion-icon></span>
+      </div>
+      <mat-menu #filterOne>
+        <button mat-menu-item (click)="setFilterItem('last-month')">
+          <span>Last Month</span>
+        </button>
+        <button mat-menu-item (click)="setFilterItem('this-year')">
+          <span>This year</span>
+        </button>
+      </mat-menu>
+    </div>
+    <div class="block pt-5 pb-3">
+      <canvas
+        class="line-chart"
+        mdbChart
+        [chartType]="barChartType"
+        [datasets]="barChartDatasets"
+        [labels]="barChartLabels"
+        [colors]="barChartColors"
+        [options]="barChartOptions"
+      >
+      </canvas>
+    </div>
+    <div class="d-flex justify-content-center my-4">
+      <strong>Months</strong>
+    </div>
+    <mat-divider class="mb-4"></mat-divider>
+    <div
+      class="chart-label d-flex align-items-center justify-content-evenly mt-auto"
+    >
+      <label>Earnings</label>
+      <label>Deductions</label>
+      <label>Net Pay</label>
     </div>
   </div>
 </ng-container>

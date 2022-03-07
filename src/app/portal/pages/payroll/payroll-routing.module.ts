@@ -9,11 +9,13 @@ import { GrossNetpayComponent } from './components/gross-netpay/gross-netpay.com
 import { InstituteManagementComponent } from './components/institute-management/institute-management.component';
 import { PayElementsComponent } from './components/pay-elements/pay-elements.component';
 import { PayScaleComponent } from './components/pay-scale/pay-scale.component';
+import { PayrollAnalysisComponent } from './components/payroll-analysis/payroll-analysis.component';
 import { PayrollDetailsComponent } from './components/payroll-details/payroll-details.component';
 import { PayrollRunlogComponent } from './components/payroll-runlog/payroll-runlog.component';
 import { PayrollSettingsComponent } from './components/payroll-settings/payroll-settings.component';
 import { PayscaleSetupComponent } from './components/payscale-setup/payscale-setup.component';
 import { PayscheduleSetupComponent } from './components/payschedule-setup/payschedule-setup.component';
+import { PayslipAnalysisComponent } from './components/payslip-analysis/payslip-analysis.component';
 import { PayslipComponent } from './components/payslip/payslip.component';
 import { QuickPayrollComponent } from './components/quick-payroll/quick-payroll.component';
 import { ReportComponent } from './components/report/report.component';
@@ -86,6 +88,14 @@ const routes: Routes = [
       {
         path: 'payroll-details',
         component: PayrollDetailsComponent,
+      },
+      {
+        path: 'payslip-analysis',
+        component: PayslipAnalysisComponent,
+      },
+      {
+        path: 'payroll-analysis',
+        component: PayrollAnalysisComponent,
       },
       {
         path: 'gross-netpay',
