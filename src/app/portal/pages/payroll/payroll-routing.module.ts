@@ -110,7 +110,7 @@ const routes: Routes = [
         component: ReportComponent,
       },
       {
-        path: 'payschedule-setup',
+        path: 'payschedule',
         component: PayscheduleSetupComponent,
       },
       {

@@ -78,6 +78,11 @@
   &--repeat--five {
     grid-template-columns: repeat(5, 20%);
   }
+  &.grid-four-alt {
+    grid-column-gap: 30px;
+    grid-row-gap: 30px;
+    grid-template-columns: repeat(4, 22.8%);
+  }
   &.grid-column-gap-30 {
     grid-column-gap: 30px;
   }
@@ -374,11 +379,23 @@ mat-radio-group {
       white-space: break-spaces;
     }
   }
+
   .mat-radio-label-content {
     padding-left: 12px;
   }
 }
-
+mat-radio-button {
+  &.custom {
+    width: -webkit-fill-available;
+    display: flex;
+    .mat-radio-label {
+      border-top: 1px solid #ccc;
+      padding: 0.5em !important;
+      display: flex;
+      justify-content: center;
+    }
+  }
+}
 mat-select {
   border: 1px solid;
   border-radius: 4px;

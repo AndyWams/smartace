@@ -60,6 +60,8 @@ export const getTableColumn = (identifier: string, optional?: string) => {
         'approved By',
         'status',
       ]);
+    case (identifier = _types.PAYSCHEDULE):
+      return (column = ['name', 'pay frequency', 'pay date']);
     case (identifier = _types.PAYSLIPANALYSIS):
       return (column = ['name', 'emp Id', 'earnings', 'deductions', 'net Pay']);
     case (identifier = _types.REPORT):

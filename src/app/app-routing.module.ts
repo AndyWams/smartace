@@ -10,10 +10,6 @@ const routes: Routes = [
       import('./portal/layout/layout.module').then((m) => m.LayoutModule),
   },
   {
-    path: 'portal',
-    redirectTo: '',
-  },
-  {
     path: '**',
     redirectTo: '',
   },

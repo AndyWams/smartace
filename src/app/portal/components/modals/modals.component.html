@@ -903,6 +903,54 @@
     </div>
   </div>
 </div>
+<div class="modal fade" id="payslipAnalysisFilterBy" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Filter By</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <form class="pb-3">
+            <div class="form-wrap w--400">
+              <div class="input">
+                <label>ID</label>
+                <input type="text" placeholder="Enter id" />
+              </div>
+              <div class="input">
+                <label>Earnings</label>
+                <input type="text" placeholder="Enter amount" />
+              </div>
+              <div class="input">
+                <label>Deductions</label>
+                <input type="text" placeholder="Enter amount" required />
+              </div>
+              <div class="input">
+                <label>Net Pay</label>
+                <input type="text" placeholder="Enter amount" required />
+              </div>
+              <div class="d-flex align-items-center mt-5">
+                <button type="button" mat-flat-button class="me-3">
+                  Apply
+                </button>
+                <button
+                  type="button"
+                  mat-stroked-button
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="modal fade" id="viewBankSchReport" role="dialog">
   <div class="modal-dialog modal-wrapper">
     <div class="modal-content-wrap">
@@ -1470,38 +1518,57 @@
     </div>
   </div>
 </div>
-<div class="modal fade" id="payslipAnalysisFilterBy" role="dialog">
+<div class="modal fade" id="editPayschedule" role="dialog">
   <div class="modal-dialog modal-wrapper">
     <div class="modal-content-wrap">
       <div class="modal-body">
         <div
           class="header-top d-flex justify-content-between align-items-center px-4 py-3"
         >
-          <div class="title">Filter By</div>
+          <div class="title">Update Pay Schedule</div>
           <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
         </div>
         <div class="container">
           <form class="pb-3">
-            <div class="form-wrap w--400">
+            <div class="form-wrap scroll w--400">
               <div class="input">
-                <label>ID</label>
-                <input type="text" placeholder="Enter id" />
+                <label>Pay Frequency</label>
+                <mat-select
+                  placeholder="Select pay frequency"
+                  class="select"
+                  required
+                >
+                  <mat-option disabled="" selected="" value="">
+                    Select pay frequency
+                  </mat-option>
+                  <mat-option value="Monthly">Monthly</mat-option>
+                  <mat-option value="Time-Shift">Time-Shift</mat-option>
+                </mat-select>
               </div>
               <div class="input">
-                <label>Earnings</label>
-                <input type="text" placeholder="Enter amount" />
+                <label>Day of the Month</label>
+                <input type="date" required />
               </div>
               <div class="input">
-                <label>Deductions</label>
-                <input type="text" placeholder="Enter amount" required />
+                <label>First Pay Date on New Shedule</label>
+                <input type="date" required />
               </div>
               <div class="input">
-                <label>Net Pay</label>
-                <input type="text" placeholder="Enter amount" required />
+                <label>Deadline to run Payroll</label>
+                <input type="date" required />
+              </div>
+              <div class="input">
+                <label>Pay Period</label>
+                <input type="date" required />
               </div>
               <div class="d-flex align-items-center mt-5">
-                <button type="button" mat-flat-button class="me-3">
-                  Apply
+                <button
+                  type="button"
+                  mat-flat-button
+                  class="me-3"
+                  data-bs-dismiss="modal"
+                >
+                  Save
                 </button>
                 <button
                   type="button"

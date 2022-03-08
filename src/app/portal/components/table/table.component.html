@@ -500,6 +500,19 @@
               >
             </td>
           </ng-container>
+          <ng-container *ngIf="last && _identifier === 'PAYSCHEDULE'">
+            <td mat-cell *matCellDef="let element">
+              <button
+                type="button"
+                mat-button
+                class="btn-link"
+                data-bs-toggle="modal"
+                data-bs-target="#editPayschedule"
+              >
+                Edit
+              </button>
+            </td>
+          </ng-container>
           <ng-container
             *ngIf="last && _identifier === 'EMPLOYEESONPAYSCALEPAYROLL'"
           >

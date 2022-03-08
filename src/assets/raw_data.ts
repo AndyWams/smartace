@@ -611,3 +611,65 @@ export const payslipAnalysisReport = [
     'total Current Deduction': '₦ 78,768.81',
   },
 ];
+export const payscheduleData = [
+  {
+    id: '1',
+    name: 'Tara Badmus',
+    'pay frequency': 'Monthly',
+    'pay date': '01 Jan 2022',
+  },
+  {
+    id: '2',
+    name: 'Tara Badmus',
+    'pay frequency': 'Monthly',
+    'pay date': '01 Jan 2022',
+  },
+  {
+    id: '3',
+    name: 'Tara Badmus',
+    'pay frequency': 'Time-Shift',
+    'pay date': '01 Jan 2022',
+  },
+  {
+    id: '3',
+    name: 'Tara Badmus',
+    'pay frequency': 'Monthly',
+    'pay date': '01 Jan 2022',
+  },
+];
+export const scehduleOption = [
+  {
+    title: `Everyone on one Schedule`,
+    subTitle: `Choose one pay schedule
+  for all your employees.`,
+    value: 'everyone',
+  },
+  {
+    title: `By Compensation
+  Type`,
+    subTitle: `Assign different pay schedule to hourly and 
+  salaried employees`,
+    value: 'compensation',
+  },
+  {
+    title: `By Employee`,
+    subTitle: `Assign employee to pay schedules individually. Use this for schedules based on location, owner status, etc.`,
+    value: 'employee',
+  },
+  {
+    title: 'By Department',
+    subTitle: `Assign pay schedule to departments, use this to pay sales or other commisioned department seperately.`,
+    value: 'department',
+  },
+  {
+    title: `By Pay Scale`,
+    subTitle: `Assign employee to pay schedule using the payscale.`,
+    value: 'pay scale',
+  },
+  {
+    title: 'By Gross Pay',
+    subTitle: `Assign employee to pay schedule using the 
+  Gross Pay.`,
+    value: 'gross pay',
+  },
+];
