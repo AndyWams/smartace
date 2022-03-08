@@ -1,88 +1,148 @@
 import * as _types from '../shared';
 
-export const getTableColumn = (identifier: string) => {
+export const getTableColumn = (identifier: string, optional?: string) => {
   let column: string[] = [];
   switch (identifier) {
     case (identifier = _types.PAYSCALE):
       return (column = [
         'name',
-        'payElement',
-        'payFrequency',
-        'noOfEmployees',
-        'action',
+        'pay Element',
+        'pay Frequency',
+        'no Of Employees',
       ]);
     case (identifier = _types.INSTITUTION):
       return (column = [
         'name',
         'category',
-        'accountName',
-        'accountNumber',
+        'account Name',
+        'account Number',
         'bank',
-        'dateCreated',
-        'action',
+        'date Created',
       ]);
     case (identifier = _types.PAYELEMENTS):
       return (column = [
         'name',
-        'payType',
-        'elementName',
-        'elementCategory',
-        'elementType',
+        'pay Type',
+        'element Name',
+        'element Category',
+        'element Type',
         'amount',
         'institution',
-        'action',
       ]);
     case (identifier = _types.EMPLOYEES):
-      return (column = ['name', 'empId', 'department', 'dateCreated']);
+      return (column = ['name', 'emp Id', 'department', 'employment date']);
     case (identifier = _types.EMPLOYEESONPAYSCALE):
-      return (column = [
-        'name',
-        'empId',
-        'department',
-        'dateCreated',
-        'action',
-      ]);
+      return (column = ['name', 'emp Id', 'department', 'employment date']);
     case (identifier = _types.EMPLOYEESONPAYSCALEPAYROLL):
       return (column = [
         'name',
-        'empId',
-        'totalEarning',
-        'totalDeduction',
-        'netPay',
-        'hoursWorked',
-        'action',
+        'emp Id',
+        'total Earning',
+        'total Deduction',
+        'net Pay',
+        'hours Worked',
       ]);
     case (identifier = _types.EMPLOYEESONGROSSPAYROLL):
       return (column = [
         'name',
-        'grossMothlySalary',
+        'gross Mothly Salary',
         'earnings',
         'deductions',
-        'netSalary',
-        'prorateDeduction',
-        'action',
+        'net Salary',
+        'prorate Deduction',
       ]);
     case (identifier = _types.PAYROLLRUNLOG):
       return (column = [
         'name',
-        'refNo',
+        'ref No',
         'period',
-        'dateApproved',
-        'approvedBy',
+        'date Approved',
+        'approved By',
         'status',
-        'actions',
       ]);
     case (identifier = _types.PAYSLIPANALYSIS):
-      return (column = [
-        'name',
-        'empId',
-        'earnings',
-        'deductions',
-        'netPay',
-        'action',
-      ]);
+      return (column = ['name', 'emp Id', 'earnings', 'deductions', 'net Pay']);
+    case (identifier = _types.REPORT):
+      return (column = getReportType(optional));
 
     default:
       return column;
   }
+};
+
+export const getReportType = (reportType: string) => {
+  let result: string[] = [];
+  let someReports = {
+    'Bank Schedule Report': [
+      'name',
+      'scId',
+      'department',
+      'bank',
+      'account No',
+      'earnings',
+      'deductions',
+      'net Pay',
+    ],
+    'Earning Report': [
+      'name',
+      'scId',
+      'department',
+      'location',
+      'leave',
+      'bonus',
+      'others',
+    ],
+    'Deduction Report': [
+      'name',
+      'scId',
+      'department',
+      'location',
+      'cooperative',
+      'loan',
+      'others',
+    ],
+    'All Element Sheet Report': [
+      'name',
+      'scId',
+      'department',
+      'location',
+      'cooperative',
+      'loan',
+      'leave',
+    ],
+    'Deduction Summary Report': ['element Name', 'amount', 'location'],
+    'Payment Summary Report': ['element Name', 'amount', 'location'],
+    'Tax Details Report': [
+      'name',
+      'scId',
+      'tax Id',
+      'element Name',
+      'amount',
+      'location',
+    ],
+    'Pension Details Report': [
+      'name',
+      'scId',
+      'pfa Code',
+      'pfa Name',
+      'pension Pin',
+      'period Name',
+      'employee Contribution',
+      'employer Contribution',
+      'remittance',
+    ],
+    'Payslip Analysis Report': [
+      'name',
+      'employee Id',
+      'total Current Earning',
+      'total Previous Earning',
+      'percentage Earning Diff',
+      'total Current Deduction',
+    ],
+  };
+
+  if (someReports.hasOwnProperty(reportType)) {
+    result = someReports[reportType];
+  }
+  return result;
 };

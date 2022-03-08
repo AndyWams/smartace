@@ -82,4 +82,10 @@
   </button>
 </div>
 
-<!-- <app-table [_data]="data" _identifier="PAYSLIPANALYSIS"></app-table> -->
+<ng-container *ngIf="screen == 2">
+  <app-table
+    [_data]="data"
+    _identifier="REPORT"
+    [_reportType]="reportType"
+  ></app-table>
+</ng-container>

@@ -13,11 +13,7 @@
     </div>
   </div>
   <div class="title-sm px-5">Employees on Pay Scale</div>
-  <app-table
-    [_tblHeader]="['name', 'id', 'department', 'employee date']"
-    [_data]="data"
-    _identifier="EMPLOYEES"
-  ></app-table>
+  <app-table [_data]="data" _identifier="EMPLOYEES"></app-table>
   <div class="d-flex justify-content-start align-items-center pb-5 px-5">
     <button mat-flat-button>Edit</button>
     <button mat-stroked-button class="btn--danger mx-3">Delete</button>
