@@ -338,6 +338,11 @@
                 "
                 [checked]="selection.isSelected(element)"
               >
+                <span
+                  class="avatar me-2"
+                  *ngIf="_identifier === 'PAYSLIPANALYSIS'"
+                  ><img src="assets/img/profile.png" alt="avatar"
+                /></span>
                 <span>{{ element[disCol] }}</span>
               </mat-checkbox>
             </td>
@@ -604,7 +609,11 @@
         <tr
           mat-row
           *matRowDef="let row; columns: displayedColumns"
-          [ngClass]="{ 'bg-wrap': selection.isSelected(row) }"
+          [ngClass]="{
+            'bg-wrap': selection.isSelected(row),
+            'border-green': row.status === 'Approved',
+            'border-red': row.status === 'Pending'
+          }"
         ></tr>
       </table>
     </ng-container>
