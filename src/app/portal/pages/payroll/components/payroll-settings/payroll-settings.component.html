@@ -1,1 +1,147 @@
-<p>payroll-settings works!</p>
+<div class="header d-flex align-items-center justify-content-between mb-4">
+  <div class="title">Payroll Settings</div>
+</div>
+<div class="bg-white">
+  <mat-tab-group animationDuration="0.5ms">
+    <mat-tab label="Tax">
+      <div class="form-wrap w--700">
+        <form>
+          <div class="grid align-items-center">
+            <label>Enable Tax</label>
+            <mat-slide-toggle
+              style="width: fit-content"
+              (change)="handleSlideToggle($event)"
+            ></mat-slide-toggle>
+          </div>
+          <div class="grid align-items-center">
+            <label>Tax ID</label>
+            <div class="input mb-0">
+              <input type="text" placeholder="Enter tax id" />
+            </div>
+          </div>
+          <div class="grid align-items-center">
+            <label>Country</label>
+            <div class="input mb-0">
+              <mat-select placeholder="Select country" class="select" required>
+                <mat-option disabled="" selected="" value="">
+                  Select country
+                </mat-option>
+                <mat-option value="Nigeria">Nigeria</mat-option>
+                <mat-option value="Ghana">Ghana</mat-option>
+              </mat-select>
+            </div>
+          </div>
+          <div class="grid align-items-center">
+            <label>State</label>
+            <div class="input mb-0">
+              <mat-select placeholder="Select state" class="select" required>
+                <mat-option disabled="" selected="" value="">
+                  Select state
+                </mat-option>
+                <mat-option value="Lagos">Lagos</mat-option>
+                <mat-option value="Delta">Delta</mat-option>
+              </mat-select>
+            </div>
+          </div>
+          <div class="grid align-items-center">
+            <div class="d-flex align-items-center">
+              <button mat-icon-button class="me-1">
+                <mat-icon class="btn--primary">add_circle</mat-icon>
+              </button>
+              <label>Add Location</label>
+            </div>
+          </div>
+          <div class="grid align-items-center pt-4">
+            <span>&nbsp;</span>
+            <div class="d-flex justify-content-start">
+              <button type="button" mat-flat-button>Save</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </mat-tab>
+    <mat-tab label="Pension">
+      <div class="form-wrap w--700">
+        <form>
+          <div class="grid align-items-center pb-4">
+            <label>Enable Pension</label>
+            <mat-slide-toggle
+              style="width: fit-content"
+              (change)="handleSlideToggle($event)"
+            ></mat-slide-toggle>
+          </div>
+          <div class="grid align-items-center">
+            <label>Pension Number</label>
+            <div class="input mb-0">
+              <input type="text" placeholder="Enter pension number" />
+            </div>
+          </div>
+          <div class="grid align-items-center pt-4">
+            <span>&nbsp;</span>
+            <div class="d-flex justify-content-start">
+              <button type="button" mat-flat-button>Save</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </mat-tab>
+    <mat-tab label="NHF">
+      <div class="form-wrap w--700">
+        <form>
+          <div class="grid align-items-center pb-4">
+            <label>Enable NHF</label>
+            <mat-slide-toggle
+              style="width: fit-content"
+              (change)="handleSlideToggle($event)"
+            ></mat-slide-toggle>
+          </div>
+          <div class="grid align-items-center">
+            <label>Company’s NHF Number</label>
+            <div class="input mb-0">
+              <input type="text" placeholder="Enter NHF number" />
+            </div>
+          </div>
+          <div class="grid align-items-center pt-4">
+            <span>&nbsp;</span>
+            <div class="d-flex justify-content-start">
+              <button type="button" mat-flat-button>Save</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </mat-tab>
+    <mat-tab label="Health Insurance">
+      <div class="empty-state">
+        <div class="center">
+          <div class="d-flex justify-content-center">
+            <img src="assets/img/coming-soon.svg" alt="coming-soon" />
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab label="Tax Setup">
+      <div class="form-wrap w--700">
+        <form>
+          <div class="grid align-items-center">
+            <label>Tax Name</label>
+            <div class="input mb-0">
+              <input type="text" placeholder="Enter tax name" />
+            </div>
+          </div>
+          <div class="grid align-items-center">
+            <label> Tax Percentage (%)</label>
+            <div class="input mb-0">
+              <input type="text" placeholder="Enter tax percentage" />
+            </div>
+          </div>
+          <div class="grid align-items-center pt-4">
+            <span>&nbsp;</span>
+            <div class="d-flex justify-content-start">
+              <button type="button" mat-flat-button>Save</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>
