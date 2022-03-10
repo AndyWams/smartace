@@ -20,7 +20,9 @@ import { AngularMaterialModule } from './portal/shared/angular-material.module';
     HttpClientModule,
     AngularMaterialModule,
   ],
-  providers: [],
+  providers: [
+    // { provide: HTTP_INTERCEPTORS, useClass: ApiInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -567,6 +567,18 @@ mat-select-trigger {
           }
         }
       }
+      .total {
+        padding: 1em;
+        background: rgba($blue, 0.1);
+        margin-top: 2em;
+        border-radius: 4px;
+        .d-flex {
+          label:last-child {
+            font-weight: bold;
+            font-size: 18px;
+          }
+        }
+      }
       .bg-white {
         padding: 2em;
         background: $white;

@@ -76,6 +76,17 @@
             Filter <ion-icon name="options" class="mx-3"></ion-icon>
           </button>
         </div>
+        <!-- Gross Filter-->
+        <div *ngIf="_identifier === 'GROSS'">
+          <button
+            mat-stroked-button
+            class="mat-stroked-secondary mr-1"
+            data-bs-toggle="modal"
+            data-bs-target="#grossFilterBy"
+          >
+            Filter <ion-icon name="options" class="mx-3"></ion-icon>
+          </button>
+        </div>
         <!-- Paymnent Summary Report Filter-->
         <div *ngIf="_reportType === 'Payment Summary Report'">
           <button
@@ -259,6 +270,25 @@
             Export as
           </button>
         </div>
+        <!--  Bulk upload-->
+        <div
+          *ngIf="
+            _identifier === 'EMPLOYEES' ||
+            _identifier === 'EMPLOYEESONPAYSCALEPAYROLL' ||
+            _identifier === 'EMPLOYEESONGROSSPAYROLL' ||
+            _identifier === 'GROSS'
+          "
+        >
+          <button
+            mat-stroked-button
+            class="mat-stroked-primary mat-stroked-secondary"
+            data-bs-toggle="modal"
+            data-bs-target="#bulkUpload"
+          >
+            <mat-icon class="me-3">file_upload</mat-icon>
+            Bulk Upload
+          </button>
+        </div>
         <!-- Print-->
         <div
           *ngIf="
@@ -282,24 +312,7 @@
         >
           <mat-icon class="me-2">share</mat-icon> Email
         </button>
-        <!--  Bulk upload-->
-        <div
-          *ngIf="
-            _identifier === 'EMPLOYEES' ||
-            _identifier === 'EMPLOYEESONPAYSCALEPAYROLL' ||
-            _identifier === 'EMPLOYEESONGROSSPAYROLL'
-          "
-        >
-          <button
-            mat-stroked-button
-            class="mat-stroked-primary mat-stroked-secondary"
-            data-bs-toggle="modal"
-            data-bs-target="#bulkUpload"
-          >
-            <mat-icon class="me-3">file_upload</mat-icon>
-            Bulk Upload
-          </button>
-        </div>
+
         <!--  Assign All -->
         <div *ngIf="_identifier === 'EMPLOYEEPAYSCALE'">
           <button
@@ -343,7 +356,7 @@
                   *ngIf="_identifier === 'PAYSLIPANALYSIS'"
                   ><img src="assets/img/profile.png" alt="avatar"
                 /></span>
-                <span>{{ element[disCol] }}</span>
+                <span>{{ element[concatColumnString(disCol)] }}</span>
               </mat-checkbox>
             </td>
           </ng-container>
@@ -518,6 +531,32 @@
               </button>
             </td>
           </ng-container>
+          <ng-container *ngIf="last && _identifier === 'GROSS'">
+            <td mat-cell *matCellDef="let element">
+              <div class="dropdown">
+                <span class="dropdown-toggle" [matMenuTriggerFor]="menu">
+                  <ion-icon name="ellipsis-horizontal"></ion-icon>
+                </span>
+                <mat-menu #menu="matMenu">
+                  <button
+                    type="button"
+                    mat-menu-item
+                    data-bs-toggle="modal"
+                    data-bs-target="#viewGross"
+                  >
+                    View
+                  </button>
+                  <button
+                    type="button"
+                    mat-menu-item
+                    routerLink="/portal/payroll/compute-gross"
+                  >
+                    Compute Gross/Net Pay
+                  </button>
+                </mat-menu>
+              </div>
+            </td>
+          </ng-container>
           <ng-container
             *ngIf="last && _identifier === 'EMPLOYEESONPAYSCALEPAYROLL'"
           >
@@ -587,20 +626,26 @@
               </button>
             </td>
           </ng-container>
+
           <!--Table  Row Content-->
           <td mat-cell *matCellDef="let element">
             <span *ngIf="_identifier !== 'PAYROLLRUNLOG'">{{
-              element[disCol]
+              element[concatColumnString(disCol)]
             }}</span>
             <span
               class="tag me-0"
               [ngClass]="{
-                'status-approved': element[disCol] === 'Approved',
-                'status-pending': element[disCol] === 'Pending'
+                'status-approved':
+                  element[[concatColumnString(disCol)]] === 'Approved',
+                'status-pending':
+                  element[[concatColumnString(disCol)]] === 'Pending'
               }"
-              *ngIf="_identifier === 'PAYROLLRUNLOG' && element[disCol]"
+              *ngIf="
+                _identifier === 'PAYROLLRUNLOG' &&
+                element[[concatColumnString(disCol)]]
+              "
             >
-              {{ element[disCol] }}</span
+              {{ element[concatColumnString(disCol)] }}</span
             >
           </td>
         </ng-container>

@@ -93,6 +93,11 @@ export class TableComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
+  concatColumnString(colString: string) {
+    let strtext = colString;
+    const myArray = strtext.split(' ');
+    return myArray.join('');
+  }
 
   getRoutes() {
     this.route.queryParams

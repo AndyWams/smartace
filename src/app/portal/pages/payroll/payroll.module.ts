@@ -29,7 +29,9 @@ import { PayrollDetailsComponent } from './components/payroll-details/payroll-de
 import { PayslipAnalysisComponent } from './components/payslip-analysis/payslip-analysis.component';
 import { PayrollAnalysisComponent } from './components/payroll-analysis/payroll-analysis.component';
 import { ChartGraphModule } from '../../components/chart-graph/chart-graph.module';
-
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { ComputeGrossComponent } from './components/compute-gross/compute-gross.component';
 @NgModule({
   declarations: [
     PayrollComponent,
@@ -57,13 +59,20 @@ import { ChartGraphModule } from '../../components/chart-graph/chart-graph.modul
     PayrollDetailsComponent,
     PayslipAnalysisComponent,
     PayrollAnalysisComponent,
+    ComputeGrossComponent,
   ],
   imports: [
     CommonModule,
     PayrollRoutingModule,
     AngularMaterialModule,
     ChartGraphModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ToastrModule.forRoot({
+      positionClass: 'toast-top-right',
+    }),
   ],
+  providers: [{ provide: ToastrService }],
   exports: [PayrollComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

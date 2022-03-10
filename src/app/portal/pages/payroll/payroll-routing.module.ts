@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AssignPayscaleComponent } from './components/assign-payscale/assign-payscale.component';
+import { ComputeGrossComponent } from './components/compute-gross/compute-gross.component';
 import { CreateNewEmployeeComponent } from './components/create-new-employee/create-new-employee.component';
 import { CreatePayElementComponent } from './components/create-pay-element/create-pay-element.component';
 import { CreatePayScaleComponent } from './components/create-pay-scale/create-pay-scale.component';
@@ -100,6 +101,10 @@ const routes: Routes = [
       {
         path: 'gross-netpay',
         component: GrossNetpayComponent,
+      },
+      {
+        path: 'compute-gross',
+        component: ComputeGrossComponent,
       },
       {
         path: 'tax-type',

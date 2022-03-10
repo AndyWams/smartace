@@ -64,6 +64,15 @@ export const getTableColumn = (identifier: string, optional?: string) => {
       return (column = ['name', 'pay frequency', 'pay date']);
     case (identifier = _types.PAYSLIPANALYSIS):
       return (column = ['name', 'emp Id', 'earnings', 'deductions', 'net Pay']);
+    case (identifier = _types.GROSS):
+      return (column = [
+        'name',
+        'gross Id',
+        'department',
+        'monthly Earning',
+        'monthly Deduction',
+        'net Pay',
+      ]);
     case (identifier = _types.REPORT):
       return (column = getReportType(optional));
 
@@ -112,8 +121,8 @@ export const getReportType = (reportType: string) => {
       'loan',
       'leave',
     ],
-    'Deduction Summary Report': ['element Name', 'amount', 'location'],
     'Payment Summary Report': ['element Name', 'amount', 'location'],
+    'Deduction Summary Report': ['element Name', 'amount', 'location'],
     'Tax Details Report': [
       'name',
       'scId',
