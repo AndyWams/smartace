@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  // apiBaseUrl: 'https://tp-services-2.herokuapp.com/api',
+  apiBaseUrl: 'https://brightstarpayrollapi.azurewebsites.net/api',
 };
 
 /*

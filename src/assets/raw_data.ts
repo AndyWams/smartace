@@ -702,6 +702,32 @@ export const taxData = [
     dateCreated: '01 Jan 2022',
   },
 ];
+export const pensionData = [
+  {
+    id: '1',
+    name: 'Tolu Aina',
+    pencomNo: '123456',
+    pfa: '123456',
+  },
+  {
+    id: '2',
+    name: 'Tolu Aina',
+    pencomNo: '123456',
+    pfa: '123456',
+  },
+  {
+    id: '3',
+    name: 'Tolu Aina',
+    pencomNo: '123456',
+    pfa: '123456',
+  },
+  {
+    id: '4',
+    name: 'Tolu Aina',
+    pencomNo: '123456',
+    pfa: '123456',
+  },
+];
 export const scehduleOption = [
   {
     title: `Everyone on one Schedule`,

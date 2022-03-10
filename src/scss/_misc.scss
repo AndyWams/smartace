@@ -128,7 +128,13 @@
 .tbl-wrap {
   background: white;
   padding: 2em 1em 2em;
+  .toolbar {
+    position: relative;
+    z-index: 1 !important;
+  }
   .custom-table {
+    position: relative;
+    z-index: 1 !important;
     border-collapse: separate;
     border-spacing: 0em 0em;
     padding: 0em 2em;
@@ -580,7 +586,7 @@ mat-select-trigger {
         }
       }
       .bg-white {
-        padding: 2em;
+        padding: 2em 1.3em;
         background: $white;
         box-shadow: 0px 4px 25px rgba(0, 0, 0, 0.1);
         border-radius: 4px;

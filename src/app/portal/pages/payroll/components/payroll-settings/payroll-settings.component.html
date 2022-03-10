@@ -61,29 +61,36 @@
       </div>
     </mat-tab>
     <mat-tab label="Pension">
-      <div class="form-wrap w--700">
-        <form>
-          <div class="grid align-items-center pb-4">
-            <label>Enable Pension</label>
-            <mat-slide-toggle
-              style="width: fit-content"
-              (change)="handleSlideToggle($event)"
-            ></mat-slide-toggle>
-          </div>
-          <div class="grid align-items-center">
-            <label>Pension Number</label>
-            <div class="input mb-0">
-              <input type="text" placeholder="Enter pension number" />
+      <ng-container *ngIf="screen == 1">
+        <div class="form-wrap w--700">
+          <form>
+            <div class="grid align-items-center pb-4">
+              <label>Enable Pension</label>
+              <mat-slide-toggle
+                style="width: fit-content"
+                (change)="handleSlideToggle($event)"
+              ></mat-slide-toggle>
             </div>
-          </div>
-          <div class="grid align-items-center pt-4">
-            <span>&nbsp;</span>
-            <div class="d-flex justify-content-start">
-              <button type="button" mat-flat-button>Save</button>
+            <div class="grid align-items-center">
+              <label>Pension Number</label>
+              <div class="input mb-0">
+                <input type="text" placeholder="Enter pension number" />
+              </div>
             </div>
-          </div>
-        </form>
-      </div>
+            <div class="grid align-items-center pt-4">
+              <span>&nbsp;</span>
+              <div class="d-flex justify-content-start">
+                <button type="button" mat-flat-button (click)="gotoView(2)">
+                  Save
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="screen == 2">
+        <app-table [_data]="data" _identifier="SETTINGS"></app-table>
+      </ng-container>
     </mat-tab>
     <mat-tab label="NHF">
       <div class="form-wrap w--700">

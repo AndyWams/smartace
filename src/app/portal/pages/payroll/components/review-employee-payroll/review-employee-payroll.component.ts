@@ -53,6 +53,7 @@ export class ReviewEmployeePayrollComponent implements OnInit, AfterViewInit {
   handleToggle(event: any) {
     this.payElementDuration = event.value;
   }
+
   onDateLoad() {
     var dtToday = new Date();
     var month: any = dtToday.getMonth() + 1;

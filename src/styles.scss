@@ -15,3 +15,7 @@ html {
 .cdk-overlay-container {
   z-index: 99999 !important;
 }
+
+.mat-tab-body.mat-tab-body-active {
+  z-index: auto !important;
+}

@@ -3,6 +3,8 @@
   min-height: 400px;
   .form-wrap {
     padding: 3em;
+    position: relative;
+    z-index: 1;
     &.w--700 {
       width: 700px;
     }

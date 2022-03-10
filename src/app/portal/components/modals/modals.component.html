@@ -1393,7 +1393,7 @@
     </div>
   </div>
 </div>
-<div class="modal fade" id="deleteTaxType" role="dialog">
+<div class="modal fade" id="deactivateTaxType" role="dialog">
   <div class="modal-dialog modal-wrapper">
     <div class="modal-content-wrap">
       <div class="modal-body">
@@ -1414,7 +1414,7 @@
           </div>
         </div>
         <div class="modal-footer d-flex justify-content-end align-items-center">
-          <button mat-flat-button class="me-3">Delete</button>
+          <button mat-flat-button class="me-3">Deactivate</button>
           <button mat-stroked-button data-bs-dismiss="modal">Cancel</button>
         </div>
       </div>
@@ -1766,6 +1766,59 @@
               <div class="input">
                 <label>Pay Period</label>
                 <input type="date" required />
+              </div>
+              <div class="d-flex align-items-center mt-5">
+                <button
+                  type="button"
+                  mat-flat-button
+                  class="me-3"
+                  data-bs-dismiss="modal"
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  mat-stroked-button
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="updatePension" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Update Pension</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <form class="pb-3">
+            <div class="form-wrap scroll w--400">
+              <div class="input">
+                <label>Name</label>
+                <input type="text" placeholder="Enter name" required />
+              </div>
+              <div class="input">
+                <label>Pencom Number</label>
+                <input type="text" placeholder="Pencom number" required />
+              </div>
+              <div class="input">
+                <label>PFA</label>
+                <mat-select placeholder="Select pfa" class="select" required>
+                  <mat-option disabled="" selected="" value="">
+                    Select Pfa
+                  </mat-option>
+                </mat-select>
               </div>
               <div class="d-flex align-items-center mt-5">
                 <button

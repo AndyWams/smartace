@@ -75,6 +75,8 @@ export const getTableColumn = (identifier: string, optional?: string) => {
         'monthly Deduction',
         'net Pay',
       ]);
+    case (identifier = _types.SETTINGS):
+      return (column = ['name', 'pencom No', 'pfa']);
     case (identifier = _types.REPORT):
       return (column = getReportType(optional));
 
