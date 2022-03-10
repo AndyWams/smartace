@@ -557,6 +557,42 @@
               </div>
             </td>
           </ng-container>
+          <ng-container *ngIf="last && _identifier === 'TAXTYPE'">
+            <td mat-cell *matCellDef="let element">
+              <div class="dropdown">
+                <span class="dropdown-toggle" [matMenuTriggerFor]="menu">
+                  <ion-icon name="ellipsis-horizontal"></ion-icon>
+                </span>
+                <mat-menu #menu="matMenu">
+                  <button
+                    type="button"
+                    mat-menu-item
+                    data-bs-toggle="modal"
+                    data-bs-target="#viewTaxType"
+                  >
+                    View
+                  </button>
+                  <button
+                    type="button"
+                    mat-menu-item
+                    data-bs-toggle="modal"
+                    data-bs-target="#editTaxType"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    type="button"
+                    class="txt-danger"
+                    mat-menu-item
+                    data-bs-toggle="modal"
+                    data-bs-target="#deleteTaxType"
+                  >
+                    Delete
+                  </button>
+                </mat-menu>
+              </div>
+            </td>
+          </ng-container>
           <ng-container
             *ngIf="last && _identifier === 'EMPLOYEESONPAYSCALEPAYROLL'"
           >
@@ -663,7 +699,7 @@
       </table>
     </ng-container>
     <!--Pagination-->
-    <div class="d-flex justify-content-between align-items-center px-4">
+    <div class="d-flex justify-content-between align-items-center px-5">
       <span class="tbl_count">Showing 10 of 320</span>
       <nav>
         <ul class="pagination mt-4">

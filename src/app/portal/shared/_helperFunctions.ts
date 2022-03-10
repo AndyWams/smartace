@@ -64,6 +64,8 @@ export const getTableColumn = (identifier: string, optional?: string) => {
       return (column = ['name', 'pay frequency', 'pay date']);
     case (identifier = _types.PAYSLIPANALYSIS):
       return (column = ['name', 'emp Id', 'earnings', 'deductions', 'net Pay']);
+    case (identifier = _types.TAXTYPE):
+      return (column = ['tax Name', 'tax Percentage', 'date Created']);
     case (identifier = _types.GROSS):
       return (column = [
         'name',

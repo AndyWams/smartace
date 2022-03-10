@@ -1007,6 +1007,44 @@
     </div>
   </div>
 </div>
+<div class="modal fade" id="editTaxType" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Edit Tax Type</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <form class="pb-3">
+            <div class="form-wrap w--400">
+              <div class="input">
+                <label>Tax Name</label>
+                <input type="text" placeholder="Enter value" />
+              </div>
+              <div class="input">
+                <label>Tax Percentage</label>
+                <input type="text" placeholder="Enter value" />
+              </div>
+              <div class="d-flex align-items-center mt-5">
+                <button type="button" mat-flat-button class="me-3">Save</button>
+                <button
+                  type="button"
+                  mat-stroked-button
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="modal fade" id="viewBankSchReport" role="dialog">
   <div class="modal-dialog modal-wrapper">
     <div class="modal-content-wrap">
@@ -1019,7 +1057,7 @@
         </div>
         <div class="container">
           <div class="pb-3">
-            <div class="bg-white w--400 m-3">
+            <div class="bg-white scroll w--400 m-3">
               <div class="grid grid--repeat--two list-items">
                 <label>ID</label>
                 <label><span>SC234</span></label>
@@ -1296,6 +1334,37 @@
     </div>
   </div>
 </div>
+<div class="modal fade" id="viewTaxType" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Tax Type</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <div class="pb-3">
+            <div class="bg-white w--400 m-3">
+              <div class="grid grid--repeat--two list-items">
+                <label>Tax Name</label>
+                <label><span>Tax name</span></label>
+                <label>TAx PErcentage</label>
+                <label><span>10%</span></label>
+                <label>DAte CREATED </label>
+                <label><span>01 Jan 2022</span></label>
+              </div>
+              <div class="pt-4 mt-5">
+                <button mat-flat-button data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="modal fade" id="deletePayElement" role="dialog">
   <div class="modal-dialog modal-wrapper">
     <div class="modal-content-wrap">
@@ -1304,6 +1373,34 @@
           class="header-top d-flex justify-content-between align-items-center px-4 py-3"
         >
           <div class="title">Delete Pay Element</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <div class="pb-3">
+            <div class="center">
+              <p>
+                Are you sure you want to deactivate this item? They will no
+                longer be accessible.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-end align-items-center">
+          <button mat-flat-button class="me-3">Delete</button>
+          <button mat-stroked-button data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="deleteTaxType" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Deactivate Tax Type</div>
           <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
         </div>
         <div class="container">

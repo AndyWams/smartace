@@ -676,6 +676,32 @@ export const grossData = [
     netPay: '₦250,000',
   },
 ];
+export const taxData = [
+  {
+    id: '1',
+    taxName: 'Tax name',
+    taxPercentage: '10%',
+    dateCreated: '01 Jan 2022',
+  },
+  {
+    id: '2',
+    taxName: 'Tax name',
+    taxPercentage: '10%',
+    dateCreated: '01 Jan 2022',
+  },
+  {
+    id: '3',
+    taxName: 'Tax name',
+    taxPercentage: '10%',
+    dateCreated: '01 Jan 2022',
+  },
+  {
+    id: '4',
+    taxName: 'Tax name',
+    taxPercentage: '10%',
+    dateCreated: '01 Jan 2022',
+  },
+];
 export const scehduleOption = [
   {
     title: `Everyone on one Schedule`,
