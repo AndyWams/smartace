@@ -713,23 +713,37 @@
     </ng-container>
     <!--Pagination-->
     <div class="d-flex justify-content-between align-items-center px-5">
-      <span class="tbl_count">Showing 10 of 320</span>
-      <nav>
+      <span class="tbl_count">Showing {{ fromToString }} items</span>
+      <nav *ngIf="_data.length">
         <ul class="pagination mt-4">
-          <li class="page-item">
-            <a class="page-lynk disabled">
+          <li class="page-item" [ngClass]="{ disabled: currentPage === 1 }">
+            <a
+              class="page-lynk d-flex"
+              aria-label="Previous"
+              (click)="backward()"
+            >
               <span class="prev d-flex align-items-center">
                 <ion-icon name="chevron-back-outline"></ion-icon>
                 Previous
               </span>
             </a>
           </li>
-          <li class="page-item active"><a class="page-link">1</a></li>
-          <li class="page-item"><a class="page-link">2</a></li>
-          <li class="page-item"><a class="page-link">3</a></li>
-          <li class="page-item"><a class="page-link">4</a></li>
-          <li class="page-item nxt">
-            <a class="page-lynk">
+          <li
+            class="page-item"
+            [ngClass]="{
+              disabled: pages < 2,
+              active: page === currentPage
+            }"
+            *ngFor="let page of pages"
+            (click)="jumpToPage(page)"
+          >
+            <a class="page-link">{{ page }}</a>
+          </li>
+          <li
+            class="page-item nxt"
+            [ngClass]="{ disabled: currentPage === noOfPages }"
+          >
+            <a class="page-lynk" aria-label="Next" (click)="forward()">
               <span class="next d-flex align-items-center">
                 Next
                 <ion-icon name="chevron-forward-outline"></ion-icon>

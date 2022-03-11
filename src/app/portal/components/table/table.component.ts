@@ -31,6 +31,11 @@ export class TableComponent implements OnInit {
   selectedItems: any[] = [];
   payScale: string = '';
   runBy: string;
+  noOfPages: number;
+  pageSize = 10;
+  currentPage = 1;
+  currentlyShown: any[] = [];
+  list: any[];
   public dataSource: MatTableDataSource<any> = new MatTableDataSource();
   public selection = new SelectionModel(true, []);
   public displayedColumns: string[];
@@ -108,5 +113,66 @@ export class TableComponent implements OnInit {
     if (this.queryString === '') {
       this.router.navigate(['/portal/payroll']);
     }
+  }
+  get fromToString(): string {
+    const indexOfLastItemInPage =
+      this.pageSize * (this.currentPage - 1) + this._data.length;
+    return `${this.pageSize * (this.currentPage - 1) + 1} -
+   ${indexOfLastItemInPage} of ${(this._data || []).length}`;
+  }
+  get pages(): any {
+    return Array(this.noOfPages)
+      .fill(1)
+      .map((_, index) => index + 1);
+  }
+  forward() {
+    if (this.currentPage === this.noOfPages) {
+      return;
+    }
+    this.move(true);
+    this.getItemPerPage(this.currentPage);
+  }
+  backward() {
+    if (this.currentPage === 1) {
+      return;
+    }
+    this.move(false);
+    this.getItemPerPage(this.currentPage);
+  }
+  move(increment: boolean) {
+    increment ? this.currentPage++ : this.currentPage--;
+    this.updateCurrentlyShown();
+    window.scrollTo(0, 0);
+  }
+  jumpToPage(pageNumber: number): void {
+    this.currentPage = pageNumber;
+    this.updateCurrentlyShown();
+    window.scrollTo(0, 0);
+    this.getItemPerPage(pageNumber);
+  }
+  updateCurrentlyShown(): void {
+    this.currentlyShown = this._data.slice(
+      (this.currentPage - 1) * this.pageSize,
+      this.currentPage * this.pageSize
+    );
+  }
+  getItemPerPage(pageCount?: number) {
+    this.list = this._data;
+    this.noOfPages = Math.ceil(this.list.length / this.pageSize);
+
+    this.currentlyShown = this.list.slice(0, this.pageSize);
+    // this.payrollService
+    //   .fetchItem(pageCount, this.pageSize)
+    //   .pipe(
+    //     catchError((err: any): ObservableInput<any> => {
+    //       return throwError(err);
+    //     })
+    //   )
+    //   .subscribe((res) => {
+    //     const { data } = res;
+    //     this.list = data.list;
+    //     this.noOfPages = Math.ceil(data.total / this.pageSize);
+    //     this.currentlyShown = this.list.slice(0, this.pageSize);
+    //   });
   }
 }
