@@ -1,13 +1,13 @@
-import {
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild,
-  ViewChildren,
-} from '@angular/core';
+import { Component, OnInit, ViewChild, ViewChildren } from '@angular/core';
+import { ObservableInput, throwError } from 'rxjs';
+import { catchError, filter } from 'rxjs/operators';
+import { PayrollService } from 'src/app/portal/services/payroll.service';
+import * as _helperFunc from 'src/app/portal/shared/_helperFunctions';
+import { SelectionModel } from '@angular/cdk/collections';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
-import { filter } from 'rxjs/internal/operators/filter';
-import { employeeData } from 'src/assets/raw_data';
 
 @Component({
   selector: 'app-create-pay-scale',
@@ -15,6 +15,7 @@ import { employeeData } from 'src/assets/raw_data';
   styleUrls: ['./create-pay-scale.component.scss'],
 })
 export class CreatePayScaleComponent implements OnInit {
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('matSelect') select: any;
   @ViewChild('allSelected') allSelected: any;
   @ViewChildren('options') _options: any;
@@ -32,12 +33,30 @@ export class CreatePayScaleComponent implements OnInit {
     'Annually',
   ];
   _selectedPayElements: string[] = [];
-  data = employeeData;
-  constructor(private route: ActivatedRoute, private router: Router) {}
+
+  employeeList: any[] = [];
+  pageSize: number = 10;
+  currentPage: number = 1;
+  emptyState: any;
+  isBusy: boolean = false;
+  itemDetails: any;
+  public dataSource: MatTableDataSource<any> = new MatTableDataSource();
+  public selection = new SelectionModel(true, []);
+  public displayedColumns: string[];
+  constructor(
+    private route: ActivatedRoute,
+    private payrollServ: PayrollService,
+    private toastr: ToastrService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.getRoutes();
+    this.getEmployees();
+    this.displayedColumns = this.column;
   }
+  column = ['Name', 'employee Id', 'department', 'employment date'];
+  ngOnChanges() {}
   hanglePayElementSelect(event: any) {
     if (event.target.value !== null) {
       this._selectedPayElements.push(event.target.value);
@@ -81,5 +100,69 @@ export class CreatePayScaleComponent implements OnInit {
     if (this.queryString === '') {
       this.router.navigate(['/portal/payroll/pay-scale']);
     }
+  }
+
+  toggleCheck(event: any, index: any) {}
+
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+  masterToggle() {
+    if (this.isAllSelected()) {
+      this.selection.clear();
+      return;
+    }
+
+    this.selection.select(...this.dataSource.data);
+  }
+
+  checkboxLabel(row?: any): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${
+      row.position + 1
+    }`;
+  }
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+  concatColumnString(colString: string) {
+    let strtext = colString;
+    const myArray = strtext.split(' ');
+    return myArray.join('');
+  }
+
+  getEmployees() {
+    let model = {
+      pageSize: this.pageSize,
+      pageNumber: this.currentPage,
+      search: '',
+      sortColumn: '',
+      sortOrder: 1,
+    };
+    this.payrollServ
+      .fetchAllEmployees(model)
+      .pipe(
+        catchError((err: any): ObservableInput<any> => {
+          return throwError(err);
+        })
+      )
+      .subscribe(
+        (res) => {
+          const { result } = res;
+          const { data, pagination } = result;
+          this.employeeList = data;
+          this.dataSource = new MatTableDataSource(this.employeeList);
+          this.dataSource.paginator = this.paginator;
+        },
+        (errors) => {
+          this.emptyState = errors;
+          console.log(errors);
+        }
+      );
   }
 }

@@ -31,7 +31,7 @@ export class CreateNewEmployeeComponent implements OnInit {
       middleName: ['', Validators.required],
       lastName: ['', Validators.required],
       phoneNumber: ['', Validators.required],
-      accountNumber: ['', Validators.required],
+      accountNumber: ['', [Validators.required, Validators.minLength(10)]],
       workEmail: ['', Validators.required],
       bankId: ['', Validators.required],
       pfa: ['', Validators.required],
@@ -131,3 +131,10 @@ export class CreateNewEmployeeComponent implements OnInit {
     }
   }
 }
+// maxLengthCheck = (event: any) => {
+//   console.log(event.target.value.length);
+
+//   if (event.target.value.length > event.target.maxLength) {
+//     event.target.value = event.target.value.slice(0, event.target.maxLength);
+//   }
+// };

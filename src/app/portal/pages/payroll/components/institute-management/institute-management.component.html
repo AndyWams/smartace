@@ -9,15 +9,18 @@
   </button>
 </div>
 <div
-  class="d-flex justify-content-center align-items-center my-3"
+  class="d-flex justify-content-center align-items-center my-3 empty-state"
   *ngIf="emptyState"
 >
-  <span>You have not created any institution yet.</span>
+  <span class="txt-grey txt-md">You have not created any institution yet.</span>
 </div>
-<ng-container *ngIf="institutionList.length === 0">
+<ng-container *ngIf="institutionList.length === 0 && !emptyState">
   <app-loading-roller></app-loading-roller>
 </ng-container>
-<div class="overflow--wrap">
+<div
+  class="overflow--wrap _visible"
+  [ngClass]="{ hide: institutionList.length == 0 }"
+>
   <div class="table-wrapper tbl-wrap">
     <ng-container *ngIf="dataSource.data.length">
       <div class="toolbar mb-5 adjust-wrap">

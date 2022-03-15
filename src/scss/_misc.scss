@@ -33,7 +33,7 @@
   font-weight: 300;
 }
 .txt-grey {
-  color: $light-grey;
+  color: rgba($light-grey, 0.8);
 }
 .ruler {
   border: 0;
@@ -710,6 +710,25 @@ mat-select-trigger {
     align-items: center;
   }
 }
+.empty-state {
+  min-height: 300px;
+}
+._visible {
+  visibility: visible;
+  &.hide {
+    visibility: hidden;
+  }
+}
+
+.adjust-wrap {
+  .adjust-flex {
+    padding: 0em 2em;
+    .mr-1 {
+      margin-right: 1em;
+    }
+  }
+}
+
 /* Loading style */
 .lds-roller {
   display: inline-block;

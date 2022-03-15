@@ -8,4 +8,217 @@
     <ion-icon name="add"></ion-icon>Add New Pay Scale
   </button>
 </div>
-<app-table [_data]="data" _identifier="PAYSCALE"></app-table>
+<div
+  class="d-flex justify-content-center align-items-center my-3 empty-state"
+  *ngIf="emptyState"
+>
+  <span class="txt-grey txt-md">You have not created any payscale yet.</span>
+</div>
+<ng-container *ngIf="payscaleList.length === 0 && !emptyState">
+  <app-loading-roller></app-loading-roller>
+</ng-container>
+<div
+  class="overflow--wrap _visible"
+  [ngClass]="{ hide: payscaleList.length == 0 }"
+>
+  <div class="table-wrapper tbl-wrap">
+    <ng-container *ngIf="dataSource.data.length">
+      <div class="toolbar mb-5 adjust-wrap">
+        <div
+          class="d-flex align-items-center justify-content-start adjust-flex"
+        >
+          <div
+            class="d-flex align-items-center mr-1"
+            style="width: fit-content"
+          >
+            <!-- Master Checkbox-->
+            <mat-checkbox
+              (change)="$event ? masterToggle() : null"
+              [checked]="selection.hasValue() && isAllSelected()"
+              [indeterminate]="selection.hasValue() && !isAllSelected()"
+              [aria-label]="checkboxLabel()"
+            >
+            </mat-checkbox>
+            <button mat-icon-button [matMenuTriggerFor]="menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item>
+                <span>Option One</span>
+              </button>
+              <button mat-menu-item>
+                <span>Option Two</span>
+              </button>
+            </mat-menu>
+          </div>
+          <div class="search-input mr-1">
+            <span><mat-icon>search</mat-icon></span>
+            <input
+              type="text"
+              placeholder="Search"
+              (keyup)="applyFilter($event)"
+              #input
+            />
+          </div>
+          <!-- Institute Mgmt Filter-->
+          <div>
+            <button
+              mat-stroked-button
+              class="mat-stroked-secondary mr-1"
+              data-bs-toggle="modal"
+              data-bs-target="#instMgmtFilterBy"
+            >
+              Filter <ion-icon name="options" class="mx-3"></ion-icon>
+            </button>
+          </div>
+          <!-- Sort by -->
+          <div class="d-flex align-items-center mr-1">
+            <label class="me-3">Sort by</label>
+            <button
+              mat-stroked-button
+              class="mat-stroked-secondary"
+              [matMenuTriggerFor]="sortby"
+            >
+              Most recent <mat-icon class="ms-2">keyboard_arrow_down</mat-icon>
+            </button>
+            <mat-menu #sortby="matMenu">
+              <button mat-menu-item>
+                <span>Option One</span>
+              </button>
+              <button mat-menu-item>
+                <span>Option Two</span>
+              </button>
+            </mat-menu>
+          </div>
+          <!-- Export as-->
+          <div>
+            <button mat-stroked-button class="mat-stroked-secondary mr-1">
+              Export as
+            </button>
+          </div>
+          <!-- Print-->
+          <div>
+            <button mat-button class="print ms-1">
+              <mat-icon class="me-2">print</mat-icon> Print
+            </button>
+          </div>
+        </div>
+      </div>
+      <table
+        mat-table
+        [dataSource]="dataSource"
+        class="table custom-table w--100"
+        style="width: 100%"
+      >
+        <ng-container
+          *ngFor="
+            let disCol of displayedColumns;
+            let colIndex = index;
+            let last = last
+          "
+          [matColumnDef]="disCol"
+        >
+          <th mat-header-cell *matHeaderCellDef>
+            {{ disCol }}
+          </th>
+          <ng-container *ngIf="colIndex === 0">
+            <td *matCellDef="let element">
+              <mat-checkbox
+                [value]="element"
+                (click)="$event.stopPropagation()"
+                (change)="
+                  $event ? selection.toggle(element) : null;
+                  toggleCheck($event, i)
+                "
+                [checked]="selection.isSelected(element)"
+              >
+                <span>{{ element[concatColumnString(disCol)] }}</span>
+              </mat-checkbox>
+            </td>
+          </ng-container>
+          <!--Action Column-->
+          <ng-container *ngIf="last">
+            <td mat-cell *matCellDef="let element">
+              <div class="dropdown">
+                <span class="dropdown-toggle" [matMenuTriggerFor]="menu">
+                  <ion-icon name="ellipsis-horizontal"></ion-icon>
+                </span>
+                <mat-menu #menu="matMenu">
+                  <button
+                    type="button"
+                    mat-menu-item
+                    data-bs-toggle="modal"
+                    data-bs-target="#viewInstMgt"
+                    (click)="getItemDetails(element['institutionId'])"
+                  >
+                    View
+                  </button>
+                  <button
+                    mat-menu-item
+                    [routerLink]="['/portal/payroll/institution-payment-setup']"
+                    [queryParams]="{
+                      query: 'edit',
+                      id: element['institutionId']
+                    }"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    type="button"
+                    mat-menu-item
+                    class="txt-danger"
+                    data-bs-toggle="modal"
+                    data-bs-target="#deleteInstitution"
+                    (click)="getItemDetails(element['institutionId'])"
+                  >
+                    Delete
+                  </button>
+                </mat-menu>
+              </div>
+            </td>
+          </ng-container>
+
+          <!--Table  Row Content-->
+          <ng-container *ngIf="disCol == 'created On'">
+            <td mat-cell *matCellDef="let element">
+              <span>{{ element["createdOn"] | date: "mediumDate" }}</span>
+            </td>
+          </ng-container>
+          <ng-container *ngIf="disCol == 'institution Category'">
+            <td mat-cell *matCellDef="let element">
+              <span>{{
+                element[concatColumnString(disCol)].institutionCategoryName
+              }}</span>
+            </td>
+          </ng-container>
+          <ng-container *ngIf="disCol == 'bank'">
+            <td mat-cell *matCellDef="let element">
+              <span>{{ element[concatColumnString(disCol)].bankName }}</span>
+            </td>
+          </ng-container>
+          <td mat-cell *matCellDef="let element">
+            <span class="tag me-0">
+              {{ element[concatColumnString(disCol)] }}</span
+            >
+          </td>
+        </ng-container>
+        <!--Mat-table  configurations-->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          [ngClass]="{
+            'bg-wrap': selection.isSelected(row)
+          }"
+        ></tr>
+        <!-- Row shown when there is no matching data. -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="4">
+            No data matching the search item: "{{ input.value }}"
+          </td>
+        </tr>
+      </table>
+    </ng-container>
+    <mat-paginator showFirstLastButtons [pageSize]="pageSize"></mat-paginator>
+  </div>
+</div>

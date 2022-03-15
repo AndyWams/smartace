@@ -26,6 +26,11 @@
             type="text"
             placeholder="Middle name"
             formControlName="middleName"
+            [ngClass]="{
+              'is-invalid':
+                createEmpForm.controls['middleName'].hasError('required') &&
+                createEmpForm.controls['middleName'].touched
+            }"
           />
         </div>
       </div>
@@ -107,12 +112,14 @@
         <div class="input mb-0">
           <input
             type="text"
+            maxlength="10"
             placeholder="Account number"
             formControlName="accountNumber"
             [ngClass]="{
               'is-invalid':
-                createEmpForm.controls['accountNumber'].hasError('required') &&
-                createEmpForm.controls['accountNumber'].touched
+                (createEmpForm.controls['accountNumber'].hasError('required') &&
+                  createEmpForm.controls['accountNumber'].touched) ||
+                createEmpForm.controls['accountNumber'].hasError('minlength')
             }"
           />
         </div>

@@ -7,9 +7,15 @@ import { environment } from 'src/environments/environment';
 import {
   IDepartment,
   IEmployee,
+  IEmployeeList,
   IInstitution,
   IInstitutionCat,
   IInstitutionList,
+  IPayElement,
+  IPayElementCat,
+  IPayElementList,
+  IPayscale,
+  IPayscaleList,
 } from '../models';
 
 @Injectable({
@@ -38,11 +44,11 @@ export class PayrollService {
       .get<any>(environment.apiBaseUrl + '/Department/GetAll', this.httpOptions)
       .pipe(catchError(handleError));
   }
-  //Fetch All Institution
-  fetchAllInstitution(model: IInstitutionList) {
+  //Fetch All Employees
+  fetchAllEmployees(model: IEmployeeList) {
     return this.http
-      .post<IInstitutionList>(
-        environment.apiBaseUrl + '/Institution/List',
+      .post<IEmployeeList>(
+        environment.apiBaseUrl + '/Employee/List',
         model,
         this.httpOptions
       )
@@ -53,6 +59,72 @@ export class PayrollService {
     return this.http
       .get<any>(
         environment.apiBaseUrl + `/Institution/GetAll`,
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
+  }
+  //Fetch All Institution
+  fetchAllInstitution(model: IInstitutionList) {
+    return this.http
+      .post<IInstitutionList>(
+        environment.apiBaseUrl + '/Institution/List',
+        model,
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
+  }
+  //Fetch Pay Element
+  fetchPayElement() {
+    return this.http
+      .post<any>(
+        environment.apiBaseUrl + '/PayElement/GetAll',
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
+  }
+  //Fetch  Pay Element Details
+  fetchPayElementDetails(id: any): Observable<any> {
+    return this.http
+      .get<any>(
+        environment.apiBaseUrl + `/PayElement/Details/${id}`,
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
+  }
+  //Fetch All Pay Elements
+  fetchAllPayElements(model: IPayElementList) {
+    return this.http
+      .post<IPayElementList>(
+        environment.apiBaseUrl + '/PayElement/List',
+        model,
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
+  }
+  //Fetch Pay Element Category
+  fetchPayElementCategory() {
+    return this.http
+      .post<any>(
+        environment.apiBaseUrl + '/PayElementCategory/GetAll',
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
+  }
+  //Fetch All Payscale
+  fetchAllPayscale(model: IPayscaleList) {
+    return this.http
+      .post<IPayscaleList>(
+        environment.apiBaseUrl + '/Payscale/List',
+        model,
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
+  }
+  //Fetch  Payscale Details
+  fetchPayScaleDetails(id: any): Observable<any> {
+    return this.http
+      .get<any>(
+        environment.apiBaseUrl + `/PayScale/Details/${id}`,
         this.httpOptions
       )
       .pipe(catchError(handleError));
@@ -124,6 +196,47 @@ export class PayrollService {
     return this.http
       .post<IInstitutionCat>(
         environment.apiBaseUrl + '/InstitutionCategory/Create',
+        model,
+        this.httpOptions
+      )
+      .pipe(
+        map((status) => status),
+        catchError(handleError)
+      );
+  }
+  //Create Pay Element
+  createPayElement(model: IPayElement): Observable<any> {
+    return this.http
+      .post<IPayElement>(
+        environment.apiBaseUrl + '/PayElement/Create',
+        model,
+        this.httpOptions
+      )
+      .pipe(
+        map((status) => status),
+        catchError(handleError)
+      );
+  }
+
+  //Create Pay Element Category
+  createPayElementCategory(model: IPayElementCat): Observable<any> {
+    return this.http
+      .post<IPayElementCat>(
+        environment.apiBaseUrl + '/PayElementCategory/Create',
+        model,
+        this.httpOptions
+      )
+      .pipe(
+        map((status) => status),
+        catchError(handleError)
+      );
+  }
+
+  //Create Payscale
+  createPayscale(model: IPayscale): Observable<any> {
+    return this.http
+      .post<IEmployee>(
+        environment.apiBaseUrl + '/Payscale/Create',
         model,
         this.httpOptions
       )

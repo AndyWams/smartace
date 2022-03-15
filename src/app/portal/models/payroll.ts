@@ -10,6 +10,17 @@ export interface IEmployee {
   pfa: string;
   taxId: string;
 }
+export interface IDepartment {
+  departmentName: string;
+}
+
+export interface IEmployeeList {
+  pageNumber: number;
+  pageSize: number;
+  search: string;
+  sortColumn: string;
+  sortOrder: number;
+}
 
 export interface IInstitution {
   pageNumber: string;
@@ -24,10 +35,10 @@ export interface IInstitutionList {
   search?: string;
   sortColumn?: string;
   sortOrder?: number;
-  filter?: Filter;
+  filter?: IInstitutionFilter;
 }
 
-export interface Filter {
+export interface IInstitutionFilter {
   instituteCategoryId?: any;
   bankId?: any;
   created?: any;
@@ -36,6 +47,78 @@ export interface Filter {
 export interface IInstitutionCat {
   institutionCatName: string;
 }
-export interface IDepartment {
-  departmentName: string;
+
+export interface IPayElement {
+  institutionId: string;
+  payElementName: string;
+  elementType: number;
+  payType: number;
+  payElementCatId: string;
+  paymentMode: number;
+  payElementAmount: number;
+  payElementPercentage: number;
+  deductTax: boolean;
+  taxId: string;
+  taxValue: number;
+  payElementLine: IPayElementLine[];
+}
+export interface IPayElementCat {
+  payElementCatName: string;
+}
+export interface IPayElementCatList {
+  pageNumber: number;
+  pageSize: number;
+  search: string;
+  sortColumn: string;
+  sortOrder: number;
+}
+
+export interface IPayscaleFilter {
+  payScaleName: string;
+  frequency: number;
+}
+
+export interface IPayscaleList {
+  pageNumber: number;
+  pageSize: number;
+  search: string;
+  sortColumn: string;
+  sortOrder: number;
+  filter: IPayscaleFilter;
+}
+
+export interface IPayscale {
+  payScaleName: string;
+  frequency: number;
+  payScaleElements: IPayScaleElement[];
+  payScaleEmployees: PayScaleEmployee[];
+}
+
+export interface IPayScaleElement {
+  payElementId: string;
+}
+
+export interface PayScaleEmployee {
+  employeeId: string;
+}
+export interface IPayElementList {
+  pageNumber: number;
+  pageSize: number;
+  search: string;
+  sortColumn: string;
+  sortOrder: number;
+  filter: IPayElementFilter;
+}
+
+export interface IPayElementFilter {
+  payElementCatId: string;
+  payType: number;
+  elementType: number;
+  payElementName: string;
+  payElementAmount: number;
+  institutionId: string;
+}
+
+export interface IPayElementLine {
+  payElementId: string;
 }

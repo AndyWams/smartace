@@ -87,7 +87,6 @@ export class InstituteManagementComponent implements OnInit {
     const myArray = strtext.split(' ');
     return myArray.join('');
   }
-
   getItemDetails(id: any) {
     if (id !== undefined) {
       this.payrollServ
