@@ -364,46 +364,6 @@
             </td>
           </ng-container>
           <!--Action Column-->
-          <ng-container *ngIf="last && _identifier === 'INSTITUTION'">
-            <td mat-cell *matCellDef="let element">
-              <div class="dropdown">
-                <span class="dropdown-toggle" [matMenuTriggerFor]="menu">
-                  <ion-icon name="ellipsis-horizontal"></ion-icon>
-                </span>
-                <mat-menu #menu="matMenu">
-                  <button
-                    type="button"
-                    mat-menu-item
-                    data-bs-toggle="modal"
-                    data-bs-target="#viewInstMgt"
-                    (click)="getItemDetails(element['institutionId'])"
-                  >
-                    View
-                  </button>
-                  <button
-                    mat-menu-item
-                    [routerLink]="['/portal/payroll/institution-payment-setup']"
-                    [queryParams]="{
-                      query: 'edit',
-                      id: element['institutionId']
-                    }"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    type="button"
-                    mat-menu-item
-                    class="txt-danger"
-                    data-bs-toggle="modal"
-                    data-bs-target="#deleteInstitution"
-                    (click)="getItemDetails(element['institutionId'])"
-                  >
-                    Delete
-                  </button>
-                </mat-menu>
-              </div>
-            </td>
-          </ng-container>
           <ng-container *ngIf="last && _identifier === 'PAYELEMENTS'">
             <td mat-cell *matCellDef="let element">
               <div class="dropdown">
@@ -687,18 +647,6 @@
           <ng-container *ngIf="disCol == 'created On'">
             <td mat-cell *matCellDef="let element">
               <span>{{ element["createdOn"] | date: "mediumDate" }}</span>
-            </td>
-          </ng-container>
-          <ng-container *ngIf="disCol == 'institution Category'">
-            <td mat-cell *matCellDef="let element">
-              <span>{{
-                element[concatColumnString(disCol)].institutionCategoryName
-              }}</span>
-            </td>
-          </ng-container>
-          <ng-container *ngIf="disCol == 'bank'">
-            <td mat-cell *matCellDef="let element">
-              <span>{{ element[concatColumnString(disCol)].bankName }}</span>
             </td>
           </ng-container>
           <td mat-cell *matCellDef="let element">

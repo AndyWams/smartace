@@ -3,59 +3,185 @@
 </div>
 <div class="bg-white">
   <div class="form-wrap">
-    <form>
+    <form [formGroup]="createEmpForm" (ngSubmit)="onSubmit()">
       <div class="grid align-items-center">
         <label>First Name</label>
         <div class="input mb-0">
-          <input type="text" placeholder="First name" />
+          <input
+            type="text"
+            placeholder="First name"
+            formControlName="firstName"
+            [ngClass]="{
+              'is-invalid':
+                createEmpForm.controls['firstName'].hasError('required') &&
+                createEmpForm.controls['firstName'].touched
+            }"
+          />
         </div>
       </div>
       <div class="grid align-items-center">
         <label>Middle Name</label>
         <div class="input mb-0">
-          <input type="text" placeholder="Middle name" />
+          <input
+            type="text"
+            placeholder="Middle name"
+            formControlName="middleName"
+          />
         </div>
       </div>
       <div class="grid align-items-center">
         <label>Last Name</label>
         <div class="input mb-0">
-          <input type="text" placeholder="Last name" />
+          <input
+            type="text"
+            placeholder="Last name"
+            formControlName="lastName"
+            [ngClass]="{
+              'is-invalid':
+                createEmpForm.controls['lastName'].hasError('required') &&
+                createEmpForm.controls['lastName'].touched
+            }"
+          />
+        </div>
+      </div>
+      <div class="grid align-items-center">
+        <label>Work Email</label>
+        <div class="input mb-0">
+          <input
+            type="text"
+            placeholder="Work email"
+            formControlName="workEmail"
+            [ngClass]="{
+              'is-invalid':
+                createEmpForm.controls['workEmail'].hasError('required') &&
+                createEmpForm.controls['workEmail'].touched
+            }"
+          />
         </div>
       </div>
       <div class="grid align-items-center">
         <label>Phone Number</label>
         <div class="input mb-0">
-          <input type="number" placeholder="Phone number" />
+          <input
+            type="text"
+            placeholder="Phone number"
+            formControlName="phoneNumber"
+            [ngClass]="{
+              'is-invalid':
+                createEmpForm.controls['phoneNumber'].hasError('required') &&
+                createEmpForm.controls['phoneNumber'].touched
+            }"
+          />
+        </div>
+      </div>
+      <div class="grid align-items-center">
+        <label>Department</label>
+        <div class="input mb-0">
+          <mat-select
+            class="select"
+            placeholder="Select department"
+            formControlName="departmentId"
+            [ngClass]="{
+              'is-invalid':
+                createEmpForm.controls['departmentId'].hasError('required') &&
+                createEmpForm.controls['departmentId'].touched
+            }"
+            required
+          >
+            <mat-option disabled="" selected="" value=""
+              >Select department</mat-option
+            >
+            <mat-option
+              *ngFor="let dept of departmentList"
+              [value]="dept.departmentId"
+              >{{ dept.departmentName }}</mat-option
+            >
+            <mat-option data-bs-toggle="modal" data-bs-target="#addDepartment"
+              >Create New</mat-option
+            >
+          </mat-select>
         </div>
       </div>
       <div class="grid align-items-center">
         <label>Account Number</label>
         <div class="input mb-0">
-          <input type="number" placeholder="Account number" />
+          <input
+            type="text"
+            placeholder="Account number"
+            formControlName="accountNumber"
+            [ngClass]="{
+              'is-invalid':
+                createEmpForm.controls['accountNumber'].hasError('required') &&
+                createEmpForm.controls['accountNumber'].touched
+            }"
+          />
         </div>
       </div>
       <div class="grid align-items-center">
         <label>Bank Name</label>
         <div class="input mb-0">
-          <input type="text" placeholder="Bank name" />
+          <mat-select
+            class="select"
+            placeholder="Select bank"
+            formControlName="bankId"
+            [ngClass]="{
+              'is-invalid':
+                createEmpForm.controls['bankId'].hasError('required') &&
+                createEmpForm.controls['bankId'].touched
+            }"
+            required
+          >
+            <mat-option disabled="" selected="" value=""
+              >Select bank</mat-option
+            >
+            <mat-option *ngFor="let bank of bankList" [value]="bank.bankId">{{
+              bank.bankName
+            }}</mat-option>
+          </mat-select>
         </div>
       </div>
       <div class="grid align-items-center">
         <label>PFA</label>
         <div class="input mb-0">
-          <input type="text" placeholder="PFA number" />
+          <input
+            type="text"
+            placeholder="PFA number"
+            formControlName="pfa"
+            [ngClass]="{
+              'is-invalid':
+                createEmpForm.controls['pfa'].hasError('required') &&
+                createEmpForm.controls['pfa'].touched
+            }"
+          />
         </div>
       </div>
       <div class="grid align-items-center">
         <label>Tax ID</label>
         <div class="input mb-0">
-          <input type="text" placeholder="Tax id" />
+          <input
+            type="text"
+            placeholder="Tax id"
+            formControlName="taxId"
+            [ngClass]="{
+              'is-invalid':
+                createEmpForm.controls['taxId'].hasError('required') &&
+                createEmpForm.controls['taxId'].touched
+            }"
+          />
         </div>
       </div>
       <div class="grid align-items-center">
         <span>&nbsp;</span>
         <div class="d-flex align-items-center">
-          <button type="button" mat-flat-button class="me-4">Save</button>
+          <button
+            type="submit"
+            mat-flat-button
+            class="me-4"
+            [disabled]="!createEmpForm.valid"
+          >
+            Save <mat-spinner *ngIf="isBusy"> </mat-spinner>
+          </button>
+          <!-- <button type="button" mat-flat-button class="me-4">Save</button> -->
           <button
             type="button"
             mat-stroked-button
@@ -66,5 +192,60 @@
         </div>
       </div>
     </form>
+  </div>
+</div>
+<div class="modal fade" id="addDepartment" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Create New Department</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <form
+            class="pb-3"
+            [formGroup]="createDeptForm"
+            (ngSubmit)="onAddDepartment()"
+          >
+            <div class="form-wrap w--400">
+              <div class="input">
+                <input
+                  type="text"
+                  placeholder="Input department name"
+                  formControlName="departmentName"
+                  [ngClass]="{
+                    'is-invalid':
+                      createDeptForm.controls['departmentName'].hasError(
+                        'required'
+                      ) && createDeptForm.controls['departmentName'].touched
+                  }"
+                />
+              </div>
+              <div class="d-flex align-items-center mt-5">
+                <button
+                  type="submit"
+                  mat-flat-button
+                  class="me-3"
+                  [disabled]="!createDeptForm.valid"
+                >
+                  Save <mat-spinner *ngIf="isBusy_"> </mat-spinner>
+                </button>
+                <button
+                  type="button"
+                  mat-stroked-button
+                  data-bs-dismiss="modal"
+                  #closebtn
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

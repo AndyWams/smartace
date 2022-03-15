@@ -36,3 +36,6 @@ export interface Filter {
 export interface IInstitutionCat {
   institutionCatName: string;
 }
+export interface IDepartment {
+  departmentName: string;
+}

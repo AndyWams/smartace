@@ -4,7 +4,13 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { handleError } from 'src/app/services/apiErrorHandler';
 import { environment } from 'src/environments/environment';
-import { IInstitution, IInstitutionCat, IInstitutionList } from '../models';
+import {
+  IDepartment,
+  IEmployee,
+  IInstitution,
+  IInstitutionCat,
+  IInstitutionList,
+} from '../models';
 
 @Injectable({
   providedIn: 'root',
@@ -24,6 +30,12 @@ export class PayrollService {
   fetchAllBanks(): Observable<any> {
     return this.http
       .get<any>(environment.apiBaseUrl + '/Bank/GetAll', this.httpOptions)
+      .pipe(catchError(handleError));
+  }
+  //Fetch Department
+  fetchDepartment(): Observable<any> {
+    return this.http
+      .get<any>(environment.apiBaseUrl + '/Department/GetAll', this.httpOptions)
       .pipe(catchError(handleError));
   }
   //Fetch All Institution
@@ -64,6 +76,33 @@ export class PayrollService {
         this.httpOptions
       )
       .pipe(catchError(handleError));
+  }
+  //Create Department
+  createDepartment(model: IDepartment): Observable<any> {
+    return this.http
+      .post<IDepartment>(
+        environment.apiBaseUrl + '/Department/Create',
+        model,
+        this.httpOptions
+      )
+      .pipe(
+        map((status) => status),
+        catchError(handleError)
+      );
+  }
+
+  //Create Employee
+  createEmployee(model: IEmployee): Observable<any> {
+    return this.http
+      .post<IEmployee>(
+        environment.apiBaseUrl + '/Employee/Create',
+        model,
+        this.httpOptions
+      )
+      .pipe(
+        map((status) => status),
+        catchError(handleError)
+      );
   }
 
   //Create Institution
