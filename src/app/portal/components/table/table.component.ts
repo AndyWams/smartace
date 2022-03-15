@@ -11,11 +11,13 @@ import {
 } from '@angular/core';
 
 import * as _helperFunc from '../../shared';
-import * as _types from '../../shared';
 import { SelectionModel } from '@angular/cdk/collections';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { catchError, filter } from 'rxjs/operators';
+import { PayrollService } from '../../services/payroll.service';
+import { ObservableInput, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-table',
@@ -23,6 +25,8 @@ import { filter } from 'rxjs/operators';
   styleUrls: ['./table.component.scss'],
 })
 export class TableComponent implements OnInit {
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  // @ViewChild(MatSort) sort: MatSort;
   @Input() _data: any;
   @Input() _identifier: string;
   @Input() _reportType: any;
@@ -31,17 +35,20 @@ export class TableComponent implements OnInit {
   selectedItems: any[] = [];
   payScale: string = '';
   runBy: string;
-  noOfPages: number;
-  pageSize = 10;
-  currentPage = 1;
-  currentlyShown: any[] = [];
-  list: any[];
+  pageSize: number = 10;
+  itemDetails: any;
   public dataSource: MatTableDataSource<any> = new MatTableDataSource();
   public selection = new SelectionModel(true, []);
   public displayedColumns: string[];
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
-  ngAfterViewInit() {}
+  constructor(
+    private payrollServ: PayrollService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
   ngOnInit(): void {
     this.getRoutes();
     this.displayedColumns = _helperFunc.getTableColumn(
@@ -51,6 +58,7 @@ export class TableComponent implements OnInit {
     this.processRequiredActionColumn(this.queryString, this._reportType);
     this.dataSource = new MatTableDataSource(this._data);
   }
+  ngOnChanges() {}
 
   processRequiredActionColumn(qrStr: string, repTyp) {
     if (
@@ -114,65 +122,20 @@ export class TableComponent implements OnInit {
       this.router.navigate(['/portal/payroll']);
     }
   }
-  get fromToString(): string {
-    const indexOfLastItemInPage =
-      this.pageSize * (this.currentPage - 1) + this._data.length;
-    return `${this.pageSize * (this.currentPage - 1) + 1} -
-   ${indexOfLastItemInPage} of ${(this._data || []).length}`;
-  }
-  get pages(): any {
-    return Array(this.noOfPages)
-      .fill(1)
-      .map((_, index) => index + 1);
-  }
-  forward() {
-    if (this.currentPage === this.noOfPages) {
-      return;
-    }
-    this.move(true);
-    this.getItemPerPage(this.currentPage);
-  }
-  backward() {
-    if (this.currentPage === 1) {
-      return;
-    }
-    this.move(false);
-    this.getItemPerPage(this.currentPage);
-  }
-  move(increment: boolean) {
-    increment ? this.currentPage++ : this.currentPage--;
-    this.updateCurrentlyShown();
-    window.scrollTo(0, 0);
-  }
-  jumpToPage(pageNumber: number): void {
-    this.currentPage = pageNumber;
-    this.updateCurrentlyShown();
-    window.scrollTo(0, 0);
-    this.getItemPerPage(pageNumber);
-  }
-  updateCurrentlyShown(): void {
-    this.currentlyShown = this._data.slice(
-      (this.currentPage - 1) * this.pageSize,
-      this.currentPage * this.pageSize
-    );
-  }
-  getItemPerPage(pageCount?: number) {
-    this.list = this._data;
-    this.noOfPages = Math.ceil(this.list.length / this.pageSize);
 
-    this.currentlyShown = this.list.slice(0, this.pageSize);
-    // this.payrollService
-    //   .fetchItem(pageCount, this.pageSize)
-    //   .pipe(
-    //     catchError((err: any): ObservableInput<any> => {
-    //       return throwError(err);
-    //     })
-    //   )
-    //   .subscribe((res) => {
-    //     const { data } = res;
-    //     this.list = data.list;
-    //     this.noOfPages = Math.ceil(data.total / this.pageSize);
-    //     this.currentlyShown = this.list.slice(0, this.pageSize);
-    //   });
+  getItemDetails(id: any) {
+    if (id !== undefined) {
+      this.payrollServ
+        .fetchInstitutionDetails(id)
+        .pipe(
+          catchError((err: any): ObservableInput<any> => {
+            return throwError(err);
+          })
+        )
+        .subscribe((res) => {
+          const { result } = res;
+          this.itemDetails = result;
+        });
+    }
   }
 }

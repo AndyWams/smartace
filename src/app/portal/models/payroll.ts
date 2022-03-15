@@ -12,9 +12,27 @@ export interface IEmployee {
 }
 
 export interface IInstitution {
-  institutionCatId: string;
+  pageNumber: string;
   institutionName: string;
   accountName: string;
   accountNumber: string;
-  bankId?: string;
+  bankId: string;
+}
+export interface IInstitutionList {
+  pageNumber?: number;
+  pageSize?: number;
+  search?: string;
+  sortColumn?: string;
+  sortOrder?: number;
+  filter?: Filter;
+}
+
+export interface Filter {
+  instituteCategoryId?: any;
+  bankId?: any;
+  created?: any;
+}
+
+export interface IInstitutionCat {
+  institutionCatName: string;
 }

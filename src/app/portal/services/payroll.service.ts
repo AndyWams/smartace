@@ -1,66 +1,117 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { handleError } from 'src/app/services/apiErrorHandler';
 import { environment } from 'src/environments/environment';
+import { IInstitution, IInstitutionCat, IInstitutionList } from '../models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PayrollService {
-  private baseUrl = environment;
   private httpOptions: any;
   constructor(private http: HttpClient) {
     this.httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${environment.userToken}`,
       }),
     };
   }
 
-  //Create  Api
-  // createProject(model: IPayrol): Observable<any> {
-  //   const url = this.baseUrl +
-  //   return this.http.post<IPayrol>(url, model, this.httpOptions).pipe(
-  //     map((status) => status),
-  //     catchError(handleError),
-  //   )
-  // }
+  //Fetch AllBanks
+  fetchAllBanks(): Observable<any> {
+    return this.http
+      .get<any>(environment.apiBaseUrl + '/Bank/GetAll', this.httpOptions)
+      .pipe(catchError(handleError));
+  }
+  //Fetch All Institution
+  fetchAllInstitution(model: IInstitutionList) {
+    return this.http
+      .post<IInstitutionList>(
+        environment.apiBaseUrl + '/Institution/List',
+        model,
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
+  }
+  //Fetch Institution
+  fetchInstitution() {
+    return this.http
+      .get<any>(
+        environment.apiBaseUrl + `/Institution/GetAll`,
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
+  }
 
-  //Fetch all
-  //Fetch Equipment-types Api
-  // fetchEquipments(): Observable<any> {
-  //   const url = this.baseUrl + `/payroll/institution`
-  //   return this.http
-  //     .get<any>(url, this.httpOptions)
-  //     .pipe(catchError(handleError))
-  // }
+  //Fetch Institution Category
+  fetchInstitutionCategory(): Observable<any> {
+    return this.http
+      .get<any>(
+        environment.apiBaseUrl + '/InstitutionCategory/GetAll',
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
+  }
 
-  //fetch single
+  //Fetch  Institution Details
+  fetchInstitutionDetails(id: any): Observable<any> {
+    return this.http
+      .get<any>(
+        environment.apiBaseUrl + `/Institution/Details/${id}`,
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
+  }
 
-  //Fetch single
-  // fetchEquipmentLogCheck(equipmentId: number): Observable<any> {
-  //   const url = this.baseUrl + `/payroll/institution/${institutionId}`
-  //   return this.http
-  //     .get<any>(url, this.httpOptions)
-  //     .pipe(catchError(handleError))
-  // }
+  //Create Institution
+  createInstitution(model: IInstitution): Observable<any> {
+    return this.http
+      .post<IInstitution>(
+        environment.apiBaseUrl + '/Institution/Create',
+        model,
+        this.httpOptions
+      )
+      .pipe(
+        map((status) => status),
+        catchError(handleError)
+      );
+  }
 
-  //Update
+  //Create Institution Category
+  createInstitutionCat(model: IInstitutionCat): Observable<any> {
+    return this.http
+      .post<IInstitutionCat>(
+        environment.apiBaseUrl + '/InstitutionCategory/Create',
+        model,
+        this.httpOptions
+      )
+      .pipe(
+        map((status) => status),
+        catchError(handleError)
+      );
+  }
 
-  // updateInstitution(institutionId: number, model: any): Observable<any>  {
-  //   const url = this.baseUrl + `/payroll/institution/${institutionId}`;
-  //   return this.http.put(url, model, this.httpOptions).pipe(
-  //     map((status) => status),
-  //     catchError(handleError),
-  //   );
-  // }
+  deleteInstitution(institutionId: string) {
+    return this.http.delete<any>(
+      environment.apiBaseUrl + `/Institution/Delete/${institutionId}`,
+      this.httpOptions
+    );
+  }
 
-  //Delete
-
-  // deleteDocument(institutionId: number) {
-  //   const url = this.baseUrl + `/payrol/institution/${institutionId}`
-  //   return this.http
-  //     .delete<any>(url, this.httpOptions)
-  //     .pipe(catchError(handleError))
-  // }
+  //Update Institution
+  updateInstitution(model: IInstitution): Observable<any> {
+    return this.http
+      .put<IInstitution>(
+        environment.apiBaseUrl + '/Institution/Edit',
+        model,
+        this.httpOptions
+      )
+      .pipe(
+        map((status) => status),
+        catchError(handleError)
+      );
+  }
 }

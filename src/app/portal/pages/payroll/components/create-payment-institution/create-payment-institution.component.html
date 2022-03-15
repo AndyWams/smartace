@@ -8,12 +8,34 @@
   </div>
 </div>
 <div class="bg-white">
+  <div
+    class="d-flex justify-content-center mt-5 pt-5"
+    *ngIf="queryString === 'edit' && !itemDetails"
+  >
+    <!--Loading Roller-->
+    <app-loading-roller></app-loading-roller>
+  </div>
   <div class="form-wrap">
-    <form>
+    <!--Add Form-->
+    <form
+      [formGroup]="createInstitutionForm"
+      (ngSubmit)="onSubmit()"
+      *ngIf="queryString === 'add'"
+    >
       <div class="grid align-items-center">
         <label>Institution Name</label>
         <div class="input mb-0">
-          <input type="text" placeholder="Institution name" />
+          <input
+            type="text"
+            placeholder="Institution name"
+            formControlName="institutionName"
+            [ngClass]="{
+              'is-invalid':
+                createInstitutionForm.controls['institutionName'].hasError(
+                  'required'
+                ) && createInstitutionForm.controls['institutionName'].touched
+            }"
+          />
         </div>
       </div>
       <div class="grid align-items-center">
@@ -21,56 +43,292 @@
         <div class="input mb-0">
           <mat-select
             class="select"
-            required
+            formControlName="institutionCategoryId"
             placeholder="Select category"
-            (change)="handleCategorySelect($event)"
-            *ngIf="categoryType !== 'New'"
+            (selectionChange)="handleCategorySelect($event)"
+            [ngClass]="{
+              'is-invalid':
+                createInstitutionForm.controls[
+                  'institutionCategoryId'
+                ].hasError('required') &&
+                createInstitutionForm.controls['institutionCategoryId'].touched
+            }"
+            required
           >
             <mat-option disabled="" selected="" value=""
               >Select category</mat-option
             >
-            <mat-option value="Tax">Tax</mat-option>
-            <mat-option value="Union">Union</mat-option>
-            <mat-option value="New">Create New</mat-option>
+            <mat-option
+              *ngFor="let cat of institutionCat"
+              [value]="cat.institutionCategoryId"
+              >{{ cat.institutionCategoryName }}</mat-option
+            >
+            <mat-option
+              data-bs-toggle="modal"
+              data-bs-target="#addInstitutionCat"
+              >Create New</mat-option
+            >
           </mat-select>
-          <input
-            type="text"
-            placeholder="Input category name"
-            *ngIf="categoryType === 'New'"
-          />
         </div>
       </div>
       <div class="grid align-items-center">
         <label>Account Name</label>
         <div class="input mb-0">
-          <input type="text" placeholder="Account name" />
+          <input
+            type="text"
+            placeholder="Account name"
+            formControlName="accountName"
+            [ngClass]="{
+              'is-invalid':
+                createInstitutionForm.controls['accountName'].hasError(
+                  'required'
+                ) && createInstitutionForm.controls['accountName'].touched
+            }"
+          />
         </div>
       </div>
       <div class="grid align-items-center">
         <label>Account Number</label>
         <div class="input mb-0">
-          <input type="text" placeholder="Account number" />
+          <input
+            type="text"
+            placeholder="Account number"
+            formControlName="accountNumber"
+            [ngClass]="{
+              'is-invalid':
+                createInstitutionForm.controls['accountNumber'].hasError(
+                  'required'
+                ) && createInstitutionForm.controls['accountNumber'].touched
+            }"
+          />
         </div>
       </div>
       <div class="grid align-items-center">
         <label>Bank</label>
         <div class="input mb-0">
-          <mat-select class="select" placeholder="Select bank" required>
+          <mat-select
+            class="select"
+            placeholder="Select bank"
+            formControlName="bankId"
+            [ngClass]="{
+              'is-invalid':
+                createInstitutionForm.controls['bankId'].hasError('required') &&
+                createInstitutionForm.controls['bankId'].touched
+            }"
+            required
+          >
             <mat-option disabled="" selected="" value=""
               >Select bank</mat-option
             >
+            <mat-option *ngFor="let bank of bankList" [value]="bank.bankId">{{
+              bank.bankName
+            }}</mat-option>
           </mat-select>
         </div>
       </div>
       <div class="grid align-items-center">
         <span>&nbsp;</span>
         <div class="d-flex align-items-center">
-          <button type="button" mat-flat-button class="me-4">
-            Save and Continue
+          <button
+            type="submit"
+            mat-flat-button
+            class="me-4"
+            [disabled]="!createInstitutionForm.valid"
+          >
+            Save and Continue <mat-spinner *ngIf="isBusy"> </mat-spinner>
           </button>
           <button type="button" mat-stroked-button>Save and Add New</button>
         </div>
       </div>
     </form>
+    <!--Update Form-->
+    <form
+      [formGroup]="updateInstitutionForm"
+      (ngSubmit)="onUpdate()"
+      *ngIf="itemDetails && queryString === 'edit'"
+    >
+      <div class="grid align-items-center">
+        <label>Institution Name</label>
+        <div class="input mb-0">
+          <input
+            type="text"
+            placeholder="Institution name"
+            formControlName="institutionName"
+            [ngClass]="{
+              'is-invalid':
+                updateInstitutionForm.controls['institutionName'].hasError(
+                  'required'
+                ) && updateInstitutionForm.controls['institutionName'].touched
+            }"
+          />
+        </div>
+      </div>
+      <div class="grid align-items-center">
+        <label>Category</label>
+        <div class="input mb-0">
+          <mat-select
+            class="select"
+            formControlName="institutionCategoryId"
+            placeholder="Select category"
+            (selectionChange)="handleCategorySelect($event)"
+            [ngClass]="{
+              'is-invalid':
+                updateInstitutionForm.controls[
+                  'institutionCategoryId'
+                ].hasError('required') &&
+                updateInstitutionForm.controls['institutionCategoryId'].touched
+            }"
+            required
+          >
+            <mat-option disabled="" selected="" value=""
+              >Select category</mat-option
+            >
+            <mat-option
+              *ngFor="let cat of institutionCat"
+              [value]="cat.institutionCategoryId"
+              >{{ cat.institutionCategoryName }}</mat-option
+            >
+            <mat-option
+              data-bs-toggle="modal"
+              data-bs-target="#addInstitutionCat"
+              >Create New</mat-option
+            >
+          </mat-select>
+        </div>
+      </div>
+      <div class="grid align-items-center">
+        <label>Account Name</label>
+        <div class="input mb-0">
+          <input
+            type="text"
+            placeholder="Account name"
+            formControlName="accountName"
+            [ngClass]="{
+              'is-invalid':
+                updateInstitutionForm.controls['accountName'].hasError(
+                  'required'
+                ) && updateInstitutionForm.controls['accountName'].touched
+            }"
+          />
+        </div>
+      </div>
+      <div class="grid align-items-center">
+        <label>Account Number</label>
+        <div class="input mb-0">
+          <input
+            type="text"
+            placeholder="Account number"
+            formControlName="accountNumber"
+            [ngClass]="{
+              'is-invalid':
+                updateInstitutionForm.controls['accountNumber'].hasError(
+                  'required'
+                ) && updateInstitutionForm.controls['accountNumber'].touched
+            }"
+          />
+        </div>
+      </div>
+      <div class="grid align-items-center">
+        <label>Bank</label>
+        <div class="input mb-0">
+          <mat-select
+            class="select"
+            placeholder="Select bank"
+            formControlName="bankId"
+            [ngClass]="{
+              'is-invalid':
+                updateInstitutionForm.controls['bankId'].hasError('required') &&
+                updateInstitutionForm.controls['bankId'].touched
+            }"
+            required
+          >
+            <mat-option disabled="" selected="" value=""
+              >Select bank</mat-option
+            >
+            <mat-option *ngFor="let bank of bankList" [value]="bank.bankId">{{
+              bank.bankName
+            }}</mat-option>
+          </mat-select>
+        </div>
+      </div>
+      <div class="grid align-items-center">
+        <span>&nbsp;</span>
+        <div class="d-flex align-items-center">
+          <button
+            type="submit"
+            mat-flat-button
+            class="me-4"
+            [disabled]="!updateInstitutionForm.valid"
+          >
+            Save <mat-spinner *ngIf="isBusy"> </mat-spinner>
+          </button>
+          <button
+            type="button"
+            mat-stroked-button
+            routerLink="/portal/payroll/institute-management"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="modal fade" id="addInstitutionCat" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Create New Institution Category</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <form
+            class="pb-3"
+            [formGroup]="createInstitutionCatForm"
+            (ngSubmit)="onCreateNew()"
+          >
+            <div class="form-wrap w--400">
+              <div class="input">
+                <input
+                  type="text"
+                  placeholder="Input category name"
+                  formControlName="institutionCategoryName"
+                  [ngClass]="{
+                    'is-invalid':
+                      createInstitutionCatForm.controls[
+                        'institutionCategoryName'
+                      ].hasError('required') &&
+                      createInstitutionCatForm.controls[
+                        'institutionCategoryName'
+                      ].touched
+                  }"
+                />
+              </div>
+              <div class="d-flex align-items-center mt-5">
+                <button
+                  type="submit"
+                  mat-flat-button
+                  class="me-3"
+                  [disabled]="!createInstitutionCatForm.valid"
+                >
+                  Save <mat-spinner *ngIf="isBusy_"> </mat-spinner>
+                </button>
+                <button
+                  type="button"
+                  mat-stroked-button
+                  data-bs-dismiss="modal"
+                  #closebtn
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

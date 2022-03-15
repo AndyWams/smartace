@@ -29,6 +29,9 @@
     &::-webkit-input-placeholder {
       color: #95a8b8;
     }
+    &.is-invalid {
+      border: 1px solid #f44336 !important;
+    }
   }
   label {
     font-size: 14px;
@@ -96,6 +99,11 @@
     &:invalid::-webkit-datetime-edit {
       color: #b1b5c4;
       font-weight: 400;
+    }
+  }
+  mat-select {
+    &.is-invalid {
+      border: 1px solid #f44336 !important;
     }
   }
 }

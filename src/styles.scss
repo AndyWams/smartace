@@ -19,3 +19,23 @@ html {
 .mat-tab-body.mat-tab-body-active {
   z-index: auto !important;
 }
+mat-spinner {
+  width: 20px !important;
+  height: 20px !important;
+  margin-left: 10px;
+  svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+}
+
+.mat-progress-spinner circle,
+.mat-spinner circle {
+  stroke: white !important;
+}
+.mat-paginator-container {
+  padding: 0em 3em !important;
+}
+.mat-paginator-container {
+  justify-content: space-between !important;
+}

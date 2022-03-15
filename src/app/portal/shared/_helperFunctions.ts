@@ -12,12 +12,12 @@ export const getTableColumn = (identifier: string, optional?: string) => {
       ]);
     case (identifier = _types.INSTITUTION):
       return (column = [
-        'name',
-        'category',
+        'institution Name',
+        'institution Category',
         'account Name',
         'account Number',
         'bank',
-        'date Created',
+        'created On',
       ]);
     case (identifier = _types.PAYELEMENTS):
       return (column = [

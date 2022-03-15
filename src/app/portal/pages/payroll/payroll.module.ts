@@ -32,6 +32,7 @@ import { ChartGraphModule } from '../../components/chart-graph/chart-graph.modul
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { ComputeGrossComponent } from './components/compute-gross/compute-gross.component';
+import { LoadingRollerComponent } from '../../components/loading-roller/loading-roller.component';
 @NgModule({
   declarations: [
     PayrollComponent,
@@ -60,6 +61,7 @@ import { ComputeGrossComponent } from './components/compute-gross/compute-gross.
     PayslipAnalysisComponent,
     PayrollAnalysisComponent,
     ComputeGrossComponent,
+    LoadingRollerComponent,
   ],
   imports: [
     CommonModule,

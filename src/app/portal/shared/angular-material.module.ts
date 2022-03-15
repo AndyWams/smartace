@@ -20,6 +20,8 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 @NgModule({
   imports: [
     CommonModule,
@@ -42,6 +44,8 @@ import { MatDividerModule } from '@angular/material/divider';
     MatSliderModule,
     MatProgressBarModule,
     MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
   ],
   exports: [
     MatButtonModule,
@@ -63,6 +67,8 @@ import { MatDividerModule } from '@angular/material/divider';
     MatSliderModule,
     MatProgressBarModule,
     MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
   ],
   providers: [],
 })
