@@ -55,7 +55,7 @@ export class CreatePayScaleComponent implements OnInit {
     this.getEmployees();
     this.displayedColumns = this.column;
   }
-  column = ['Name', 'employee Id', 'department', 'employment date'];
+  column = ['Name', 'employee Id', 'department', 'employment Date'];
   ngOnChanges() {}
   hanglePayElementSelect(event: any) {
     if (event.target.value !== null) {

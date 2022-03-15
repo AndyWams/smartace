@@ -215,11 +215,15 @@
                 </mat-checkbox>
               </td>
             </ng-container>
-            <!-- <ng-container *ngIf="disCol == 'created On'">
+            <ng-container *ngIf="disCol == 'employment Date'">
               <td mat-cell *matCellDef="let element">
-                <span>{{ element["createdOn"] | date: "mediumDate" }}</span>
+                <span>{{
+                  element["employementDate"]
+                    ? (element["employementDate"] | date: "mediumDate")
+                    : "****"
+                }}</span>
               </td>
-            </ng-container> -->
+            </ng-container>
             <ng-container *ngIf="disCol == 'department'">
               <td mat-cell *matCellDef="let element">
                 <span>{{
