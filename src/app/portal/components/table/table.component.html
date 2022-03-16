@@ -153,17 +153,7 @@
             Filter <ion-icon name="options" class="mx-3"></ion-icon>
           </button>
         </div>
-        <!-- Pay Elements Filter-->
-        <div *ngIf="_identifier === 'PAYELEMENTS'">
-          <button
-            mat-stroked-button
-            class="mat-stroked-secondary mr-1"
-            data-bs-toggle="modal"
-            data-bs-target="#payElementFilterBy"
-          >
-            Filter <ion-icon name="options" class="mx-3"></ion-icon>
-          </button>
-        </div>
+
         <!-- Pay Scale Filter-->
         <div *ngIf="_identifier === 'PAYSCALE'">
           <button
@@ -222,7 +212,6 @@
         <!-- Employee Filter-->
         <div
           *ngIf="
-            _identifier === 'EMPLOYEES' ||
             _identifier === 'EMPLOYEESONPAYSCALE' ||
             _identifier === 'EMPLOYEEPAYSCALE'
           "
@@ -258,7 +247,6 @@
         <!-- Export as-->
         <div
           *ngIf="
-            _identifier !== 'EMPLOYEES' &&
             _identifier !== 'EMPLOYEESONPAYSCALE' &&
             _identifier !== 'EMPLOYEESONGROSSPAYROLL' &&
             _identifier !== 'EMPLOYEESONPAYSCALEPAYROLL' &&
@@ -451,42 +439,6 @@
                     routerLink="/portal/payroll/compute-gross"
                   >
                     Compute Gross/Net Pay
-                  </button>
-                </mat-menu>
-              </div>
-            </td>
-          </ng-container>
-          <ng-container *ngIf="last && _identifier === 'TAXTYPE'">
-            <td mat-cell *matCellDef="let element">
-              <div class="dropdown">
-                <span class="dropdown-toggle" [matMenuTriggerFor]="menu">
-                  <ion-icon name="ellipsis-horizontal"></ion-icon>
-                </span>
-                <mat-menu #menu="matMenu">
-                  <button
-                    type="button"
-                    mat-menu-item
-                    data-bs-toggle="modal"
-                    data-bs-target="#viewTaxType"
-                  >
-                    View
-                  </button>
-                  <button
-                    type="button"
-                    mat-menu-item
-                    data-bs-toggle="modal"
-                    data-bs-target="#editTaxType"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    type="button"
-                    class="txt-danger"
-                    mat-menu-item
-                    data-bs-toggle="modal"
-                    data-bs-target="#deactivateTaxType"
-                  >
-                    Deactivate
                   </button>
                 </mat-menu>
               </div>

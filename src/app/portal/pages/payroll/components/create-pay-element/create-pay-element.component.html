@@ -338,11 +338,9 @@
             <mat-option disabled="" selected="" value=""
               >Select tax type</mat-option
             >
-            <mat-option value="Value Added Tax">Value Added Tax</mat-option>
-            <mat-option value="Withholding Tax">Withholding Tax</mat-option>
-            <mat-option value="Personal Income Tax"
-              >Personal Income Tax</mat-option
-            >
+            <mat-option *ngFor="let type of taxTypes" [value]="type.taxId">{{
+              type.taxName
+            }}</mat-option>
           </mat-select>
         </div>
       </div>
@@ -378,7 +376,7 @@
           <button
             type="button"
             mat-stroked-button
-            routerLink="/portal/paroll/pay-elements"
+            routerLink="/portal/payroll/payscale-setup"
           >
             Cancel
           </button>

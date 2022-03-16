@@ -102,8 +102,8 @@ export class CreatePayScaleComponent implements OnInit {
     }
   }
 
-  toggleCheck(event: any, index: any) {
-    console.log(this.selection.selected);
+  toggleCheck() {
+    // console.log(this.selection.selected);
   }
 
   isAllSelected() {
@@ -118,7 +118,7 @@ export class CreatePayScaleComponent implements OnInit {
     }
 
     this.selection.select(...this.dataSource.data);
-    console.log(this.selection.selected);
+    // console.log(this.selection.selected);
   }
 
   checkboxLabel(row?: any): string {

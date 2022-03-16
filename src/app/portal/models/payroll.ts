@@ -122,3 +122,16 @@ export interface IPayScaleElement {
 export interface PayScaleEmployee {
   employeeId: string;
 }
+
+export interface ITaxType {
+  taxName: string;
+  taxPercentage: number;
+  taxId: string;
+}
+export interface ITaxTypeList {
+  pageNumber: number;
+  pageSize: number;
+  search: string;
+  sortColumn: string;
+  sortOrder: number;
+}

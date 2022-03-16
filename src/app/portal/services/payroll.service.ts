@@ -16,6 +16,8 @@ import {
   IPayElementList,
   IPayscale,
   IPayscaleList,
+  ITaxType,
+  ITaxTypeList,
 } from '../models';
 
 @Injectable({
@@ -155,6 +157,30 @@ export class PayrollService {
       )
       .pipe(catchError(handleError));
   }
+  //Fetch  Tax type Details
+  fetchTaxTypeDetails(id: any): Observable<any> {
+    return this.http
+      .get<any>(environment.apiBaseUrl + `/Tax/Details/${id}`, this.httpOptions)
+      .pipe(catchError(handleError));
+  }
+
+  //Fetch Tax Types
+  fetchTaxTypes(): Observable<any> {
+    return this.http
+      .get<any>(environment.apiBaseUrl + '/Tax/GetAll', this.httpOptions)
+      .pipe(catchError(handleError));
+  }
+  //Fetch All Tax Type
+  fetchAllTaxTypes(model: ITaxTypeList) {
+    return this.http
+      .post<ITaxTypeList>(
+        environment.apiBaseUrl + '/Tax/List',
+        model,
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
+  }
+
   //Create Department
   createDepartment(model: IDepartment): Observable<any> {
     return this.http
@@ -271,12 +297,30 @@ export class PayrollService {
       this.httpOptions
     );
   }
+  deleteTaxType(taxId: string) {
+    return this.http.delete<any>(
+      environment.apiBaseUrl + `/Tax/Delete/${taxId}`,
+      this.httpOptions
+    );
+  }
 
   //Update Institution
   updateInstitution(model: IInstitution): Observable<any> {
     return this.http
       .put<IInstitution>(
         environment.apiBaseUrl + '/Institution/Edit',
+        model,
+        this.httpOptions
+      )
+      .pipe(
+        map((status) => status),
+        catchError(handleError)
+      );
+  }
+  updateTaxType(model: ITaxType): Observable<any> {
+    return this.http
+      .put<ITaxType>(
+        environment.apiBaseUrl + '/Tax/Edit',
         model,
         this.httpOptions
       )

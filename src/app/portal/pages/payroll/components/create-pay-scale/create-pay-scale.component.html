@@ -204,8 +204,7 @@
                   [value]="element"
                   (click)="$event.stopPropagation()"
                   (change)="
-                    $event ? selection.toggle(element) : null;
-                    toggleCheck($event, i)
+                    $event ? selection.toggle(element) : null; toggleCheck()
                   "
                   [checked]="selection.isSelected(element)"
                 >
@@ -304,6 +303,44 @@
               </div>
             </div>
           </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="bulkUpload" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div class="container">
+          <div class="file__content">
+            <div class="d-flex justify-content-between align-items-center">
+              <button mat-button color="primary">
+                <mat-icon class="me-2">backup</mat-icon> Download sample file
+              </button>
+              <button mat-icon-button data-bs-dismiss="modal">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+            <figure>
+              <div class="dashed-border">
+                <div
+                  class="d-flex justify-content-center align-items-center flex-column"
+                >
+                  <div class="mb-3 mt-2">
+                    <img src="assets/img/file-upload-ico.svg" alt="" />
+                  </div>
+                  <button mat-stroked-button>Add File</button>
+                  <label class="txt-md txt-grey mt-2"
+                    >or drop files to upload</label
+                  >
+                </div>
+              </div>
+              <div class="d-flex justify-content-end mt-3">
+                <button mat-flat-button>Submit</button>
+              </div>
+            </figure>
+          </div>
         </div>
       </div>
     </div>

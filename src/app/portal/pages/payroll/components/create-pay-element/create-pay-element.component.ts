@@ -36,6 +36,7 @@ export class CreatePayElementComponent implements OnInit {
   _elementType: any;
   enumkey: any;
   enumKeys = [];
+  taxTypes: any[] = [];
   payrollItem: string = 'default';
   _isChecked: boolean = false;
   payElments: any = [];
@@ -54,7 +55,7 @@ export class CreatePayElementComponent implements OnInit {
   ) {
     this.createPayElmForm = this.fb.group({
       parollItem: ['', Validators.required],
-      payType: [0, Validators.required],
+      payType: [1, Validators.required],
       payElementName: ['', Validators.required],
       payElementCatId: [null],
       elementType: [0, Validators.required],
@@ -80,6 +81,7 @@ export class CreatePayElementComponent implements OnInit {
     this.getRoutes();
     this.getPaymentInstitution();
     this.getEnums();
+    this.getTaxTypes();
     this.checkInputDisabled();
   }
   ngAfterViewinit() {}
@@ -199,6 +201,19 @@ export class CreatePayElementComponent implements OnInit {
       )
       .subscribe((res) => {
         this.enumkey = res;
+      });
+  }
+  getTaxTypes() {
+    this.payrollServ
+      .fetchTaxTypes()
+      .pipe(
+        catchError((err: any): ObservableInput<any> => {
+          return throwError(err);
+        })
+      )
+      .subscribe((res) => {
+        const { result } = res;
+        this.taxTypes = result;
       });
   }
   checkInputDisabled() {

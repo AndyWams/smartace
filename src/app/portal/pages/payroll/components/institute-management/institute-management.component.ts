@@ -54,7 +54,9 @@ export class InstituteManagementComponent implements OnInit {
     'created On',
   ];
   ngOnChanges() {}
-  toggleCheck(event: any, index: any) {}
+  toggleCheck() {
+    // console.log(this.selection.selected);
+  }
 
   isAllSelected() {
     const numSelected = this.selection.selected.length;

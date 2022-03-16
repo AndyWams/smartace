@@ -127,8 +127,7 @@
                 [value]="element"
                 (click)="$event.stopPropagation()"
                 (change)="
-                  $event ? selection.toggle(element) : null;
-                  toggleCheck($event, i)
+                  $event ? selection.toggle(element) : null; toggleCheck()
                 "
                 [checked]="selection.isSelected(element)"
               >
