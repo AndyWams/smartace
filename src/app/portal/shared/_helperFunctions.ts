@@ -161,3 +161,8 @@ export const getReportType = (reportType: string) => {
   }
   return result;
 };
+
+export const formatEmum = (enumElement: any) => {
+  let enumKeys = Object.keys(enumElement).filter((f) => !isNaN(Number(f)));
+  return enumKeys.map((x) => parseInt(x));
+};

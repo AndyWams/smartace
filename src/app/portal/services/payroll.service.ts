@@ -91,6 +91,12 @@ export class PayrollService {
       )
       .pipe(catchError(handleError));
   }
+  //Fetch  Enums
+  fetchEnums(): Observable<any> {
+    return this.http
+      .get<any>(environment.apiBaseUrl + `/Lookup/Enums`, this.httpOptions)
+      .pipe(catchError(handleError));
+  }
   //Fetch All Pay Elements
   fetchAllPayElements(model: IPayElementList) {
     return this.http
@@ -232,6 +238,19 @@ export class PayrollService {
       );
   }
 
+  //Create ParollItem
+  createParollItem(model: any): Observable<any> {
+    return this.http
+      .post<any>(
+        environment.apiBaseUrl + '/ParollItem/Create',
+        model,
+        this.httpOptions
+      )
+      .pipe(
+        map((status) => status),
+        catchError(handleError)
+      );
+  }
   //Create Payscale
   createPayscale(model: IPayscale): Observable<any> {
     return this.http

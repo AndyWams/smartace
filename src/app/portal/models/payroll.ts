@@ -62,6 +62,27 @@ export interface IPayElement {
   taxValue: number;
   payElementLine: IPayElementLine[];
 }
+export interface IPayElementList {
+  pageNumber: number;
+  pageSize: number;
+  search: string;
+  sortColumn: string;
+  sortOrder: number;
+  filter: IPayElementFilter;
+}
+
+export interface IPayElementFilter {
+  payElementCatId: string;
+  payType: number;
+  elementType: number;
+  payElementName: string;
+  payElementAmount: number;
+  institutionId: string;
+}
+
+export interface IPayElementLine {
+  payElementId: string;
+}
 export interface IPayElementCat {
   payElementCatName: string;
 }
@@ -100,25 +121,4 @@ export interface IPayScaleElement {
 
 export interface PayScaleEmployee {
   employeeId: string;
-}
-export interface IPayElementList {
-  pageNumber: number;
-  pageSize: number;
-  search: string;
-  sortColumn: string;
-  sortOrder: number;
-  filter: IPayElementFilter;
-}
-
-export interface IPayElementFilter {
-  payElementCatId: string;
-  payType: number;
-  elementType: number;
-  payElementName: string;
-  payElementAmount: number;
-  institutionId: string;
-}
-
-export interface IPayElementLine {
-  payElementId: string;
 }
