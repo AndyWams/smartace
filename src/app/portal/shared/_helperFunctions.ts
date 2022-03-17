@@ -166,3 +166,21 @@ export const formatEmum = (enumElement: any) => {
   let enumKeys = Object.keys(enumElement).filter((f) => !isNaN(Number(f)));
   return enumKeys.map((x) => parseInt(x));
 };
+
+export const commaFormatted = (event: any) => {
+  if (event.which >= 37 && event.which <= 40) return;
+
+  if (event.target.value) {
+    event.target.value = event.target.value
+      .replace(/\D/g, '')
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+};
+
+export const numberCheck = (args: any) => {
+  if (args.key === 'e' || args.key === '+' || args.key === '-') {
+    return false;
+  } else {
+    return true;
+  }
+};

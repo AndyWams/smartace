@@ -195,7 +195,6 @@ export class PayElementsComponent implements OnInit {
         });
     }
   }
-
   confirmDelete() {
     this.isBusy = true;
     if (this.itemDetails !== undefined) {

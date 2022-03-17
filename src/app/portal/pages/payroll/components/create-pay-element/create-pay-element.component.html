@@ -214,6 +214,8 @@
           <div class="input mb-0">
             <input
               type="text"
+              (keydown)="numberCheck($event)"
+              (keyup)="commaFormat($event)"
               placeholder="Percentage"
               formControlName="payElementPercentage"
               [ngClass]="{
@@ -266,6 +268,8 @@
         <div class="input mb-0">
           <input
             type="text"
+            (keydown)="numberCheck($event)"
+            (keyup)="commaFormat($event)"
             placeholder="Amount"
             formControlName="payElementAmount"
             [ngClass]="{
@@ -302,6 +306,7 @@
           </mat-select>
         </div>
       </div>
+      <!--Deduct Tax -->
       <div class="grid align-items-center">
         <label>Deduct Tax</label>
         <mat-slide-toggle
@@ -597,6 +602,8 @@
           <div class="input mb-0">
             <input
               type="text"
+              (keydown)="numberCheck($event)"
+              (keyup)="commaFormat($event)"
               placeholder="Percentage"
               formControlName="payElementPercentage"
               [ngClass]="{
@@ -619,9 +626,9 @@
               (selectionChange)="handlePayElementChange($event)"
             >
               <mat-select-trigger>
-                {{ payElments ? stripedObjValue : "" }}
-                <span class="more" *ngIf="payElments.length > 2">
-                  +{{ payElments.slice(0, 2).length - 1 }} other item
+                {{ payElements ? stripedObjValue : "" }}
+                <span class="more" *ngIf="payElements.length > 2">
+                  +{{ payElements.slice(0, 2).length - 1 }} other item
                 </span>
               </mat-select-trigger>
               <mat-option
@@ -632,11 +639,11 @@
               >
               <mat-option
                 #options
-                *ngFor="let option of options"
-                [value]="option"
+                *ngFor="let item of payElements"
+                [value]="item"
                 (click)="toggleOne()"
               >
-                {{ option.payElementName }}
+                {{ item.payElementName }}
               </mat-option>
             </mat-select>
           </div>
@@ -651,6 +658,8 @@
         <div class="input mb-0">
           <input
             type="text"
+            (keydown)="numberCheck($event)"
+            (keyup)="commaFormat($event)"
             placeholder="Amount"
             formControlName="payElementAmount"
             [ngClass]="{

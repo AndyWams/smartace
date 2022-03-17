@@ -19,6 +19,7 @@ import { filter } from 'rxjs/internal/operators/filter';
 import { catchError } from 'rxjs/operators';
 import { IPayElement } from 'src/app/portal/models';
 import { PayrollService } from 'src/app/portal/services/payroll.service';
+import { commaFormatted, numberCheck } from 'src/app/portal/shared';
 
 @Component({
   selector: 'app-create-pay-element',
@@ -48,6 +49,8 @@ export class CreatePayElementComponent implements OnInit {
   itemDetails: any;
   payElements: any[] = [];
   payElementItems: any[] = [];
+  commaFormat = commaFormatted;
+  numberCheck = numberCheck;
   public createPayElmForm: FormGroup = new FormGroup({});
   public createPayrollItemForm: FormGroup = new FormGroup({});
   public updatePayElementForm: FormGroup = new FormGroup({});
@@ -315,6 +318,11 @@ export class CreatePayElementComponent implements OnInit {
     }
   }
   setFormControlElement() {
+    if (this.itemDetails.deductTax) {
+      this._isChecked = true;
+    } else {
+      this._isChecked = false;
+    }
     this.updatePayElementForm = this.fb.group({
       parollItem: [''],
       payType: [this.itemDetails.payType, Validators.required],
