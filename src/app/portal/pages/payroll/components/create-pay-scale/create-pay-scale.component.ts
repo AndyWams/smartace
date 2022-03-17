@@ -21,20 +21,25 @@ export class CreatePayScaleComponent implements OnInit {
   @ViewChild('matSelect') select: any;
   @ViewChild('allSelected') allSelected: any;
   @ViewChildren('options') _options: any;
+  @ViewChild('closebtn_') closebtn_: any;
   queryString: string = '';
   payElements: any[] = [];
   payElementItems: any[] = [];
   employeeList: any[] = [];
+  departmentList: any[] = [];
   pageSize: number = 10;
   currentPage: number = 1;
   emptyState: any;
   isBusy: boolean = false;
+  isBusy_: boolean = false;
+  noRecord: boolean = false;
   itemDetails: any;
   enumkey: any;
   enumKeys = [];
   _payscaleID: any;
   public createPayScaleForm: FormGroup = new FormGroup({});
   public updatePayScaleForm: FormGroup = new FormGroup({});
+  public filterForm: FormGroup = new FormGroup({});
   public dataSource: MatTableDataSource<any> = new MatTableDataSource();
   public selection = new SelectionModel(true, []);
   public displayedColumns: string[];
@@ -47,14 +52,20 @@ export class CreatePayScaleComponent implements OnInit {
   ) {
     this.createPayScaleForm = this.fb.group({
       payScaleName: ['', Validators.required],
-      frequency: [0, Validators.required],
+      frequency: [null, Validators.required],
       payScaleElements: [],
       payScaleEmployees: [],
+    });
+    this.filterForm = this.fb.group({
+      employeeId: [null, Validators.required],
+      departmentId: [null, Validators.required],
+      employementDate: [null],
     });
   }
 
   ngOnInit(): void {
     this.getRoutes();
+    this.getDepartments();
     this.getItemDetails();
     this.getEmployees();
     this.getPayElements();
@@ -139,7 +150,25 @@ export class CreatePayScaleComponent implements OnInit {
     const myArray = strtext.split(' ');
     return myArray.join('');
   }
-
+  checkInputDisabled() {
+    if (this.payElements.length == 0) {
+      console.log(this.payElements.length);
+      this.createPayScaleForm.controls['payScaleElements'].disable();
+    }
+  }
+  getDepartments() {
+    this.payrollServ
+      .fetchDepartment()
+      .pipe(
+        catchError((err: any): ObservableInput<any> => {
+          return throwError(err);
+        })
+      )
+      .subscribe((res) => {
+        const { result } = res;
+        this.departmentList = result;
+      });
+  }
   getEmployees() {
     let model = {
       pageSize: this.pageSize,
@@ -179,6 +208,7 @@ export class CreatePayScaleComponent implements OnInit {
       .subscribe((res) => {
         const { result } = res;
         this.payElements = result;
+        this.checkInputDisabled();
       });
   }
   getEnums() {
@@ -199,26 +229,37 @@ export class CreatePayScaleComponent implements OnInit {
       let ids = this.createPayScaleForm.controls['payScaleElements'].value
         .filter((x: any) => x !== 0)
         .map((a: any) => {
-          return {
-            payElementId: a.payElementId,
-          };
+          return a;
         });
       this.createPayScaleForm.patchValue({
         payScaleElements: ids,
       });
     }
+    // if (this.selection.selected.length !== 0) {
+    //   let empIds = this.selection.selected
+    //     .filter((x: any) => x !== undefined)
+    //     .map((a: any) => {
+    //       return {
+    //         employeeId: a,
+    //       };
+    //     });
+    //   this.createPayScaleForm.patchValue({
+    //     payScaleEmployees: empIds,
+    //   });
+    // }
+
     if (this.selection.selected.length !== 0) {
       let empIds = this.selection.selected
-        .filter((x: any) => x !== 0)
+        .filter((x: any) => x !== undefined)
         .map((a: any) => {
-          return {
-            employeeId: a.employeeId,
-          };
+          return a;
         });
       this.createPayScaleForm.patchValue({
         payScaleEmployees: empIds,
       });
     }
+
+    console.log(this.formRawValue);
 
     this.isBusy = true;
     if (this.createPayScaleForm.invalid) {
@@ -301,6 +342,60 @@ export class CreatePayScaleComponent implements OnInit {
           this.updatePayScaleForm.reset();
         }
       );
+    }
+  }
+  onFilter() {
+    this.isBusy_ = true;
+    const model = {
+      pageSize: this.pageSize,
+      pageNumber: this.currentPage,
+      search: '',
+      sortColumn: '',
+      sortOrder: 1,
+      filter: {
+        employeeId: this.filterForm.controls['employeeId'].value,
+        departmentId: this.filterForm.controls['departmentId'].value,
+        employementDate: this.filterForm.controls['employementDate'].value,
+      },
+    };
+    if (this.filterForm.invalid) {
+      this.isBusy_ = false;
+      return;
+    }
+    if (this.filterForm.valid) {
+      this.payrollServ
+        .fetchAllEmployees(model)
+        .pipe(
+          catchError((err: any): ObservableInput<any> => {
+            return throwError(err);
+          })
+        )
+        .subscribe(
+          (res) => {
+            const { result } = res;
+            const { data, pagination } = result;
+            this.employeeList = data;
+            this.dataSource = new MatTableDataSource(this.employeeList);
+            this.dataSource.paginator = this.paginator;
+            this.closebtn_._elementRef.nativeElement.click();
+            this.isBusy_ = false;
+            this.filterForm.reset();
+            this.emptyState = false;
+          },
+          (errors) => {
+            this.emptyState = errors;
+            this.isBusy_ = false;
+            this.noRecord = true;
+            if (this.emptyState) {
+              this.employeeList = [];
+            }
+          },
+          () => {
+            this.isBusy_ = false;
+            this.noRecord = false;
+            this.filterForm.reset();
+          }
+        );
     }
   }
 }

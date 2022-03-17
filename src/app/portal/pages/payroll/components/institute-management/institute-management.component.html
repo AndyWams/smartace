@@ -12,7 +12,7 @@
   class="d-flex justify-content-center align-items-center my-3 empty-state"
   *ngIf="emptyState"
 >
-  <span class="txt-grey txt-md">You have not created any institution yet.</span>
+  <span class="txt-grey txt-md">No record found! Please create a record.</span>
 </div>
 <ng-container *ngIf="institutionList.length === 0 && !emptyState">
   <app-loading-roller></app-loading-roller>
@@ -22,7 +22,8 @@
   [ngClass]="{ hide: institutionList.length == 0 }"
 >
   <div class="table-wrapper tbl-wrap">
-    <ng-container *ngIf="dataSource.data.length">
+    <ng-container *ngIf="institutionList.length !== 0">
+      <!--Table Toobar Header-->
       <div class="toolbar mb-5 adjust-wrap">
         <div
           class="d-flex align-items-center justify-content-start adjust-flex"
@@ -104,6 +105,7 @@
           </div>
         </div>
       </div>
+      <!--Table Layout-->
       <table
         mat-table
         [dataSource]="dataSource"
@@ -126,9 +128,7 @@
               <mat-checkbox
                 [value]="element"
                 (click)="$event.stopPropagation()"
-                (change)="
-                  $event ? selection.toggle(element) : null; toggleCheck()
-                "
+                (change)="$event ? selection.toggle(element) : null"
                 [checked]="selection.isSelected(element)"
               >
                 <span>{{ element[concatColumnString(disCol)] }}</span>
@@ -326,36 +326,61 @@
           <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
         </div>
         <div class="container">
-          <form class="pb-3">
+          <form class="pb-3" [formGroup]="filterForm" (ngSubmit)="onFilter()">
             <div class="form-wrap w--400">
               <div class="input">
                 <label>Category</label>
-                <mat-select placeholder="Category" class="select" required>
+                <mat-select
+                  placeholder="Category"
+                  class="select"
+                  formControlName="instituteCategoryId"
+                >
                   <mat-option disabled="" selected="" value="">
                     Select category
                   </mat-option>
+                  <mat-option
+                    *ngFor="let item of institutionCatList"
+                    [value]="item.institutionCategoryId"
+                    >{{ item.institutionCategoryName }}</mat-option
+                  >
                 </mat-select>
               </div>
               <div class="input">
                 <label>Bank</label>
-                <mat-select placeholder="Select bank" class="select" required>
+                <mat-select
+                  placeholder="Select bank"
+                  class="select"
+                  formControlName="bankId"
+                >
                   <mat-option disabled="" selected="" value="">
                     Select bank
                   </mat-option>
+                  <mat-option
+                    *ngFor="let item of bankList"
+                    [value]="item.bankId"
+                    >{{ item.bankName }}</mat-option
+                  >
                 </mat-select>
               </div>
               <div class="input">
                 <label>Date Created</label>
-                <input type="date" required />
+                <input type="date" formControlName="created" />
               </div>
+              <p *ngIf="noRecord" class="txt-grey txt-md">No record found!</p>
               <div class="d-flex align-items-center mt-5">
-                <button type="button" mat-flat-button class="me-3">
-                  Apply
+                <button
+                  type="submit"
+                  mat-flat-button
+                  class="me-3"
+                  [disabled]="!filterForm.valid"
+                >
+                  Apply <mat-spinner *ngIf="isBusy"> </mat-spinner>
                 </button>
                 <button
                   type="button"
                   mat-stroked-button
                   data-bs-dismiss="modal"
+                  #closebtn_
                 >
                   Cancel
                 </button>

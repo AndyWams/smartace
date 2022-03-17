@@ -31,6 +31,7 @@ export class CreateNewEmployeeComponent implements OnInit {
       middleName: ['', Validators.required],
       lastName: ['', Validators.required],
       phoneNumber: ['', Validators.required],
+      employeeNo: ['', Validators.required],
       accountNumber: ['', [Validators.required, Validators.minLength(10)]],
       workEmail: ['', Validators.required],
       bankId: ['', Validators.required],

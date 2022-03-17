@@ -81,7 +81,6 @@
           <mat-select
             placeholder="Pay frequency"
             class="select"
-            required
             formControlName="frequency"
             [ngClass]="{
               'is-invalid':
@@ -200,7 +199,9 @@
     class="d-flex justify-content-center align-items-center my-3 empty-state"
     *ngIf="emptyState"
   >
-    <span class="txt-grey txt-md">You have not created any employees yet.</span>
+    <span class="txt-grey txt-md"
+      >No record found! Please create a record.</span
+    >
   </div>
   <ng-container *ngIf="employeeList.length === 0 && !emptyState">
     <app-loading-roller></app-loading-roller>
@@ -211,7 +212,7 @@
     [ngClass]="{ hide: employeeList.length == 0 }"
   >
     <div class="table-wrapper tbl-wrap">
-      <ng-container *ngIf="dataSource.data.length">
+      <ng-container *ngIf="employeeList.length">
         <!--Table Toolbar Header-->
         <div class="toolbar mb-5 adjust-wrap">
           <div
@@ -333,12 +334,19 @@
                 </mat-checkbox>
               </td>
             </ng-container>
+            <ng-container *ngIf="disCol == 'employee Id'">
+              <td mat-cell *matCellDef="let element">
+                <span>{{
+                  element["employeeNo"] ? element["employeeNo"] : "----"
+                }}</span>
+              </td>
+            </ng-container>
             <ng-container *ngIf="disCol == 'employment Date'">
               <td mat-cell *matCellDef="let element">
                 <span>{{
                   element["employementDate"]
                     ? (element["employementDate"] | date: "mediumDate")
-                    : "****"
+                    : "----"
                 }}</span>
               </td>
             </ng-container>
@@ -418,32 +426,63 @@
           <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
         </div>
         <div class="container">
-          <form class="pb-3">
+          <form class="pb-3" [formGroup]="filterForm" (ngSubmit)="onFilter()">
             <div class="form-wrap w--400">
               <div class="input">
                 <label>ID</label>
-                <input type="text" placeholder="Enter id" />
+                <input
+                  type="text"
+                  placeholder="Enter id"
+                  formControlName="employeeId"
+                  [ngClass]="{
+                    'is-invalid':
+                      filterForm.controls['employeeId'].hasError('required') &&
+                      filterForm.controls['employeeId'].touched
+                  }"
+                />
               </div>
               <div class="input">
                 <label>Department</label>
-                <mat-select placeholder="Department" class="select" required>
+                <mat-select
+                  placeholder="Department"
+                  class="select"
+                  formControlName="departmentId"
+                  [ngClass]="{
+                    'is-invalid':
+                      filterForm.controls['departmentId'].hasError(
+                        'required'
+                      ) && filterForm.controls['departmentId'].touched
+                  }"
+                >
                   <mat-option disabled="" selected="" value="">
                     Select category
                   </mat-option>
+                  <mat-option
+                    *ngFor="let item of departmentList"
+                    [value]="item.departmentId"
+                    >{{ item.departmentName }}</mat-option
+                  >
                 </mat-select>
               </div>
               <div class="input">
                 <label>Employement Date</label>
-                <input type="date" required />
+                <input type="date" formControlName="employementDate" />
               </div>
+              <p *ngIf="noRecord" class="txt-grey txt-md">No record found!</p>
               <div class="d-flex align-items-center mt-5">
-                <button type="button" mat-flat-button class="me-3">
-                  Apply
+                <button
+                  type="submit"
+                  mat-flat-button
+                  class="me-3"
+                  [disabled]="!filterForm.valid"
+                >
+                  Apply <mat-spinner *ngIf="isBusy_"> </mat-spinner>
                 </button>
                 <button
                   type="button"
                   mat-stroked-button
                   data-bs-dismiss="modal"
+                  #closebtn_
                 >
                   Cancel
                 </button>

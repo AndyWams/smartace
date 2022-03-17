@@ -63,7 +63,7 @@ export class CreatePayElementComponent implements OnInit {
       parollItem: [''],
       payType: [1, Validators.required],
       payElementName: ['', Validators.required],
-      payElementCategoryId: [null],
+      payElementCategoryId: [''],
       elementType: [0, Validators.required],
       earningType: [''],
       amountPerHour: [''],
@@ -85,17 +85,15 @@ export class CreatePayElementComponent implements OnInit {
 
   ngOnInit(): void {
     this.getRoutes();
+    this.getPayElements();
     this.getItemDetails();
     this.getPaymentInstitution();
     this.getEnums();
     this.getPayElementsCats();
-    this.getPayElements();
     this.getTaxTypes();
   }
   ngOnChanges() {}
-  ngAfterViewinit() {
-    this.checkInputDisabled();
-  }
+  ngAfterViewinit() {}
 
   get formRawValue(): any {
     return this.createPayElmForm.getRawValue();
@@ -114,19 +112,12 @@ export class CreatePayElementComponent implements OnInit {
 
   handlePaymentModeToggle(event: any) {
     this.predefinedPaymentMode = event.value;
-    if (this.predefinedPaymentMode == 2) {
-      this.createPayElmForm.controls['payElementAmount'].setValue('');
-    } else {
+    if (this.predefinedPaymentMode == 1) {
       this.createPayElmForm.controls['payElementLine'].setValue([]);
     }
   }
   handleTaxModeToggle(event: any) {
     this.taxMode = event.value;
-    // if (this.taxMode == 'default') {
-    //   this.createPayElmForm.controls['taxValue'].setValue('');
-    // } else {
-    //   this.createPayElmForm.controls['taxId'].setValue('');
-    // }
   }
   handleSlideToggle(event: any) {
     this._isChecked = event.checked;
@@ -199,6 +190,7 @@ export class CreatePayElementComponent implements OnInit {
       .subscribe((res) => {
         const { result } = res;
         this.payElements = result;
+        this.checkInputDisabled();
       });
   }
   getEnums() {

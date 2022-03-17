@@ -119,7 +119,7 @@ export class PayrollService {
   fetchAllPayscale(model: IPayscaleList) {
     return this.http
       .post<IPayscaleList>(
-        environment.apiBaseUrl + '/Payscale/List',
+        environment.apiBaseUrl + '/PayScale/List',
         model,
         this.httpOptions
       )

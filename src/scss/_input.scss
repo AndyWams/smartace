@@ -105,6 +105,9 @@
     &.is-invalid {
       border: 1px solid #f44336 !important;
     }
+    &:disabled {
+      background: rgba(205, 215, 220, 0.5);
+    }
   }
 }
 

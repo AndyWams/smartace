@@ -12,9 +12,7 @@
   class="d-flex justify-content-center align-items-center my-3 empty-state"
   *ngIf="emptyState"
 >
-  <span class="txt-grey txt-md"
-    >You have not created any pay elements yet.</span
-  >
+  <span class="txt-grey txt-md">No record found! Please create a record.</span>
 </div>
 <ng-container *ngIf="payElementList.length === 0 && !emptyState">
   <app-loading-roller></app-loading-roller>
@@ -229,7 +227,7 @@
     <mat-paginator showFirstLastButtons [pageSize]="pageSize"></mat-paginator>
   </div>
 </div>
-
+<!--Modal components-->
 <div class="modal fade" id="payElementFilterBy" role="dialog">
   <div class="modal-dialog modal-wrapper">
     <div class="modal-content-wrap">
@@ -241,34 +239,54 @@
           <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
         </div>
         <div class="container">
-          <form class="pb-3">
+          <form class="pb-3" [formGroup]="filterForm" (ngSubmit)="onFilter()">
             <div class="form-wrap w--400 scroll">
               <div class="input">
                 <label>Pay Type</label>
                 <mat-select
                   placeholder="Select pay type"
                   class="select"
-                  required
+                  formControlName="payType"
                 >
                   <mat-option disabled="" selected="" value="">
                     Select pay type
                   </mat-option>
+                  <mat-option
+                    *ngFor="let type of enumkey?.payType"
+                    [value]="type.value"
+                    >{{ type.text }}</mat-option
+                  >
                 </mat-select>
               </div>
               <div class="input">
                 <label>Element Name</label>
-                <input type="text" placeholder="Element name" />
+                <input
+                  type="text"
+                  placeholder="Element name"
+                  formControlName="payElementName"
+                />
               </div>
               <div class="input">
                 <label>Element Category</label>
                 <mat-select
                   placeholder="Select category"
                   class="select"
-                  required
+                  formControlName="payElementCatId"
+                  [ngClass]="{
+                    'is-invalid':
+                      filterForm.controls['payElementCatId'].hasError(
+                        'required'
+                      ) && filterForm.controls['payElementCatId'].touched
+                  }"
                 >
                   <mat-option disabled="" selected="" value="">
                     Select category
                   </mat-option>
+                  <mat-option
+                    *ngFor="let item of payElementCats"
+                    [value]="item.payElementCategoryId"
+                    >{{ item.payElementCategoryName }}</mat-option
+                  >
                 </mat-select>
               </div>
               <div class="input">
@@ -276,37 +294,64 @@
                 <mat-select
                   placeholder="Select element type"
                   class="select"
-                  required
+                  formControlName="elementType"
                 >
                   <mat-option disabled="" selected="" value="">
                     Select element type
                   </mat-option>
+                  <mat-option
+                    *ngFor="let type of enumkey?.elementType"
+                    [value]="type.value"
+                    >{{ type.text }}</mat-option
+                  >
                 </mat-select>
               </div>
               <div class="input">
                 <label>Amount</label>
-                <input type="text" placeholder="Amount" />
+                <input
+                  type="text"
+                  placeholder="Amount"
+                  formControlName="payElementAmount"
+                />
               </div>
               <div class="input">
                 <label>Institution</label>
                 <mat-select
                   placeholder="Select institution"
                   class="select"
-                  required
+                  formControlName="institutionId"
+                  [ngClass]="{
+                    'is-invalid':
+                      filterForm.controls['institutionId'].hasError(
+                        'required'
+                      ) && filterForm.controls['institutionId'].touched
+                  }"
                 >
                   <mat-option disabled="" selected="" value="">
                     Select institution
                   </mat-option>
+                  <mat-option
+                    *ngFor="let item of institutionList"
+                    [value]="item.institutionId"
+                    >{{ item.institutionName }}</mat-option
+                  >
                 </mat-select>
               </div>
+              <p *ngIf="noRecord" class="txt-grey txt-md">No record found!</p>
               <div class="d-flex align-items-center mt-5">
-                <button type="button" mat-flat-button class="me-3">
-                  Apply
+                <button
+                  type="submit"
+                  mat-flat-button
+                  class="me-3"
+                  [disabled]="!filterForm.valid"
+                >
+                  Apply <mat-spinner *ngIf="isBusy"> </mat-spinner>
                 </button>
                 <button
                   type="button"
                   mat-stroked-button
                   data-bs-dismiss="modal"
+                  #closebtn_
                 >
                   Cancel
                 </button>
