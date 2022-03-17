@@ -53,7 +53,7 @@ export interface IPayElement {
   payElementName: string;
   elementType: number;
   payType: number;
-  payElementCatId: string;
+  payElementCategoryId: string;
   paymentMode: number;
   payElementAmount: number;
   payElementPercentage: number;

@@ -15,6 +15,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class PayElementsComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild('closebtn') closebtn: any;
   payElementList: any[] = [];
   pageSize: number = 10;
   currentPage: number = 1;
@@ -37,7 +38,7 @@ export class PayElementsComponent implements OnInit {
   }
 
   column = [
-    'Name',
+    'name',
     'pay Type',
     'element Name',
     'element Category',
@@ -45,7 +46,9 @@ export class PayElementsComponent implements OnInit {
     'amount',
     'institution',
   ];
-  ngOnChanges() {}
+  ngOnChanges() {
+    this.getPayElements();
+  }
   toggleCheck(event: any, index: any) {}
 
   isAllSelected() {
@@ -80,21 +83,6 @@ export class PayElementsComponent implements OnInit {
     return myArray.join('');
   }
 
-  getItemDetails(id: any) {
-    if (id !== undefined) {
-      this.payrollServ
-        .fetchPayElementDetails(id)
-        .pipe(
-          catchError((err: any): ObservableInput<any> => {
-            return throwError(err);
-          })
-        )
-        .subscribe((res) => {
-          const { result } = res;
-          this.itemDetails = result;
-        });
-    }
-  }
   getPayElements() {
     let model = {
       pageSize: this.pageSize,
@@ -104,10 +92,10 @@ export class PayElementsComponent implements OnInit {
       sortOrder: 1,
       filter: {
         payElementCatId: null,
-        payType: 1,
-        elementType: 1,
-        payElementName: '',
-        payElementAmount: 0,
+        payType: null,
+        elementType: null,
+        payElementName: null,
+        payElementAmount: null,
         institutionId: null,
       },
     };
@@ -128,7 +116,44 @@ export class PayElementsComponent implements OnInit {
         },
         (errors) => {
           this.emptyState = errors;
+          if (this.emptyState) {
+            this.payElementList = [];
+          }
         }
       );
+  }
+  getItemDetails(id: any) {
+    if (id !== undefined) {
+      this.payrollServ
+        .fetchPayElementDetails(id)
+        .pipe(
+          catchError((err: any): ObservableInput<any> => {
+            return throwError(err);
+          })
+        )
+        .subscribe((res) => {
+          const { result } = res;
+          this.itemDetails = result;
+        });
+    }
+  }
+
+  confirmDelete() {
+    this.isBusy = true;
+    if (this.itemDetails !== undefined) {
+      this.payrollServ
+        .deletePayElement(this.itemDetails.payElementId)
+        .pipe(
+          catchError((err: any): ObservableInput<any> => {
+            return throwError(err);
+          })
+        )
+        .subscribe(({ message }) => {
+          this.isBusy = false;
+          this.toastr.success(message, 'Success');
+          this.closebtn._elementRef.nativeElement.click();
+          this.getPayElements();
+        });
+    }
   }
 }

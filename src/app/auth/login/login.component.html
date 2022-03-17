@@ -11,12 +11,12 @@
           <label>Email Address</label>
           <input
             type="text"
-            placeholder="Enter email"
-            formControlName="email"
+            placeholder="Enter username"
+            formControlName="username"
             [ngClass]="{
               'is-invalid':
-                form.controls['email'].hasError('required') &&
-                form.controls['email'].touched
+                form.controls['username'].hasError('required') &&
+                form.controls['username'].touched
             }"
           />
         </div>

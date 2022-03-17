@@ -5,10 +5,21 @@
 </div>
 <div class="bg-white">
   <div
+    class="d-flex justify-content-center mt-5 pt-5"
+    *ngIf="queryString === 'edit' && !itemDetails"
+  >
+    <!--Loading Roller-->
+    <app-loading-roller></app-loading-roller>
+  </div>
+  <div
     class="form-wrap"
     [ngClass]="[queryString === 'add' ? 'w--700' : 'w--850']"
   >
-    <form [formGroup]="createPayElmForm" (ngSubmit)="onSubmit()">
+    <form
+      [formGroup]="createPayElmForm"
+      (ngSubmit)="onSubmit()"
+      *ngIf="queryString === 'add'"
+    >
       <div class="grid align-items-center">
         <label>Payroll Item</label>
         <div class="input mb-0">
@@ -81,20 +92,22 @@
           <mat-select
             placeholder="Element category"
             class="select"
-            formControlName="payElementCatId"
+            formControlName="payElementCategoryId"
             [ngClass]="{
               'is-invalid':
-                createPayElmForm.controls['payElementCatId'].hasError(
+                createPayElmForm.controls['payElementCategoryId'].hasError(
                   'required'
-                ) && createPayElmForm.controls['payElementCatId'].touched
+                ) && createPayElmForm.controls['payElementCategoryId'].touched
             }"
           >
             <mat-option disabled="" selected="" value="">
               Select element category
             </mat-option>
-            <mat-option value="Taxable">Taxable</mat-option>
-            <mat-option value="Non-Taxable">Non-Taxable</mat-option>
-            <mat-option value="Bonus">Bonus</mat-option>
+            <mat-option
+              *ngFor="let cat of payElementCats"
+              [value]="cat?.payElementCategoryId"
+              >{{ cat?.payElementCategoryName }}</mat-option
+            >
           </mat-select>
         </div>
       </div>
@@ -202,12 +215,12 @@
             <input
               type="text"
               placeholder="Percentage"
-              formControlName="percentage"
+              formControlName="payElementPercentage"
               [ngClass]="{
                 'is-invalid':
-                  createPayElmForm.controls['percentage'].hasError(
+                  createPayElmForm.controls['payElementPercentage'].hasError(
                     'required'
-                  ) && createPayElmForm.controls['percentage'].touched
+                  ) && createPayElmForm.controls['payElementPercentage'].touched
               }"
             />
           </div>
@@ -222,9 +235,9 @@
               (selectionChange)="handlePayElementChange($event)"
             >
               <mat-select-trigger>
-                {{ payElments ? stripedObjValue : "" }}
-                <span class="more" *ngIf="payElments.length > 2">
-                  +{{ payElments.slice(0, 2).length - 1 }} other item
+                {{ payElementItems ? stripedObjValue : "" }}
+                <span class="more" *ngIf="payElements.length > 2">
+                  +{{ payElementItems.slice(0, 2).length - 1 }} other item
                 </span>
               </mat-select-trigger>
               <mat-option
@@ -235,12 +248,11 @@
               >
               <mat-option
                 #options
-                *ngFor="let option of options"
-                [value]="option"
+                *ngFor="let item of payElements"
+                [value]="item"
                 (click)="toggleOne()"
+                >{{ item.payElementName }}</mat-option
               >
-                {{ option.payElementName }}
-              </mat-option>
             </mat-select>
           </div>
         </div>
@@ -380,17 +392,402 @@
           >
             Cancel
           </button>
-          <!-- <button type="button" mat-flat-button class="me-4">
-           Save
-          </button> -->
-          <!-- <button
+        </div>
+      </div>
+    </form>
+    <form
+      [formGroup]="updatePayElementForm"
+      (ngSubmit)="onUpdate()"
+      *ngIf="itemDetails && queryString === 'edit'"
+    >
+      <div class="grid align-items-center">
+        <label>Payroll Item</label>
+        <div class="input mb-0">
+          <mat-select
+            class="select"
+            placeholder="Payroll item"
+            formControlName="parollItem"
+            [ngClass]="{
+              'is-invalid':
+                updatePayElementForm.controls['parollItem'].hasError(
+                  'required'
+                ) && updatePayElementForm.controls['parollItem'].touched
+            }"
+          >
+            <mat-option disabled="" selected="" value=""
+              >Select item</mat-option
+            >
+            <mat-option value="Statutory">Statutory</mat-option>
+            <mat-option value="Non-statutory">Non-statutory</mat-option>
+            <mat-option data-bs-toggle="modal" data-bs-target="#addPayrollItem"
+              >Create New</mat-option
+            >
+          </mat-select>
+        </div>
+      </div>
+      <div class="grid align-items-center">
+        <label>Pay Type</label>
+        <div class="input mb-0">
+          <mat-select
+            class="select"
+            placeholder="Pay type"
+            [value]="payType"
+            (selectionChange)="handlePayTypeSelect($event)"
+            formControlName="payType"
+            [ngClass]="{
+              'is-invalid':
+                updatePayElementForm.controls['payType'].hasError('required') &&
+                updatePayElementForm.controls['payType'].touched
+            }"
+          >
+            <mat-option disabled="" selected="" value=""
+              >Select type</mat-option
+            >
+            <mat-option
+              *ngFor="let type of enumkey?.payType"
+              [value]="type.value"
+              >{{ type.text }}</mat-option
+            >
+          </mat-select>
+        </div>
+      </div>
+      <div class="grid align-items-center">
+        <label>Element Name</label>
+        <div class="input mb-0">
+          <input
+            type="text"
+            placeholder="Element name"
+            formControlName="payElementName"
+            [ngClass]="{
+              'is-invalid':
+                updatePayElementForm.controls['payElementName'].hasError(
+                  'required'
+                ) && updatePayElementForm.controls['payElementName'].touched
+            }"
+          />
+        </div>
+      </div>
+      <div class="grid align-items-center" *ngIf="payType == 1">
+        <label>Element Category</label>
+        <div class="input mb-0">
+          <mat-select
+            placeholder="Element category"
+            class="select"
+            formControlName="payElementCategoryId"
+            [ngClass]="{
+              'is-invalid':
+                updatePayElementForm.controls['payElementCategoryId'].hasError(
+                  'required'
+                ) &&
+                updatePayElementForm.controls['payElementCategoryId'].touched
+            }"
+          >
+            <mat-option disabled="" selected="" value="">
+              Select element category
+            </mat-option>
+            <mat-option
+              *ngFor="let cat of payElementCats"
+              [value]="cat?.payElementCategoryId"
+              >{{ cat?.payElementCategoryName }}</mat-option
+            >
+          </mat-select>
+        </div>
+      </div>
+      <div class="grid align-items-center">
+        <label>Element Type</label>
+        <div class="input mb-0">
+          <mat-select
+            placeholder="Element type"
+            class="select"
+            formControlName="elementType"
+            [ngClass]="{
+              'is-invalid':
+                updatePayElementForm.controls['elementType'].hasError(
+                  'required'
+                ) && updatePayElementForm.controls['elementType'].touched
+            }"
+          >
+            <mat-option disabled="" selected="" value="">
+              Select element type
+            </mat-option>
+            <mat-option
+              *ngFor="let type of enumkey?.elementType"
+              [value]="type.value"
+              >{{ type.text }}</mat-option
+            >
+          </mat-select>
+        </div>
+      </div>
+      <div class="grid align-items-center" *ngIf="payType == 2">
+        <label>Earning Type</label>
+        <div class="input mb-0">
+          <mat-select
+            placeholder="Select earning type"
+            class="select"
+            formControlName="earningType"
+          >
+            <mat-option disabled="" selected="" value="">
+              Select element type
+            </mat-option>
+            <mat-option value="Salary">Salary</mat-option>
+            <mat-option value="Wages">Wages</mat-option>
+            <mat-option value="Overtime">Overtime</mat-option>
+          </mat-select>
+        </div>
+      </div>
+      <div class="grid align-items-center" *ngIf="payType == 2">
+        <label>Amount Per Hour</label>
+        <div class="input mb-0">
+          <input
+            type="text"
+            placeholder="Amount per hour"
+            formControlName="amountPerHour"
+            [ngClass]="{
+              'is-invalid':
+                updatePayElementForm.controls['amountPerHour'].hasError(
+                  'required'
+                ) && updatePayElementForm.controls['amountPerHour'].touched
+            }"
+          />
+        </div>
+      </div>
+      <div class="grid align-items-center" *ngIf="payType == 2">
+        <label
+          >No of Work Hours
+          <span class="italize txt-sm">(Optional)</span></label
+        >
+        <div class="input mb-0">
+          <input
+            type="text"
+            placeholder=" No of work hours"
+            formControlName="noOfWorkHours"
+            [ngClass]="{
+              'is-invalid':
+                updatePayElementForm.controls['noOfWorkHours'].hasError(
+                  'required'
+                ) && updatePayElementForm.controls['noOfWorkHours'].touched
+            }"
+          />
+        </div>
+      </div>
+      <!--Payment Mode-->
+      <div class="grid align-items-center" *ngIf="payType == 1">
+        <label>Payment Mode</label>
+        <mat-radio-group
+          aria-label="Select an option"
+          formControlName="paymentMode"
+        >
+          <mat-radio-button
+            class="me-4"
+            *ngFor="let type of enumkey?.paymentMode"
+            [value]="type.value"
+            (change)="handlePaymentModeToggle($event)"
+          >
+            {{ type.text }}
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <!--Variable-->
+      <div
+        class="grid align-items-center"
+        *ngIf="predefinedPaymentMode === 2 && payType == 1"
+      >
+        <label>Variable</label>
+        <div class="d-flex align-items-center">
+          <div class="input mb-0">
+            <input
+              type="text"
+              placeholder="Percentage"
+              formControlName="payElementPercentage"
+              [ngClass]="{
+                'is-invalid':
+                  updatePayElementForm.controls[
+                    'payElementPercentage'
+                  ].hasError('required') &&
+                  updatePayElementForm.controls['payElementPercentage'].touched
+              }"
+            />
+          </div>
+          <span class="mx-3 txt-sm">Of</span>
+          <div class="input mb-0">
+            <mat-select
+              placeholder="Pay element"
+              class="select"
+              multiple
+              #matSelect
+              formControlName="payElementLine"
+              (selectionChange)="handlePayElementChange($event)"
+            >
+              <mat-select-trigger>
+                {{ payElments ? stripedObjValue : "" }}
+                <span class="more" *ngIf="payElments.length > 2">
+                  +{{ payElments.slice(0, 2).length - 1 }} other item
+                </span>
+              </mat-select-trigger>
+              <mat-option
+                #allSelected
+                (click)="toggleAllSelection()"
+                [value]="0"
+                >All</mat-option
+              >
+              <mat-option
+                #options
+                *ngFor="let option of options"
+                [value]="option"
+                (click)="toggleOne()"
+              >
+                {{ option.payElementName }}
+              </mat-option>
+            </mat-select>
+          </div>
+        </div>
+      </div>
+      <!--Amount-->
+      <div
+        class="grid align-items-center"
+        *ngIf="predefinedPaymentMode === 1 && payType == 1"
+      >
+        <label>Amount</label>
+        <div class="input mb-0">
+          <input
+            type="text"
+            placeholder="Amount"
+            formControlName="payElementAmount"
+            [ngClass]="{
+              'is-invalid':
+                updatePayElementForm.controls['payElementAmount'].hasError(
+                  'required'
+                ) && updatePayElementForm.controls['payElementAmount'].touched
+            }"
+          />
+        </div>
+      </div>
+      <div class="grid align-items-center">
+        <label>Payment Institution</label>
+        <div class="input mb-0">
+          <mat-select
+            placeholder="Payment insititution"
+            class="select"
+            formControlName="institutionId"
+            [ngClass]="{
+              'is-invalid':
+                updatePayElementForm.controls['institutionId'].hasError(
+                  'required'
+                ) && updatePayElementForm.controls['institutionId'].touched
+            }"
+          >
+            <mat-option disabled="" selected="" value="">
+              Select payment institution
+            </mat-option>
+            <mat-option
+              *ngFor="let item of institutionList"
+              [value]="item.institutionId"
+              >{{ item.institutionName }}</mat-option
+            >
+          </mat-select>
+        </div>
+      </div>
+      <div class="grid align-items-center">
+        <label>Deduct Tax</label>
+        <mat-slide-toggle
+          style="width: fit-content"
+          (change)="handleSlideToggle($event)"
+          formControlName="deductTax"
+          [ngClass]="{
+            'is-invalid':
+              updatePayElementForm.controls['deductTax'].hasError('required') &&
+              updatePayElementForm.controls['deductTax'].touched
+          }"
+        ></mat-slide-toggle>
+      </div>
+      <!--Tax mode-->
+      <div class="grid align-items-center" *ngIf="_isChecked">
+        <label>Tax Mode</label>
+        <mat-radio-group aria-label="Select an option">
+          <mat-radio-button
+            checked
+            value="default"
+            class="me-4"
+            (change)="handleTaxModeToggle($event)"
+            id="default"
+            >Select from Tax list</mat-radio-button
+          >
+          <mat-radio-button
+            value="inputValue"
+            (change)="handleTaxModeToggle($event)"
+            id="inputValue"
+            >input Tax Value</mat-radio-button
+          >
+        </mat-radio-group>
+      </div>
+      <!--Tax type-->
+      <div
+        class="grid align-items-center"
+        *ngIf="_isChecked && taxMode === 'default'"
+      >
+        <label>Tax Type</label>
+        <div class="input mb-0">
+          <mat-select
+            placeholder="Tax type"
+            class="select"
+            formControlName="taxId"
+          >
+            <mat-option disabled="" selected="" value=""
+              >Select tax type</mat-option
+            >
+            <mat-option *ngFor="let type of taxTypes" [value]="type.taxId">{{
+              type.taxName
+            }}</mat-option>
+          </mat-select>
+        </div>
+      </div>
+      <div
+        class="grid align-items-center"
+        *ngIf="_isChecked && taxMode === 'inputValue'"
+      >
+        <label>Tax Type</label>
+        <div class="input mb-0">
+          <input
+            type="text"
+            placeholder="Tax value"
+            formControlName="taxValue"
+            [ngClass]="{
+              'is-invalid':
+                updatePayElementForm.controls['taxValue'].hasError(
+                  'required'
+                ) && updatePayElementForm.controls['taxValue'].touched
+            }"
+          />
+        </div>
+      </div>
+      <div class="grid align-items-center pt-4">
+        <span>&nbsp;</span>
+        <div class="d-flex align-items-center">
+          <button
+            type="submit"
+            mat-flat-button
+            class="me-4"
+            [disabled]="!updatePayElementForm.valid"
+          >
+            Save <mat-spinner *ngIf="isBusy"> </mat-spinner>
+          </button>
+          <button
             type="button"
             mat-stroked-button
             class="btn--danger me-4"
-            *ngIf="queryString === 'edit'"
+            data-bs-toggle="modal"
+            data-bs-target="#deletePayElement"
           >
             Delete
-          </button> -->
+          </button>
+          <button
+            type="button"
+            mat-button
+            class="btn-link"
+            routerLink="/portal/payroll/pay-elements"
+          >
+            Cancel
+          </button>
         </div>
       </div>
     </form>
@@ -447,6 +844,43 @@
               </div>
             </div>
           </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="deletePayElement" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Delete Pay Element</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <div class="pb-3">
+            <div class="center">
+              <p>
+                Are you sure you want to delete this item? They will no longer
+                be accessible.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-end align-items-center">
+          <button
+            mat-flat-button
+            class="me-3"
+            data-bs-dismiss="modal"
+            (click)="confirmDelete()"
+          >
+            Delete <mat-spinner *ngIf="isBusy_"> </mat-spinner>
+          </button>
+          <button mat-stroked-button data-bs-dismiss="modal" #closebtn>
+            Cancel
+          </button>
         </div>
       </div>
     </div>

@@ -78,10 +78,7 @@ export class PayrollService {
   //Fetch Pay Element
   fetchPayElement() {
     return this.http
-      .post<any>(
-        environment.apiBaseUrl + '/PayElement/GetAll',
-        this.httpOptions
-      )
+      .get<any>(environment.apiBaseUrl + '/PayElement/GetAll', this.httpOptions)
       .pipe(catchError(handleError));
   }
   //Fetch  Pay Element Details
@@ -99,7 +96,7 @@ export class PayrollService {
       .get<any>(environment.apiBaseUrl + `/Lookup/Enums`, this.httpOptions)
       .pipe(catchError(handleError));
   }
-  //Fetch All Pay Elements
+  //Fetch All Pay Elements List
   fetchAllPayElements(model: IPayElementList) {
     return this.http
       .post<IPayElementList>(
@@ -112,7 +109,7 @@ export class PayrollService {
   //Fetch Pay Element Category
   fetchPayElementCategory() {
     return this.http
-      .post<any>(
+      .get<any>(
         environment.apiBaseUrl + '/PayElementCategory/GetAll',
         this.httpOptions
       )
@@ -280,8 +277,8 @@ export class PayrollService {
   //Create Payscale
   createPayscale(model: IPayscale): Observable<any> {
     return this.http
-      .post<IEmployee>(
-        environment.apiBaseUrl + '/Payscale/Create',
+      .post<IPayscale>(
+        environment.apiBaseUrl + '/PayScale/Create',
         model,
         this.httpOptions
       )
@@ -297,6 +294,18 @@ export class PayrollService {
       this.httpOptions
     );
   }
+  deletePayElement(id: string) {
+    return this.http.delete<any>(
+      environment.apiBaseUrl + `/PayElement/Delete/${id}`,
+      this.httpOptions
+    );
+  }
+  deletePayScale(id: string) {
+    return this.http.delete<any>(
+      environment.apiBaseUrl + `/PayScale/Delete/${id}`,
+      this.httpOptions
+    );
+  }
   deleteTaxType(taxId: string) {
     return this.http.delete<any>(
       environment.apiBaseUrl + `/Tax/Delete/${taxId}`,
@@ -309,6 +318,30 @@ export class PayrollService {
     return this.http
       .put<IInstitution>(
         environment.apiBaseUrl + '/Institution/Edit',
+        model,
+        this.httpOptions
+      )
+      .pipe(
+        map((status) => status),
+        catchError(handleError)
+      );
+  }
+  updatePayElement(model: IPayElement): Observable<any> {
+    return this.http
+      .put<IPayElement>(
+        environment.apiBaseUrl + '/PayElement/Edit',
+        model,
+        this.httpOptions
+      )
+      .pipe(
+        map((status) => status),
+        catchError(handleError)
+      );
+  }
+  updatePayscale(model: IPayscale): Observable<any> {
+    return this.http
+      .put<IPayscale>(
+        environment.apiBaseUrl + '/PayScale/Edit',
         model,
         this.httpOptions
       )

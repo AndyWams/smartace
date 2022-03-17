@@ -4,12 +4,29 @@
   </div>
 </div>
 <div class="bg-white">
+  <div
+    class="d-flex justify-content-center mt-5 pt-5"
+    *ngIf="queryString === 'edit' && !itemDetails"
+  >
+    <!--Loading Roller-->
+    <app-loading-roller></app-loading-roller>
+  </div>
   <div class="form-wrap w--700">
-    <form>
+    <form [formGroup]="createPayScaleForm" *ngIf="queryString === 'add'">
       <div class="grid align-items-center">
         <label>Scale Name</label>
         <div class="input mb-0">
-          <input type="text" placeholder="Scale name" />
+          <input
+            type="text"
+            placeholder="Scale name"
+            formControlName="payScaleName"
+            [ngClass]="{
+              'is-invalid':
+                createPayScaleForm.controls['payScaleName'].hasError(
+                  'required'
+                ) && createPayScaleForm.controls['payScaleName'].touched
+            }"
+          />
         </div>
       </div>
       <div class="grid align-items-center">
@@ -21,11 +38,12 @@
             multiple
             #matSelect
             (selectionChange)="handlePayElementChange($event)"
+            formControlName="payScaleElements"
           >
             <mat-select-trigger>
-              {{ _selectedPayElements ? _selectedPayElements.slice(0, 2) : "" }}
-              <span class="more" *ngIf="_selectedPayElements.length > 2">
-                +{{ _selectedPayElements.slice(0, 2).length - 1 }} other item
+              {{ payElementItems ? stripedObjValue : "" }}
+              <span class="more" *ngIf="payElements.length > 2">
+                +{{ payElementItems.slice(0, 2).length - 1 }} other item
               </span>
             </mat-select-trigger>
             <mat-option #allSelected (click)="toggleAllSelection()" [value]="0"
@@ -33,24 +51,115 @@
             >
             <mat-option
               #options
-              *ngFor="let option of options"
-              [value]="option.value"
+              *ngFor="let item of payElements"
+              [value]="item"
               (click)="toggleOne()"
+              >{{ item.payElementName }}</mat-option
             >
-              {{ option.label }}
-            </mat-option>
           </mat-select>
         </div>
       </div>
-      <ng-container *ngIf="_selectedPayElements.length !== 0">
+      <ng-container *ngIf="payElementItems.length !== 0">
         <div class="grid">
           <span>&nbsp;</span>
           <div class="chips_wrap d-flex align-items-center">
             <div
               class="_chips animate__animated animate__bounceIn"
-              *ngFor="let chip of _selectedPayElements; let i = index"
+              *ngFor="let chip of payElementItems; let i = index"
             >
-              <span>{{ chip }}</span>
+              <span>{{ chip.payElementName }}</span>
+              <span (click)="dropItem(i)"
+                ><ion-icon name="close"></ion-icon
+              ></span>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <div class="grid align-items-center">
+        <label>Pay Frequency</label>
+        <div class="input mb-0">
+          <mat-select
+            placeholder="Pay frequency"
+            class="select"
+            required
+            formControlName="frequency"
+            [ngClass]="{
+              'is-invalid':
+                createPayScaleForm.controls['frequency'].hasError('required') &&
+                createPayScaleForm.controls['frequency'].touched
+            }"
+          >
+            <mat-option disabled="" selected="" value="">
+              Select pay frequencies
+            </mat-option>
+            <mat-option
+              *ngFor="let type of enumkey?.frequency"
+              [value]="type.value"
+              >{{ type.text }}</mat-option
+            >
+          </mat-select>
+        </div>
+      </div>
+    </form>
+    <form
+      [formGroup]="updatePayScaleForm"
+      *ngIf="itemDetails && queryString === 'edit'"
+    >
+      <div class="grid align-items-center">
+        <label>Scale Name</label>
+        <div class="input mb-0">
+          <input
+            type="text"
+            placeholder="Scale name"
+            formControlName="payScaleName"
+            [ngClass]="{
+              'is-invalid':
+                updatePayScaleForm.controls['payScaleName'].hasError(
+                  'required'
+                ) && updatePayScaleForm.controls['payScaleName'].touched
+            }"
+          />
+        </div>
+      </div>
+      <div class="grid align-items-center">
+        <label>Pay Elements</label>
+        <div class="input mb-0">
+          <mat-select
+            placeholder="Pay element"
+            class="select"
+            multiple
+            #matSelect
+            (selectionChange)="handlePayElementChange($event)"
+            formControlName="payScaleElements"
+          >
+            <mat-select-trigger>
+              {{ payElementItems ? stripedObjValue : "" }}
+              <span class="more" *ngIf="payElements.length > 2">
+                +{{ payElementItems.slice(0, 2).length - 1 }} other item
+              </span>
+            </mat-select-trigger>
+            <mat-option #allSelected (click)="toggleAllSelection()" [value]="0"
+              >All</mat-option
+            >
+            <mat-option
+              #options
+              *ngFor="let item of payElements"
+              [value]="item"
+              (click)="toggleOne()"
+              >{{ item.payElementName }}</mat-option
+            >
+          </mat-select>
+        </div>
+      </div>
+      <ng-container *ngIf="payElementItems.length !== 0">
+        <div class="grid">
+          <span>&nbsp;</span>
+          <div class="chips_wrap d-flex align-items-center">
+            <div
+              class="_chips animate__animated animate__bounceIn"
+              *ngFor="let chip of payElementItems; let i = index"
+            >
+              <span>{{ chip.payElementName }}</span>
               <span (click)="dropItem(i)"
                 ><ion-icon name="close"></ion-icon
               ></span>
@@ -66,38 +175,44 @@
             class="select"
             (selectionChange)="handlePayFrequencyChange($event)"
             required
+            formControlName="frequency"
+            [ngClass]="{
+              'is-invalid':
+                updatePayScaleForm.controls['frequency'].hasError('required') &&
+                updatePayScaleForm.controls['frequency'].touched
+            }"
           >
             <mat-option disabled="" selected="" value="">
               Select pay frequencies
             </mat-option>
-            <mat-option *ngFor="let item of _payFrequencies" [value]="item">
-              {{ item }}
-            </mat-option>
+            <mat-option
+              *ngFor="let type of enumkey?.frequency"
+              [value]="type.value"
+              >{{ type.text }}</mat-option
+            >
           </mat-select>
         </div>
       </div>
     </form>
   </div>
-</div>
-
-<div class="bg-white">
   <div class="title-sm px-5">Add Employees</div>
-
   <div
     class="d-flex justify-content-center align-items-center my-3 empty-state"
     *ngIf="emptyState"
   >
-    <span class="txt-grey txt-md">You have not created any payscale yet.</span>
+    <span class="txt-grey txt-md">You have not created any employees yet.</span>
   </div>
   <ng-container *ngIf="employeeList.length === 0 && !emptyState">
     <app-loading-roller></app-loading-roller>
   </ng-container>
+  <!--Table Content-->
   <div
     class="overflow--wrap _visible"
     [ngClass]="{ hide: employeeList.length == 0 }"
   >
     <div class="table-wrapper tbl-wrap">
       <ng-container *ngIf="dataSource.data.length">
+        <!--Table Toolbar Header-->
         <div class="toolbar mb-5 adjust-wrap">
           <div
             class="d-flex align-items-center justify-content-start adjust-flex"
@@ -135,7 +250,7 @@
                 #input
               />
             </div>
-            <!-- Institute Mgmt Filter-->
+            <!-- Employee  Filter-->
             <div>
               <button
                 mat-stroked-button
@@ -166,6 +281,11 @@
                 </button>
               </mat-menu>
             </div>
+            <div class="mr-1" *ngIf="queryString == 'edit'">
+              <button mat-flat-button class="btn-danger">
+                Remove Employee
+              </button>
+            </div>
             <!--  Bulk upload-->
             <div>
               <button
@@ -180,6 +300,7 @@
             </div>
           </div>
         </div>
+        <!--Table Layout-->
         <table
           mat-table
           [dataSource]="dataSource"
@@ -203,9 +324,7 @@
                 <mat-checkbox
                   [value]="element"
                   (click)="$event.stopPropagation()"
-                  (change)="
-                    $event ? selection.toggle(element) : null; toggleCheck()
-                  "
+                  (change)="$event ? selection.toggle(element) : null"
                   [checked]="selection.isSelected(element)"
                 >
                   <span
@@ -253,10 +372,38 @@
       </ng-container>
       <mat-paginator showFirstLastButtons [pageSize]="pageSize"></mat-paginator>
     </div>
-    <div class="d-flex justify-content-center align-items-center pb-5">
-      <button mat-flat-button class="me-3">Save</button>
-      <button mat-stroked-button>Cancel</button>
-    </div>
+    <ng-container *ngIf="queryString === 'add'">
+      <div class="d-flex justify-content-center align-items-center pb-5">
+        <button
+          type="submit"
+          mat-flat-button
+          class="me-4"
+          [disabled]="!createPayScaleForm.valid"
+          (click)="onSubmit()"
+        >
+          Save <mat-spinner *ngIf="isBusy"> </mat-spinner>
+        </button>
+        <button mat-stroked-button routerLink="/portal/payroll/payscale-setup">
+          Cancel
+        </button>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="queryString === 'edit'">
+      <div class="d-flex justify-content-center align-items-center pb-5">
+        <button
+          type="submit"
+          mat-flat-button
+          class="me-4"
+          [disabled]="!updatePayScaleForm.valid"
+          (click)="onUpdate()"
+        >
+          Save <mat-spinner *ngIf="isBusy"> </mat-spinner>
+        </button>
+        <button mat-stroked-button routerLink="/portal/payroll/payscale-setup">
+          Cancel
+        </button>
+      </div>
+    </ng-container>
   </div>
 </div>
 

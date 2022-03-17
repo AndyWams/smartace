@@ -8,6 +8,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { IPayscale } from 'src/app/portal/models';
 
 @Component({
   selector: 'app-create-pay-scale',
@@ -20,26 +22,19 @@ export class CreatePayScaleComponent implements OnInit {
   @ViewChild('allSelected') allSelected: any;
   @ViewChildren('options') _options: any;
   queryString: string = '';
-  options = [
-    { value: 'Pay Element 1', label: 'Pay Element 1' },
-    { value: 'Pay Element 2', label: 'Pay Element 2' },
-    { value: 'Pay Element 3', label: 'Pay Element 3' },
-  ];
-  _payFrequencies: string[] = [
-    'Daily',
-    'Weekly',
-    'Monthly',
-    'Bi-annual',
-    'Annually',
-  ];
-  _selectedPayElements: string[] = [];
-
+  payElements: any[] = [];
+  payElementItems: any[] = [];
   employeeList: any[] = [];
   pageSize: number = 10;
   currentPage: number = 1;
   emptyState: any;
   isBusy: boolean = false;
   itemDetails: any;
+  enumkey: any;
+  enumKeys = [];
+  _payscaleID: any;
+  public createPayScaleForm: FormGroup = new FormGroup({});
+  public updatePayScaleForm: FormGroup = new FormGroup({});
   public dataSource: MatTableDataSource<any> = new MatTableDataSource();
   public selection = new SelectionModel(true, []);
   public displayedColumns: string[];
@@ -47,19 +42,41 @@ export class CreatePayScaleComponent implements OnInit {
     private route: ActivatedRoute,
     private payrollServ: PayrollService,
     private toastr: ToastrService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private fb: FormBuilder
+  ) {
+    this.createPayScaleForm = this.fb.group({
+      payScaleName: ['', Validators.required],
+      frequency: [0, Validators.required],
+      payScaleElements: [],
+      payScaleEmployees: [],
+    });
+  }
 
   ngOnInit(): void {
     this.getRoutes();
+    this.getItemDetails();
     this.getEmployees();
+    this.getPayElements();
+    this.getEnums();
     this.displayedColumns = this.column;
   }
   column = ['Name', 'employee Id', 'department', 'employment Date'];
   ngOnChanges() {}
+  get formRawValue(): any {
+    return this.createPayScaleForm.getRawValue();
+  }
+  get value_(): IPayscale {
+    return this.updatePayScaleForm.getRawValue();
+  }
+  get stripedObjValue() {
+    if (this.payElements.length !== 0) {
+      return this.payElementItems.slice(0, 2).map((x: any) => x.payElementName);
+    }
+  }
   hanglePayElementSelect(event: any) {
     if (event.target.value !== null) {
-      this._selectedPayElements.push(event.target.value);
+      this.payElementItems.push(event.target.value);
     }
   }
   dropItem(index: number) {
@@ -81,31 +98,17 @@ export class CreatePayScaleComponent implements OnInit {
   }
   handlePayElementChange(event: any) {
     let result = event.source._value.filter((t) => t !== 0);
-    this._selectedPayElements = result;
+    this.payElementItems = result;
   }
-  handlePayFrequencyChange(event: any) {}
-
   toggleOne() {
     if (this.allSelected.selected) {
       this.allSelected.deselect();
       return false;
     }
-  }
-  getRoutes() {
-    this.route.queryParams
-      .pipe(filter((params) => params.query))
-      .subscribe((params) => {
-        this.queryString = params.query;
-      });
-    if (this.queryString === '') {
-      this.router.navigate(['/portal/payroll/pay-scale']);
+    if (this.select.value.length == this.payElements.length) {
+      this.allSelected.select();
     }
   }
-
-  toggleCheck() {
-    // console.log(this.selection.selected);
-  }
-
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
@@ -116,9 +119,7 @@ export class CreatePayScaleComponent implements OnInit {
       this.selection.clear();
       return;
     }
-
     this.selection.select(...this.dataSource.data);
-    // console.log(this.selection.selected);
   }
 
   checkboxLabel(row?: any): string {
@@ -164,8 +165,142 @@ export class CreatePayScaleComponent implements OnInit {
         },
         (errors) => {
           this.emptyState = errors;
-          console.log(errors);
         }
       );
+  }
+  getPayElements() {
+    this.payrollServ
+      .fetchPayElement()
+      .pipe(
+        catchError((err: any): ObservableInput<any> => {
+          return throwError(err);
+        })
+      )
+      .subscribe((res) => {
+        const { result } = res;
+        this.payElements = result;
+      });
+  }
+  getEnums() {
+    this.payrollServ
+      .fetchEnums()
+      .pipe(
+        catchError((err: any): ObservableInput<any> => {
+          return throwError(err);
+        })
+      )
+      .subscribe((res) => {
+        this.enumkey = res;
+      });
+  }
+
+  onSubmit() {
+    if (this.createPayScaleForm.controls['payScaleElements'].value !== null) {
+      let ids = this.createPayScaleForm.controls['payScaleElements'].value
+        .filter((x: any) => x !== 0)
+        .map((a: any) => {
+          return {
+            payElementId: a.payElementId,
+          };
+        });
+      this.createPayScaleForm.patchValue({
+        payScaleElements: ids,
+      });
+    }
+    if (this.selection.selected.length !== 0) {
+      let empIds = this.selection.selected
+        .filter((x: any) => x !== 0)
+        .map((a: any) => {
+          return {
+            employeeId: a.employeeId,
+          };
+        });
+      this.createPayScaleForm.patchValue({
+        payScaleEmployees: empIds,
+      });
+    }
+
+    this.isBusy = true;
+    if (this.createPayScaleForm.invalid) {
+      this.isBusy = false;
+      return;
+    }
+    if (this.createPayScaleForm.valid) {
+      //Make api call here...
+      this.payrollServ.createPayscale(this.formRawValue).subscribe(
+        ({ message, data }) => {
+          this.toastr.success(message, 'Message');
+          this.createPayScaleForm.reset();
+          this.router.navigate(['/portal/payroll/pay-scale']);
+        },
+        (error) => {
+          this.isBusy = false;
+          this.toastr.error(error, 'Message', {
+            timeOut: 3000,
+          });
+        },
+        () => {
+          this.isBusy = false;
+          this.createPayScaleForm.reset();
+        }
+      );
+    }
+  }
+  getRoutes() {
+    this.route.queryParams
+      .pipe(filter((params) => params.query))
+      .subscribe((params) => {
+        this.queryString = params.query;
+        this._payscaleID = params.id;
+      });
+    if (this.queryString === '') {
+      this.router.navigate(['/portal/payroll/pay-scale']);
+    }
+  }
+  getItemDetails() {
+    if (this._payscaleID !== undefined) {
+      this.payrollServ
+        .fetchPayScaleDetails(this._payscaleID)
+        .pipe(
+          catchError((err: any): ObservableInput<any> => {
+            return throwError(err);
+          })
+        )
+        .subscribe((res) => {
+          const { result } = res;
+          this.itemDetails = result;
+          this.setFormControlElement();
+        });
+    }
+  }
+  setFormControlElement() {
+    this.updatePayScaleForm = this.fb.group({
+      payScaleName: [this.itemDetails.payScaleName, Validators.required],
+      frequency: [this.itemDetails.frequency, Validators.required],
+      payScaleElements: [],
+      payScaleEmployees: [],
+    });
+  }
+  onUpdate() {
+    this.isBusy = true;
+    if (this.updatePayScaleForm.valid) {
+      this.payrollServ.updatePayscale(this.value_).subscribe(
+        ({ message }) => {
+          this.toastr.success(message, 'Message');
+          this.updatePayScaleForm.reset();
+          this.router.navigate(['/portal/payroll/pay-elements']);
+        },
+        (error) => {
+          this.isBusy = false;
+          this.toastr.error(error, 'Message', {
+            timeOut: 3000,
+          });
+        },
+        () => {
+          this.isBusy = false;
+          this.updatePayScaleForm.reset();
+        }
+      );
+    }
   }
 }
