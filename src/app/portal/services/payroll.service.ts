@@ -14,6 +14,7 @@ import {
   IPayElement,
   IPayElementCat,
   IPayElementList,
+  IPayrollSettings,
   IPayscale,
   IPayscaleList,
   ITaxType,
@@ -279,6 +280,19 @@ export class PayrollService {
     return this.http
       .post<IPayscale>(
         environment.apiBaseUrl + '/PayScale/Create',
+        model,
+        this.httpOptions
+      )
+      .pipe(
+        map((status) => status),
+        catchError(handleError)
+      );
+  }
+  //Save PayrollSettings
+  savePayrollSettings(model: IPayrollSettings): Observable<any> {
+    return this.http
+      .post<IPayrollSettings>(
+        environment.apiBaseUrl + '/PayrollSettings/Save',
         model,
         this.httpOptions
       )

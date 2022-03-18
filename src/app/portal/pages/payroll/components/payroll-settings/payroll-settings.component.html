@@ -5,24 +5,32 @@
   <mat-tab-group animationDuration="0.5ms">
     <mat-tab label="Tax">
       <div class="form-wrap w--700">
-        <form>
+        <form [formGroup]="saveTaxForm" (ngSubmit)="onSaveTax()">
           <div class="grid align-items-center">
             <label>Enable Tax</label>
             <mat-slide-toggle
               style="width: fit-content"
-              (change)="handleSlideToggle($event)"
+              formControlName="isTaxEnable"
             ></mat-slide-toggle>
           </div>
           <div class="grid align-items-center">
             <label>Tax ID</label>
             <div class="input mb-0">
-              <input type="text" placeholder="Enter tax id" />
+              <input
+                type="text"
+                placeholder="Enter tax id"
+                formControlName="taxId"
+              />
             </div>
           </div>
           <div class="grid align-items-center">
             <label>Country</label>
             <div class="input mb-0">
-              <mat-select placeholder="Select country" class="select" required>
+              <mat-select
+                placeholder="Select country"
+                class="select"
+                formControlName="country"
+              >
                 <mat-option disabled="" selected="" value="">
                   Select country
                 </mat-option>
@@ -34,8 +42,12 @@
           <div class="grid align-items-center">
             <label>State</label>
             <div class="input mb-0">
-              <mat-select placeholder="Select state" class="select" required>
-                <mat-option disabled="" selected="" value="">
+              <mat-select
+                placeholder="Select state"
+                class="select"
+                formControlName="state"
+              >
+                <mat-option disabled selected="" value="">
                   Select state
                 </mat-option>
                 <mat-option value="Lagos">Lagos</mat-option>
@@ -43,18 +55,55 @@
               </mat-select>
             </div>
           </div>
-          <div class="grid align-items-center">
+          <div class="grid align-items-start">
             <div class="d-flex align-items-center">
-              <button mat-icon-button class="me-1">
+              <button
+                type="button"
+                mat-icon-button
+                class="me-1"
+                (click)="addLocation()"
+              >
                 <mat-icon class="btn--primary">add_circle</mat-icon>
               </button>
               <label>Add Location</label>
+            </div>
+            <div class="d-flex flex-column">
+              <div
+                class="input mb-3"
+                formArrayName="location"
+                *ngFor="let t of locationValues.controls; let i = index"
+              >
+                <ng-container [formGroupName]="i">
+                  <div class="d-flex align-items-center">
+                    <input
+                      type="text"
+                      formControlName="name"
+                      id="{{ 'name' + i }}"
+                      placeholder="Enter location"
+                    />
+                    <button
+                      mat-icon-button
+                      class="abs-pos"
+                      (click)="removeLocation(i)"
+                    >
+                      <mat-icon>remove_circle</mat-icon>
+                    </button>
+                  </div>
+                </ng-container>
+              </div>
             </div>
           </div>
           <div class="grid align-items-center pt-4">
             <span>&nbsp;</span>
             <div class="d-flex justify-content-start">
-              <button type="button" mat-flat-button>Save</button>
+              <button
+                type="submit"
+                mat-flat-button
+                class="me-4"
+                [disabled]="!saveTaxForm.valid"
+              >
+                Save <mat-spinner *ngIf="isBusy"> </mat-spinner>
+              </button>
             </div>
           </div>
         </form>

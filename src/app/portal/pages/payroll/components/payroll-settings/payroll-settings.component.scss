@@ -1,3 +1,4 @@
+@import "src/scss/_vars.scss";
 .bg-white {
   padding: 2em;
   min-height: 400px;
@@ -38,6 +39,12 @@
         }
       }
     }
+  }
+  .abs-pos {
+    position: absolute;
+    right: -1em;
+    top: -1em;
+    color: $red;
   }
   .empty-state {
     .center {

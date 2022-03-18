@@ -135,3 +135,14 @@ export interface ITaxTypeList {
   sortColumn: string;
   sortOrder: number;
 }
+
+export interface IPayrollSettings {
+  isTaxEnable: boolean;
+  taxId: string;
+  country: string;
+  state: string;
+  isPensionEnable: boolean;
+  pensionNumber: string;
+  isNHFEnable: boolean;
+  nhfNumber: string;
+}

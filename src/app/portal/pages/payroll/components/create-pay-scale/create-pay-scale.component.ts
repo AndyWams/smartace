@@ -229,37 +229,26 @@ export class CreatePayScaleComponent implements OnInit {
       let ids = this.createPayScaleForm.controls['payScaleElements'].value
         .filter((x: any) => x !== 0)
         .map((a: any) => {
-          return a;
+          return {
+            payElementId: a.payElementId,
+          };
         });
       this.createPayScaleForm.patchValue({
         payScaleElements: ids,
       });
     }
-    // if (this.selection.selected.length !== 0) {
-    //   let empIds = this.selection.selected
-    //     .filter((x: any) => x !== undefined)
-    //     .map((a: any) => {
-    //       return {
-    //         employeeId: a,
-    //       };
-    //     });
-    //   this.createPayScaleForm.patchValue({
-    //     payScaleEmployees: empIds,
-    //   });
-    // }
-
     if (this.selection.selected.length !== 0) {
       let empIds = this.selection.selected
         .filter((x: any) => x !== undefined)
         .map((a: any) => {
-          return a;
+          return {
+            employeeId: a.employeeId,
+          };
         });
       this.createPayScaleForm.patchValue({
         payScaleEmployees: empIds,
       });
     }
-
-    console.log(this.formRawValue);
 
     this.isBusy = true;
     if (this.createPayScaleForm.invalid) {

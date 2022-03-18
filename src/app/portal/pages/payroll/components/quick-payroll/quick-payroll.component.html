@@ -2,30 +2,65 @@
   <div class="title">Quick Payroll</div>
 </div>
 <div class="bg-white">
+  <div
+    class="abs-pos animate__animated animate__bounceIn"
+    *ngIf="payChannel === 'Bank'"
+  >
+    <label>Bank Balance</label>
+    <label class="bold-txt">NGN 39,000,920.00</label>
+  </div>
   <div class="form-wrap w--700">
-    <form>
+    <form [formGroup]="createQuickPayrollForm">
       <div class="grid align-items-center">
         <label>Payroll Period</label>
         <div class="d-flex align-items-center">
           <div class="input mb-0 me-3">
             <label for="">Start Date</label>
-            <input type="date" required />
+            <input
+              type="date"
+              formControlName="startDate"
+              [ngClass]="{
+                'is-invalid':
+                  createQuickPayrollForm.controls['startDate'].hasError(
+                    'required'
+                  ) && createQuickPayrollForm.controls['startDate'].touched
+              }"
+            />
           </div>
           <div class="input mb-0">
             <label for="">End Date</label>
-            <input type="date" required />
+            <input
+              type="date"
+              formControlName="endDate"
+              [ngClass]="{
+                'is-invalid':
+                  createQuickPayrollForm.controls['endDate'].hasError(
+                    'required'
+                  ) && createQuickPayrollForm.controls['endDate'].touched
+              }"
+            />
           </div>
         </div>
       </div>
       <div class="grid align-items-center">
         <label>Payroll Schedule</label>
         <div class="input mb-0">
-          <mat-select placeholder="Payroll schedule" class="select" required>
+          <mat-select
+            placeholder="Payroll schedule"
+            class="select"
+            formControlName="payrollSchedule"
+            [ngClass]="{
+              'is-invalid':
+                createQuickPayrollForm.controls['payrollSchedule'].hasError(
+                  'required'
+                ) && createQuickPayrollForm.controls['payrollSchedule'].touched
+            }"
+          >
             <mat-option disabled="" selected="" value="">
               Select payroll schedule
             </mat-option>
-            <mat-option value="">Option One</mat-option>
-            <mat-option value="">Option Two</mat-option>
+            <mat-option value="Opt1">Option One</mat-option>
+            <mat-option value="Opt2">Option Two</mat-option>
           </mat-select>
         </div>
       </div>
@@ -35,8 +70,14 @@
           <mat-select
             placeholder="Payment channel"
             class="select"
-            required
             (selectionChange)="handlePayChannel($event)"
+            formControlName="paymentChannel"
+            [ngClass]="{
+              'is-invalid':
+                createQuickPayrollForm.controls['paymentChannel'].hasError(
+                  'required'
+                ) && createQuickPayrollForm.controls['paymentChannel'].touched
+            }"
           >
             <mat-option disabled="" selected="" value="">
               Select payment channel
@@ -52,8 +93,13 @@
           <mat-select
             placeholder="Run by"
             class="select"
-            required
             (selectionChange)="handleRunBy($event)"
+            formControlName="runBy"
+            [ngClass]="{
+              'is-invalid':
+                createQuickPayrollForm.controls['runBy'].hasError('required') &&
+                createQuickPayrollForm.controls['runBy'].touched
+            }"
           >
             <mat-option disabled="" selected="" value="">
               Select payment channel
@@ -66,7 +112,17 @@
       <div class="grid align-items-center" *ngIf="runByItem === 'Payscale'">
         <label>Select Payscale</label>
         <div class="input mb-0">
-          <mat-select class="select" placeholder="Select pay scale" required>
+          <mat-select
+            class="select"
+            placeholder="Select pay scale"
+            formControlName="payScale"
+            [ngClass]="{
+              'is-invalid':
+                createQuickPayrollForm.controls['payScale'].hasError(
+                  'required'
+                ) && createQuickPayrollForm.controls['payScale'].touched
+            }"
+          >
             <mat-option disabled="" selected="" value="">
               Select payment channel
             </mat-option>
@@ -77,49 +133,436 @@
       </div>
     </form>
   </div>
-  <div
-    class="abs-pos animate__animated animate__bounceIn"
-    *ngIf="payChannel === 'Bank'"
-  >
-    <label>Bank Balance</label>
-    <label class="bold-txt">NGN 39,000,920.00</label>
-  </div>
-</div>
-<div class="bg-white">
   <div class="title-sm px-5">Select Employees</div>
-  <ng-container *ngIf="runByItem === 'Gross/net'">
-    <app-table
-      [_data]="data_"
-      _identifier="EMPLOYEESONGROSSPAYROLL"
-      [runByItem]="runByItem"
-    ></app-table>
-  </ng-container>
-  <ng-container *ngIf="runByItem === 'Payscale'">
-    <app-table
-      [_data]="data"
-      _identifier="EMPLOYEESONPAYSCALEPAYROLL"
-      [runByItem]="runByItem"
-    ></app-table>
-  </ng-container>
-
-  <div class="d-flex justify-content-center align-items-center pb-5">
-    <button
-      mat-flat-button
-      class="me-3"
-      data-bs-toggle="modal"
-      data-bs-target="#runPayroll"
-      *ngIf="runByItem === 'Gross/net'"
+  <div
+    class="d-flex justify-content-center align-items-center my-3 empty-state"
+    *ngIf="emptyState"
+  >
+    <span class="txt-grey txt-md"
+      >No record found! Please create a record.</span
     >
-      Run Payroll
-    </button>
-    <button
-      mat-flat-button
-      class="me-3"
-      data-bs-toggle="modal"
-      data-bs-target="#runPayroll"
-      *ngIf="runByItem === 'Payscale'"
-    >
-      Run Payroll
-    </button>
+  </div>
+  <ng-container *ngIf="employeeList.length === 0 && !emptyState">
+    <app-loading-roller></app-loading-roller>
+  </ng-container>
+  <!--Table Content-->
+  <div
+    class="overflow--wrap _visible"
+    [ngClass]="{ hide: employeeList.length == 0 }"
+  >
+    <div class="table-wrapper tbl-wrap">
+      <ng-container *ngIf="employeeList.length && runByItem == 'Payscale'">
+        <!--Table Toolbar Header-->
+        <div class="toolbar mb-5 adjust-wrap">
+          <div
+            class="d-flex align-items-center justify-content-start adjust-flex"
+          >
+            <div
+              class="d-flex align-items-center mr-1"
+              style="width: fit-content"
+            >
+              <!-- Master Checkbox-->
+              <mat-checkbox
+                (change)="$event ? masterToggle() : null"
+                [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()"
+                [aria-label]="checkboxLabel()"
+              >
+              </mat-checkbox>
+              <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item>
+                  <span>Option One</span>
+                </button>
+                <button mat-menu-item>
+                  <span>Option Two</span>
+                </button>
+              </mat-menu>
+            </div>
+            <div class="search-input mr-1">
+              <span><mat-icon>search</mat-icon></span>
+              <input
+                type="text"
+                placeholder="Search"
+                (keyup)="applyFilter($event)"
+                #input
+              />
+            </div>
+            <!-- Employee  Filter-->
+            <div>
+              <button
+                mat-stroked-button
+                class="mat-stroked-secondary mr-1"
+                data-bs-toggle="modal"
+                data-bs-target="#employeeFilterBy"
+              >
+                Filter <ion-icon name="options" class="mx-3"></ion-icon>
+              </button>
+            </div>
+            <!-- Sort by -->
+            <div class="d-flex align-items-center mr-1">
+              <label class="me-3">Sort by</label>
+              <button
+                mat-stroked-button
+                class="mat-stroked-secondary"
+                [matMenuTriggerFor]="sortby"
+              >
+                Most recent
+                <mat-icon class="ms-2">keyboard_arrow_down</mat-icon>
+              </button>
+              <mat-menu #sortby="matMenu">
+                <button mat-menu-item>
+                  <span>Option One</span>
+                </button>
+                <button mat-menu-item>
+                  <span>Option Two</span>
+                </button>
+              </mat-menu>
+            </div>
+            <div class="mr-1" *ngIf="queryString == 'edit'">
+              <button mat-flat-button class="btn-danger">
+                Remove Employee
+              </button>
+            </div>
+            <!--  Bulk upload-->
+            <div>
+              <button
+                mat-stroked-button
+                class="mat-stroked-primary mat-stroked-secondary"
+                data-bs-toggle="modal"
+                data-bs-target="#bulkUpload"
+              >
+                <mat-icon class="me-3">file_upload</mat-icon>
+                Bulk Upload
+              </button>
+            </div>
+          </div>
+        </div>
+        <!--Table Layout-->
+        <table
+          mat-table
+          [dataSource]="dataSource"
+          class="table custom-table w--100"
+          style="width: 100%"
+        >
+          <ng-container
+            *ngFor="
+              let disCol of displayedColumns;
+              let colIndex = index;
+              let last = last
+            "
+            [matColumnDef]="disCol"
+          >
+            <th mat-header-cell *matHeaderCellDef>
+              {{ disCol }}
+            </th>
+            <!--Action Column-->
+            <ng-container *ngIf="last">
+              <td mat-cell *matCellDef="let element">
+                <a
+                  [routerLink]="['/portal/payroll/review-payroll']"
+                  [queryParams]="{ query: 'payscale' }"
+                  mat-button
+                  class="btn-link"
+                  >View</a
+                >
+              </td>
+            </ng-container>
+            <!--Table  Row Content-->
+            <ng-container *ngIf="colIndex === 0">
+              <td *matCellDef="let element">
+                <mat-checkbox
+                  [value]="element"
+                  (click)="$event.stopPropagation()"
+                  (change)="$event ? selection.toggle(element) : null"
+                  [checked]="selection.isSelected(element)"
+                >
+                  <span
+                    >{{ element["firstName"] }} {{ element["lastName"] }}</span
+                  >
+                </mat-checkbox>
+              </td>
+            </ng-container>
+            <ng-container *ngIf="disCol == 'emp Id'">
+              <td mat-cell *matCellDef="let element">
+                <span>{{
+                  element["employeeNo"] ? element["employeeNo"] : "----"
+                }}</span>
+              </td>
+            </ng-container>
+            <ng-container *ngIf="disCol == 'total earning'">
+              <td mat-cell *matCellDef="let element">
+                <span>{{
+                  element["totalEarning"] ? element["totalEarning"] : "-------"
+                }}</span>
+              </td>
+            </ng-container>
+            <ng-container *ngIf="disCol == 'total deduction'">
+              <td mat-cell *matCellDef="let element">
+                <span>{{
+                  element["totalDeduction"]
+                    ? element["totalDeduction"]
+                    : "-------"
+                }}</span>
+              </td>
+            </ng-container>
+            <ng-container *ngIf="disCol == 'net pay'">
+              <td mat-cell *matCellDef="let element">
+                <span>{{
+                  element["netPay"] ? element["netPay"] : "-------"
+                }}</span>
+              </td>
+            </ng-container>
+            <ng-container *ngIf="disCol == 'hours worked'">
+              <td mat-cell *matCellDef="let element">
+                <span>
+                  {{
+                    element["hoursWorked"] ? element["hoursWorked"] : "-------"
+                  }}</span
+                >
+              </td>
+            </ng-container>
+            <td mat-cell *matCellDef="let element">
+              <span> {{ element[concatColumnString(disCol)] }}</span>
+            </td>
+          </ng-container>
+          <!--Mat-table  configurations-->
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns"
+            [ngClass]="{
+              'bg-wrap': selection.isSelected(row)
+            }"
+          ></tr>
+          <!-- Row shown when there is no matching data. -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">
+              No data matching the search item: "{{ input.value }}"
+            </td>
+          </tr>
+        </table>
+      </ng-container>
+      <ng-container *ngIf="employeeList.length && runByItem == 'Gross/net'">
+        <!--Table Toolbar Header-->
+        <div class="toolbar mb-5 adjust-wrap">
+          <div
+            class="d-flex align-items-center justify-content-start adjust-flex"
+          >
+            <div
+              class="d-flex align-items-center mr-1"
+              style="width: fit-content"
+            >
+              <!-- Master Checkbox-->
+              <mat-checkbox
+                (change)="$event ? masterToggle() : null"
+                [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()"
+                [aria-label]="checkboxLabel()"
+              >
+              </mat-checkbox>
+              <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item>
+                  <span>Option One</span>
+                </button>
+                <button mat-menu-item>
+                  <span>Option Two</span>
+                </button>
+              </mat-menu>
+            </div>
+            <div class="search-input mr-1">
+              <span><mat-icon>search</mat-icon></span>
+              <input
+                type="text"
+                placeholder="Search"
+                (keyup)="applyFilter($event)"
+                #input
+              />
+            </div>
+            <!-- Employee  Filter-->
+            <div>
+              <button
+                mat-stroked-button
+                class="mat-stroked-secondary mr-1"
+                data-bs-toggle="modal"
+                data-bs-target="#employeeFilterBy"
+              >
+                Filter <ion-icon name="options" class="mx-3"></ion-icon>
+              </button>
+            </div>
+            <!-- Sort by -->
+            <div class="d-flex align-items-center mr-1">
+              <label class="me-3">Sort by</label>
+              <button
+                mat-stroked-button
+                class="mat-stroked-secondary"
+                [matMenuTriggerFor]="sortby"
+              >
+                Most recent
+                <mat-icon class="ms-2">keyboard_arrow_down</mat-icon>
+              </button>
+              <mat-menu #sortby="matMenu">
+                <button mat-menu-item>
+                  <span>Option One</span>
+                </button>
+                <button mat-menu-item>
+                  <span>Option Two</span>
+                </button>
+              </mat-menu>
+            </div>
+            <div class="mr-1" *ngIf="queryString == 'edit'">
+              <button mat-flat-button class="btn-danger">
+                Remove Employee
+              </button>
+            </div>
+            <!--  Bulk upload-->
+            <div>
+              <button
+                mat-stroked-button
+                class="mat-stroked-primary mat-stroked-secondary"
+                data-bs-toggle="modal"
+                data-bs-target="#bulkUpload"
+              >
+                <mat-icon class="me-3">file_upload</mat-icon>
+                Bulk Upload
+              </button>
+            </div>
+          </div>
+        </div>
+        <!--Table Layout-->
+        <table
+          mat-table
+          [dataSource]="dataSource_"
+          class="table custom-table w--100"
+          style="width: 100%"
+        >
+          <ng-container
+            *ngFor="
+              let disCol of displayedColumns_;
+              let colIndex = index;
+              let last = last
+            "
+            [matColumnDef]="disCol"
+          >
+            <th mat-header-cell *matHeaderCellDef>
+              {{ disCol }}
+            </th>
+            <!--Action Column-->
+            <ng-container *ngIf="last">
+              <td mat-cell *matCellDef="let element">
+                <a
+                  [routerLink]="['/portal/payroll/review-payroll']"
+                  [queryParams]="{ query: 'payscale' }"
+                  mat-button
+                  class="btn-link"
+                  >View</a
+                >
+              </td>
+            </ng-container>
+            <!--Table  Row Content-->
+            <ng-container *ngIf="colIndex === 0">
+              <td *matCellDef="let element">
+                <mat-checkbox
+                  [value]="element"
+                  (click)="$event.stopPropagation()"
+                  (change)="$event ? selection.toggle(element) : null"
+                  [checked]="selection.isSelected(element)"
+                >
+                  <span
+                    >{{ element["firstName"] }} {{ element["lastName"] }}</span
+                  >
+                </mat-checkbox>
+              </td>
+            </ng-container>
+            <ng-container *ngIf="disCol == 'gross monthly salary'">
+              <td mat-cell *matCellDef="let element">
+                <span>{{
+                  element["grossMonthlySalary"]
+                    ? element["grossMonthlySalary"]
+                    : "----"
+                }}</span>
+              </td>
+            </ng-container>
+            <ng-container *ngIf="disCol == 'earnings'">
+              <td mat-cell *matCellDef="let element">
+                <span>{{
+                  element["earnings"] ? element["earnings"] : "-------"
+                }}</span>
+              </td>
+            </ng-container>
+            <ng-container *ngIf="disCol == 'deductions'">
+              <td mat-cell *matCellDef="let element">
+                <span>{{
+                  element["deductions"] ? element["deductions"] : "-------"
+                }}</span>
+              </td>
+            </ng-container>
+            <ng-container *ngIf="disCol == 'net salary'">
+              <td mat-cell *matCellDef="let element">
+                <span>{{
+                  element["netSalary"] ? element["netSalary"] : "-------"
+                }}</span>
+              </td>
+            </ng-container>
+            <ng-container *ngIf="disCol == 'prorate deduction'">
+              <td mat-cell *matCellDef="let element">
+                <span>
+                  {{
+                    element["prorateDeduction"]
+                      ? element["prorateDeduction"]
+                      : "-------"
+                  }}</span
+                >
+              </td>
+            </ng-container>
+            <td mat-cell *matCellDef="let element">
+              <span> {{ element[concatColumnString(disCol)] }}</span>
+            </td>
+          </ng-container>
+          <!--Mat-table  configurations-->
+          <tr mat-header-row *matHeaderRowDef="displayedColumns_"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns_"
+            [ngClass]="{
+              'bg-wrap': selection.isSelected(row)
+            }"
+          ></tr>
+          <!-- Row shown when there is no matching data. -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">
+              No data matching the search item: "{{ input.value }}"
+            </td>
+          </tr>
+        </table>
+      </ng-container>
+      <mat-paginator showFirstLastButtons [pageSize]="pageSize"></mat-paginator>
+    </div>
+    <!--Action Button-->
+    <div class="d-flex justify-content-center align-items-center pb-5">
+      <button
+        mat-flat-button
+        class="me-3"
+        data-bs-toggle="modal"
+        data-bs-target="#runPayroll"
+        *ngIf="runByItem === 'Gross/net'"
+      >
+        Run Payroll
+      </button>
+      <button
+        mat-flat-button
+        class="me-3"
+        data-bs-toggle="modal"
+        data-bs-target="#runPayroll"
+        *ngIf="runByItem === 'Payscale'"
+      >
+        Run Payroll
+      </button>
+    </div>
   </div>
 </div>

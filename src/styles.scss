@@ -39,3 +39,7 @@ mat-spinner {
 .mat-paginator-container {
   justify-content: space-between !important;
 }
+
+.mat-select-disabled .mat-select-value {
+  color: rgba(205, 215, 220, 0.5) !important;
+}
