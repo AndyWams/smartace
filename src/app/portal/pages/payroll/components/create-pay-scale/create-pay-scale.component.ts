@@ -33,6 +33,7 @@ export class CreatePayScaleComponent implements OnInit {
   isBusy: boolean = false;
   isBusy_: boolean = false;
   noRecord: boolean = false;
+  show_ref: boolean = false;
   itemDetails: any;
   enumkey: any;
   enumKeys = [];
@@ -191,6 +192,7 @@ export class CreatePayScaleComponent implements OnInit {
           this.employeeList = data;
           this.dataSource = new MatTableDataSource(this.employeeList);
           this.dataSource.paginator = this.paginator;
+          this.show_ref = false;
         },
         (errors) => {
           this.emptyState = errors;
@@ -370,6 +372,7 @@ export class CreatePayScaleComponent implements OnInit {
             this.isBusy_ = false;
             this.filterForm.reset();
             this.emptyState = false;
+            this.show_ref = true;
           },
           (errors) => {
             this.emptyState = errors;

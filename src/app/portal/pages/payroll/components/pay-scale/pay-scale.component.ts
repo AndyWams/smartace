@@ -20,6 +20,7 @@ export class PayScaleComponent implements OnInit {
   currentPage: number = 1;
   emptyState: any;
   isBusy: boolean = false;
+  show_ref: boolean = false;
   itemDetails: any;
   public dataSource: MatTableDataSource<any> = new MatTableDataSource();
   public selection = new SelectionModel(true, []);
@@ -113,6 +114,7 @@ export class PayScaleComponent implements OnInit {
           this.payscaleList = data;
           this.dataSource = new MatTableDataSource(this.payscaleList);
           this.dataSource.paginator = this.paginator;
+          this.show_ref = false;
         },
         (errors) => {
           this.emptyState = errors;

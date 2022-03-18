@@ -100,6 +100,18 @@
               <mat-icon class="me-2">print</mat-icon> Print
             </button>
           </div>
+          <div>
+            <button
+              mat-mini-fab
+              class="mx-2"
+              color="primary"
+              *ngIf="show_ref"
+              matTooltip="Refresh List"
+              (click)="getPayElements()"
+            >
+              <mat-icon>refresh</mat-icon>
+            </button>
+          </div>
         </div>
       </div>
       <table

@@ -25,6 +25,7 @@ export class PayElementsComponent implements OnInit {
   currentPage: number = 1;
   emptyState: any;
   noRecord: boolean = false;
+  show_ref: boolean = false;
   enumkey: any;
   enumKeys = [];
   isBusy: boolean = false;
@@ -171,6 +172,7 @@ export class PayElementsComponent implements OnInit {
           this.payElementList = data;
           this.dataSource = new MatTableDataSource(this.payElementList);
           this.dataSource.paginator = this.paginator;
+          this.show_ref = false;
         },
         (errors) => {
           this.emptyState = errors;
@@ -253,6 +255,7 @@ export class PayElementsComponent implements OnInit {
             this.isBusy = false;
             this.noRecord = false;
             this.emptyState = false;
+            this.show_ref = true;
             this.filterForm.reset();
           },
           (errors) => {

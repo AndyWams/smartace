@@ -14,7 +14,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
 @Component({
   selector: 'app-institute-management',
   templateUrl: './institute-management.component.html',
@@ -30,6 +29,7 @@ export class InstituteManagementComponent implements OnInit {
   emptyState: any;
   noRecord: boolean = false;
   isBusy: boolean = false;
+  show_ref: boolean = false;
   itemDetails: any;
   bankList: any[] = [];
   institutionCatList: any[] = [];
@@ -173,6 +173,7 @@ export class InstituteManagementComponent implements OnInit {
           this.institutionList = data;
           this.dataSource = new MatTableDataSource(this.institutionList);
           this.dataSource.paginator = this.paginator;
+          this.show_ref = false;
         },
         (errors) => {
           this.emptyState = errors;
@@ -239,6 +240,7 @@ export class InstituteManagementComponent implements OnInit {
             this.isBusy = false;
             this.noRecord = false;
             this.emptyState = false;
+            this.show_ref = true;
             this.filterForm.reset();
           },
           (errors) => {

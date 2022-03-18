@@ -299,6 +299,18 @@
                 Bulk Upload
               </button>
             </div>
+            <div>
+              <button
+                mat-mini-fab
+                class="mx-2"
+                color="primary"
+                *ngIf="show_ref"
+                matTooltip="Refresh List"
+                (click)="getEmployees()"
+              >
+                <mat-icon>refresh</mat-icon>
+              </button>
+            </div>
           </div>
         </div>
         <!--Table Layout-->
