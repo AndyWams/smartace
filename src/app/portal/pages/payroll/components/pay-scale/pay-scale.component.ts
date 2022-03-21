@@ -7,6 +7,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ToastrService } from 'ngx-toastr';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-pay-scale',
@@ -14,25 +15,37 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./pay-scale.component.scss'],
 })
 export class PayScaleComponent implements OnInit {
+  @ViewChild('closebtn') closebtn: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   payscaleList: any[] = [];
+  payElementList: any[] = [];
   pageSize: number = 10;
   currentPage: number = 1;
   emptyState: any;
+  noRecord: boolean = false;
   isBusy: boolean = false;
   show_ref: boolean = false;
   itemDetails: any;
   public dataSource: MatTableDataSource<any> = new MatTableDataSource();
   public selection = new SelectionModel(true, []);
   public displayedColumns: string[];
+  public filterForm: FormGroup = new FormGroup({});
 
   constructor(
     private payrollServ: PayrollService,
-    private toastr: ToastrService
-  ) {}
+    private toastr: ToastrService,
+    private fb: FormBuilder
+  ) {
+    this.filterForm = this.fb.group({
+      payScaleName: ['', Validators.required],
+      payScaleElements: [null],
+      frequency: ['', Validators.required],
+    });
+  }
 
   ngOnInit(): void {
     this.getPayscale();
+    this.getPayElements();
     this.displayedColumns = this.column;
     this.displayedColumns = this.displayedColumns.concat(['action']);
   }
@@ -88,6 +101,19 @@ export class PayScaleComponent implements OnInit {
         });
     }
   }
+  getPayElements() {
+    this.payrollServ
+      .fetchPayElement()
+      .pipe(
+        catchError((err: any): ObservableInput<any> => {
+          return throwError(err);
+        })
+      )
+      .subscribe((res) => {
+        const { result } = res;
+        this.payElementList = result;
+      });
+  }
   getPayscale() {
     let model = {
       pageSize: this.pageSize,
@@ -96,8 +122,8 @@ export class PayScaleComponent implements OnInit {
       sortColumn: '',
       sortOrder: 1,
       filter: {
-        payScaleName: '',
-        frequency: 1,
+        payScaleName: null,
+        frequency: null,
       },
     };
     this.payrollServ
@@ -120,5 +146,80 @@ export class PayScaleComponent implements OnInit {
           this.emptyState = errors;
         }
       );
+  }
+  confirmDelete() {
+    this.isBusy = true;
+
+    if (this.itemDetails !== undefined) {
+      this.payrollServ
+        .deletePayScale(this.itemDetails.payScaleId)
+        .pipe(
+          catchError((err: any): ObservableInput<any> => {
+            return throwError(err);
+          })
+        )
+        .subscribe(({ message }) => {
+          this.isBusy = false;
+          this.toastr.success(message, 'Success');
+          this.closebtn._elementRef.nativeElement.click();
+          this.getPayscale();
+        });
+    }
+  }
+  onFilter() {
+    this.isBusy = true;
+    const model = {
+      pageNumber: 1,
+      pageSize: 10,
+      search: '',
+      sortColumn: '',
+      sortOrder: 1,
+      filter: {
+        payScaleName: this.filterForm.controls['payScaleName'].value,
+        frequency: this.filterForm.controls['frequency'].value,
+        // payScaleElements: this.filterForm.controls['payScaleElements'].value,
+      },
+    };
+    if (this.filterForm.invalid) {
+      this.isBusy = false;
+      return;
+    }
+    if (this.filterForm.valid) {
+      this.payrollServ
+        .fetchAllPayscale(model)
+        .pipe(
+          catchError((err: any): ObservableInput<any> => {
+            return throwError(err);
+          })
+        )
+        .subscribe(
+          (res) => {
+            const { result } = res;
+            const { data, pagination } = result;
+            this.payscaleList = data;
+            this.dataSource = new MatTableDataSource(this.payscaleList);
+            this.dataSource.paginator = this.paginator;
+            this.closebtn._elementRef.nativeElement.click();
+            this.isBusy = false;
+            this.noRecord = false;
+            this.emptyState = false;
+            this.show_ref = true;
+            this.filterForm.reset();
+          },
+          (errors) => {
+            this.emptyState = errors;
+            this.isBusy = false;
+            this.noRecord = true;
+            if (this.emptyState) {
+              this.payscaleList = [];
+            }
+          },
+          () => {
+            this.isBusy = false;
+            this.noRecord = false;
+            this.filterForm.reset();
+          }
+        );
+    }
   }
 }

@@ -60,13 +60,13 @@
               #input
             />
           </div>
-          <!-- Payscale Mgmt Filter-->
+          <!-- Pay Scale Filter-->
           <div>
             <button
               mat-stroked-button
               class="mat-stroked-secondary mr-1"
               data-bs-toggle="modal"
-              data-bs-target="#instMgmtFilterBy"
+              data-bs-target="#payScaleFilterBy"
             >
               Filter <ion-icon name="options" class="mx-3"></ion-icon>
             </button>
@@ -144,7 +144,7 @@
                 "
                 [checked]="selection.isSelected(element)"
               >
-                <span>{{ element[concatColumnString(disCol)] }}</span>
+                <span>{{ element["payScaleName"] }}</span>
               </mat-checkbox>
             </td>
           </ng-container>
@@ -159,18 +159,16 @@
                   <button
                     type="button"
                     mat-menu-item
-                    data-bs-toggle="modal"
-                    data-bs-target="#viewInstMgt"
-                    (click)="getItemDetails(element['institutionId'])"
+                    [routerLink]="['/portal/payroll/view-payscale']"
                   >
                     View
                   </button>
                   <button
                     mat-menu-item
-                    [routerLink]="['/portal/payroll/institution-payment-setup']"
+                    [routerLink]="['/portal/payroll/pay-scale-setup']"
                     [queryParams]="{
                       query: 'edit',
-                      id: element['institutionId']
+                      id: element['payScaleId']
                     }"
                   >
                     Edit
@@ -180,8 +178,8 @@
                     mat-menu-item
                     class="txt-danger"
                     data-bs-toggle="modal"
-                    data-bs-target="#deleteInstitution"
-                    (click)="getItemDetails(element['institutionId'])"
+                    data-bs-target="#deletePayScale"
+                    (click)="getItemDetails(element['payScaleId'])"
                   >
                     Delete
                   </button>
@@ -191,21 +189,21 @@
           </ng-container>
 
           <!--Table  Row Content-->
-          <ng-container *ngIf="disCol == 'created On'">
+          <ng-container *ngIf="disCol == 'pay Elements'">
             <td mat-cell *matCellDef="let element">
-              <span>{{ element["createdOn"] | date: "mediumDate" }}</span>
-            </td>
-          </ng-container>
-          <ng-container *ngIf="disCol == 'institution Category'">
-            <td mat-cell *matCellDef="let element">
-              <span>{{
-                element[concatColumnString(disCol)].institutionCategoryName
+              <span *ngFor="let item of element['payScaleElements']">{{
+                item["payElement"] ? item["payElement"] : "---"
               }}</span>
             </td>
           </ng-container>
-          <ng-container *ngIf="disCol == 'bank'">
+          <ng-container *ngIf="disCol == 'pay Frequency'">
             <td mat-cell *matCellDef="let element">
-              <span>{{ element[concatColumnString(disCol)].bankName }}</span>
+              <span>{{ element["frequency"] }}</span>
+            </td>
+          </ng-container>
+          <ng-container *ngIf="disCol == 'no of Employees'">
+            <td mat-cell *matCellDef="let element">
+              <span>{{ element["payScaleEmployees"].length }}</span>
             </td>
           </ng-container>
           <td mat-cell *matCellDef="let element">
@@ -232,5 +230,107 @@
       </table>
     </ng-container>
     <mat-paginator showFirstLastButtons [pageSize]="pageSize"></mat-paginator>
+  </div>
+</div>
+<div class="modal fade" id="payScaleFilterBy" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Filter By</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <form class="pb-3" [formGroup]="filterForm" (ngSubmit)="onFilter()">
+            <div class="form-wrap w--400">
+              <div class="input">
+                <label>Scale Name</label>
+                <input
+                  type="text"
+                  placeholder="Enter scale name"
+                  formControlName="payScaleName"
+                />
+              </div>
+              <div class="input">
+                <label>Pay Elements</label>
+                <mat-select
+                  placeholder="Select pay element"
+                  class="select"
+                  formControlName="payScaleElements"
+                >
+                  <mat-option disabled="" selected="" value="">
+                    Select pay element
+                  </mat-option>
+                  <mat-option
+                    *ngFor="let item of payElementList"
+                    [value]="item.payElementId"
+                    >{{ item.payElementName }}</mat-option
+                  >
+                </mat-select>
+              </div>
+              <div class="input">
+                <label>Pay Frequency</label>
+                <input
+                  type="number"
+                  placeholder="Enter pay frequency"
+                  formControlName="frequency"
+                />
+              </div>
+              <p *ngIf="noRecord" class="txt-grey txt-md">No record found!</p>
+              <div class="d-flex align-items-center mt-5">
+                <button
+                  type="submit"
+                  mat-flat-button
+                  class="me-3"
+                  [disabled]="!filterForm.valid"
+                >
+                  Apply
+                </button>
+                <button
+                  type="button"
+                  mat-stroked-button
+                  data-bs-dismiss="modal"
+                  #closebtn
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="deletePayScale" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Delete Pay Scale</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <div class="pb-3">
+            <div class="center">
+              <p>
+                Are you sure you want to deactivate this item? They will no
+                longer be accessible.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-end align-items-center">
+          <button mat-flat-button class="me-3" (click)="confirmDelete()">
+            Delete
+          </button>
+          <button mat-stroked-button data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

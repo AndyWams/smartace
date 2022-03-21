@@ -17,11 +17,7 @@
   </div>
   <div class="form-wrap">
     <!--Add Form-->
-    <form
-      [formGroup]="createInstitutionForm"
-      (ngSubmit)="onSubmit()"
-      *ngIf="queryString === 'add'"
-    >
+    <form [formGroup]="createInstitutionForm" *ngIf="queryString === 'add'">
       <div class="grid align-items-center">
         <label>Institution Name</label>
         <div class="input mb-0">
@@ -92,13 +88,18 @@
         <div class="input mb-0">
           <input
             type="text"
+            maxlength="10"
             placeholder="Account number"
             formControlName="accountNumber"
             [ngClass]="{
               'is-invalid':
-                createInstitutionForm.controls['accountNumber'].hasError(
+                (createInstitutionForm.controls['accountNumber'].hasError(
                   'required'
-                ) && createInstitutionForm.controls['accountNumber'].touched
+                ) &&
+                  createInstitutionForm.controls['accountNumber'].touched) ||
+                createInstitutionForm.controls['accountNumber'].hasError(
+                  'minlength'
+                )
             }"
           />
         </div>
@@ -133,11 +134,19 @@
             type="submit"
             mat-flat-button
             class="me-4"
+            (click)="onSubmit($event)"
             [disabled]="!createInstitutionForm.valid"
           >
             Save and Continue <mat-spinner *ngIf="isBusy"> </mat-spinner>
           </button>
-          <button type="button" mat-stroked-button>Save and Add New</button>
+          <button
+            type="button"
+            mat-stroked-button
+            (click)="onSubmit($event)"
+            [disabled]="!createInstitutionForm.valid"
+          >
+            Save and Add New
+          </button>
         </div>
       </div>
     </form>
@@ -221,9 +230,13 @@
             formControlName="accountNumber"
             [ngClass]="{
               'is-invalid':
-                updateInstitutionForm.controls['accountNumber'].hasError(
+                (updateInstitutionForm.controls['accountNumber'].hasError(
                   'required'
-                ) && updateInstitutionForm.controls['accountNumber'].touched
+                ) &&
+                  updateInstitutionForm.controls['accountNumber'].touched) ||
+                updateInstitutionForm.controls['accountNumber'].hasError(
+                  'minlength'
+                )
             }"
           />
         </div>

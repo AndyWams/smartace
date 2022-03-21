@@ -28,6 +28,8 @@ import { commaFormatted, numberCheck } from 'src/app/portal/shared';
 })
 export class CreatePayElementComponent implements OnInit {
   @ViewChild('closebtn') closebtn: any;
+  @ViewChild('closebtn_') closebtn_: any;
+  @ViewChild('closebtn__') closebtn__: any;
   @ViewChild('allSelected') allSelected: any;
   @ViewChildren('options') _options: any;
   @ViewChild('matSelect') select: any;
@@ -39,6 +41,7 @@ export class CreatePayElementComponent implements OnInit {
   enumkey: any;
   enumKeys = [];
   taxTypes: any[] = [];
+  payrollItemList: any[] = [];
   payElementCats: any[] = [];
   payrollItem: string = 'default';
   _isChecked: boolean = false;
@@ -53,6 +56,7 @@ export class CreatePayElementComponent implements OnInit {
   numberCheck = numberCheck;
   public createPayElmForm: FormGroup = new FormGroup({});
   public createPayrollItemForm: FormGroup = new FormGroup({});
+  public createElementCatForm: FormGroup = new FormGroup({});
   public updatePayElementForm: FormGroup = new FormGroup({});
   constructor(
     private route: ActivatedRoute,
@@ -63,26 +67,29 @@ export class CreatePayElementComponent implements OnInit {
     private fb: FormBuilder
   ) {
     this.createPayElmForm = this.fb.group({
-      parollItem: [''],
+      payrollItemId: [''],
       payType: [1, Validators.required],
       payElementName: ['', Validators.required],
       payElementCategoryId: [''],
       elementType: [0, Validators.required],
-      earningType: [''],
-      amountPerHour: [''],
-      noOfWorkHours: [''],
+      earningType: [0],
+      amountPerHour: [0],
+      noOfWorkHours: [0],
       paymentMode: [1],
       payElementPercentage: [0],
       payElementLine: [],
       payElementAmount: [0],
       deductTax: [false],
-      taxId: [''],
-      taxValue: [0],
+      taxId: [null],
+      taxValue: [null],
       institutionId: ['', Validators.required],
     });
 
     this.createPayrollItemForm = this.fb.group({
-      parollItemName: ['', Validators.required],
+      payrollItemName: ['', Validators.required],
+    });
+    this.createElementCatForm = this.fb.group({
+      payElementCategoryName: ['', Validators.required],
     });
   }
 
@@ -94,6 +101,7 @@ export class CreatePayElementComponent implements OnInit {
     this.getEnums();
     this.getPayElementsCats();
     this.getTaxTypes();
+    this.getPayrollItems();
   }
   ngOnChanges() {}
   ngAfterViewinit() {}
@@ -106,6 +114,9 @@ export class CreatePayElementComponent implements OnInit {
   }
   get inputRawValue(): any {
     return this.createPayrollItemForm.getRawValue();
+  }
+  get catRawValue(): any {
+    return this.createElementCatForm.getRawValue();
   }
   get stripedObjValue() {
     if (this.payElements.length !== 0) {
@@ -190,11 +201,17 @@ export class CreatePayElementComponent implements OnInit {
           return throwError(err);
         })
       )
-      .subscribe((res) => {
-        const { result } = res;
-        this.payElements = result;
-        this.checkInputDisabled();
-      });
+      .subscribe(
+        (res) => {
+          const { result } = res;
+          this.payElements = result;
+        },
+        (error) => {
+          if (error) {
+            this.checkInputDisabled();
+          }
+        }
+      );
   }
   getEnums() {
     this.payrollServ
@@ -221,11 +238,23 @@ export class CreatePayElementComponent implements OnInit {
         this.taxTypes = result;
       });
   }
+  getPayrollItems() {
+    this.payrollServ
+      .fetchPayrollItems()
+      .pipe(
+        catchError((err: any): ObservableInput<any> => {
+          return throwError(err);
+        })
+      )
+      .subscribe((res) => {
+        const { result } = res;
+        this.payrollItemList = result;
+      });
+  }
+
   checkInputDisabled() {
-    if (this.payElements.length == 0) {
-      this.createPayElmForm.controls['payElementPercentage'].disable();
-      this.createPayElmForm.controls['payElementLine'].disable();
-    }
+    this.createPayElmForm.controls['payElementPercentage'].disable();
+    this.createPayElmForm.controls['payElementLine'].disable();
   }
   onSubmit() {
     if (this.createPayElmForm.controls['payElementLine'].value !== null) {
@@ -275,7 +304,7 @@ export class CreatePayElementComponent implements OnInit {
           this.toastr.success(message, 'Message');
           this.createPayrollItemForm.reset();
           this.closebtn._elementRef.nativeElement.click();
-          // this.getParollItems();
+          this.getPayrollItems();
         },
         (error) => {
           this.isBusy_ = false;
@@ -286,6 +315,29 @@ export class CreatePayElementComponent implements OnInit {
         () => {
           this.isBusy_ = false;
           this.createPayrollItemForm.reset();
+        }
+      );
+    }
+  }
+  onAddPayElementCat() {
+    this.isBusy_ = true;
+    if (this.createElementCatForm.valid) {
+      this.payrollServ.createPayElementCategory(this.catRawValue).subscribe(
+        ({ message }) => {
+          this.toastr.success(message, 'Message');
+          this.createElementCatForm.reset();
+          this.closebtn_._elementRef.nativeElement.click();
+          this.getPayElementsCats();
+        },
+        (error) => {
+          this.isBusy_ = false;
+          this.toastr.error(error, 'Message', {
+            timeOut: 3000,
+          });
+        },
+        () => {
+          this.isBusy_ = false;
+          this.createElementCatForm.reset();
         }
       );
     }
@@ -379,6 +431,7 @@ export class CreatePayElementComponent implements OnInit {
           this.isBusy_ = false;
           this.toastr.success(message, 'Success');
           this.router.navigate(['/portal/payroll/pay-elements']);
+          this.closebtn__._elementRef.nativeElement.click();
         });
     }
   }

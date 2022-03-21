@@ -136,13 +136,17 @@ export interface ITaxTypeList {
   sortOrder: number;
 }
 
-export interface IPayrollSettings {
+export interface ITaxSettings {
   isTaxEnable: boolean;
   taxId: string;
-  country: string;
-  state: string;
-  isPensionEnable: boolean;
-  pensionNumber: string;
-  isNHFEnable: boolean;
-  nhfNumber: string;
+  countryId: string;
+  stateId: string;
+}
+
+export interface IPaySchedule {
+  payScheduleName: string;
+  frequency: string;
+  date: string;
+  deadline: string;
+  payPeriod: boolean;
 }

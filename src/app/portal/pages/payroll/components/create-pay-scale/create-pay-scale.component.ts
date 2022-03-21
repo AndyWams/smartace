@@ -36,7 +36,6 @@ export class CreatePayScaleComponent implements OnInit {
   show_ref: boolean = false;
   itemDetails: any;
   enumkey: any;
-  enumKeys = [];
   _payscaleID: any;
   public createPayScaleForm: FormGroup = new FormGroup({});
   public updatePayScaleForm: FormGroup = new FormGroup({});
@@ -225,7 +224,6 @@ export class CreatePayScaleComponent implements OnInit {
         this.enumkey = res;
       });
   }
-
   onSubmit() {
     if (this.createPayScaleForm.controls['payScaleElements'].value !== null) {
       let ids = this.createPayScaleForm.controls['payScaleElements'].value
@@ -301,6 +299,8 @@ export class CreatePayScaleComponent implements OnInit {
         .subscribe((res) => {
           const { result } = res;
           this.itemDetails = result;
+          console.log(res);
+
           this.setFormControlElement();
         });
     }

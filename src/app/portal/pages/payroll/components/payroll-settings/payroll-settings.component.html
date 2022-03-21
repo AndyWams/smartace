@@ -29,13 +29,17 @@
               <mat-select
                 placeholder="Select country"
                 class="select"
-                formControlName="country"
+                formControlName="countryId"
               >
                 <mat-option disabled="" selected="" value="">
                   Select country
                 </mat-option>
-                <mat-option value="Nigeria">Nigeria</mat-option>
-                <mat-option value="Ghana">Ghana</mat-option>
+                <mat-option
+                  *ngFor="let item of countryList"
+                  [value]="item.countryId"
+                >
+                  {{ item.countryName }}
+                </mat-option>
               </mat-select>
             </div>
           </div>
@@ -45,27 +49,26 @@
               <mat-select
                 placeholder="Select state"
                 class="select"
-                formControlName="state"
+                formControlName="stateId"
               >
                 <mat-option disabled selected="" value="">
                   Select state
                 </mat-option>
-                <mat-option value="Lagos">Lagos</mat-option>
-                <mat-option value="Delta">Delta</mat-option>
+                <mat-option
+                  *ngFor="let item of stateList"
+                  [value]="item.stateId"
+                >
+                  {{ item.stateName }}
+                </mat-option>
               </mat-select>
             </div>
           </div>
           <div class="grid align-items-start">
-            <div class="d-flex align-items-center">
-              <button
-                type="button"
-                mat-icon-button
-                class="me-1"
-                (click)="addLocation()"
-              >
+            <div class="d-flex align-items-center" (click)="addLocation()">
+              <button type="button" mat-icon-button class="me-1">
                 <mat-icon class="btn--primary">add_circle</mat-icon>
               </button>
-              <label>Add Location</label>
+              <label class="cursor">Add Location</label>
             </div>
             <div class="d-flex flex-column">
               <div
@@ -112,25 +115,34 @@
     <mat-tab label="Pension">
       <ng-container *ngIf="screen == 1">
         <div class="form-wrap w--700">
-          <form>
+          <form [formGroup]="savePensionForm" (ngSubmit)="onSavePension()">
             <div class="grid align-items-center pb-4">
               <label>Enable Pension</label>
               <mat-slide-toggle
                 style="width: fit-content"
                 (change)="handleSlideToggle($event)"
+                formControlName="isPensionEnable"
               ></mat-slide-toggle>
             </div>
             <div class="grid align-items-center">
               <label>Pension Number</label>
               <div class="input mb-0">
-                <input type="text" placeholder="Enter pension number" />
+                <input
+                  type="text"
+                  placeholder="Enter pension number"
+                  formControlName="pensionNumber"
+                />
               </div>
             </div>
             <div class="grid align-items-center pt-4">
               <span>&nbsp;</span>
               <div class="d-flex justify-content-start">
-                <button type="button" mat-flat-button (click)="gotoView(2)">
-                  Save
+                <button
+                  type="submit"
+                  mat-flat-button
+                  [disabled]="!savePensionForm.valid"
+                >
+                  Save <mat-spinner *ngIf="isBusy"> </mat-spinner>
                 </button>
               </div>
             </div>
@@ -143,24 +155,35 @@
     </mat-tab>
     <mat-tab label="NHF">
       <div class="form-wrap w--700">
-        <form>
+        <form [formGroup]="saveNHFForm" (ngSubmit)="onSaveNHF()">
           <div class="grid align-items-center pb-4">
             <label>Enable NHF</label>
             <mat-slide-toggle
               style="width: fit-content"
               (change)="handleSlideToggle($event)"
+              formControlName="isNHFEnable"
             ></mat-slide-toggle>
           </div>
           <div class="grid align-items-center">
             <label>Company’s NHF Number</label>
             <div class="input mb-0">
-              <input type="text" placeholder="Enter NHF number" />
+              <input
+                type="text"
+                placeholder="Enter NHF number"
+                formControlName="nhfNumber"
+              />
             </div>
           </div>
           <div class="grid align-items-center pt-4">
             <span>&nbsp;</span>
             <div class="d-flex justify-content-start">
-              <button type="button" mat-flat-button>Save</button>
+              <button
+                type="submit"
+                mat-flat-button
+                [disabled]="!saveNHFForm.valid"
+              >
+                Save <mat-spinner *ngIf="isBusy"> </mat-spinner>
+              </button>
             </div>
           </div>
         </form>
@@ -177,23 +200,48 @@
     </mat-tab>
     <mat-tab label="Tax Setup">
       <div class="form-wrap w--700">
-        <form>
+        <form [formGroup]="createTaxForm" (ngSubmit)="onAddTax()">
           <div class="grid align-items-center">
             <label>Tax Name</label>
             <div class="input mb-0">
-              <input type="text" placeholder="Enter tax name" />
+              <input
+                type="text"
+                placeholder="Enter tax name"
+                formControlName="taxName"
+                [ngClass]="{
+                  'is-invalid':
+                    createTaxForm.controls['taxName'].hasError('required') &&
+                    createTaxForm.controls['taxName'].touched
+                }"
+              />
             </div>
           </div>
           <div class="grid align-items-center">
             <label> Tax Percentage (%)</label>
             <div class="input mb-0">
-              <input type="text" placeholder="Enter tax percentage" />
+              <input
+                type="number"
+                placeholder="Enter tax percentage"
+                formControlName="taxPercentage"
+                [ngClass]="{
+                  'is-invalid':
+                    createTaxForm.controls['taxPercentage'].hasError(
+                      'required'
+                    ) && createTaxForm.controls['taxPercentage'].touched
+                }"
+              />
             </div>
           </div>
           <div class="grid align-items-center pt-4">
             <span>&nbsp;</span>
             <div class="d-flex justify-content-start">
-              <button type="button" mat-flat-button>Save</button>
+              <button
+                type="submit"
+                mat-flat-button
+                [disabled]="!createTaxForm.valid"
+              >
+                Save <mat-spinner *ngIf="isBusy"> </mat-spinner>
+              </button>
             </div>
           </div>
         </form>

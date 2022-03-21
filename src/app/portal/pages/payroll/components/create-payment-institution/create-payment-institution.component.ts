@@ -41,7 +41,7 @@ export class CreatePaymentInstitutionComponent implements OnInit {
       institutionCategoryId: ['', Validators.required],
       institutionName: ['', Validators.required],
       accountName: ['', Validators.required],
-      accountNumber: ['', Validators.required],
+      accountNumber: ['', [Validators.required, Validators.minLength(10)]],
       bankId: ['', Validators.required],
     });
 
@@ -95,15 +95,16 @@ export class CreatePaymentInstitutionComponent implements OnInit {
         this.institutionCat = result;
       });
   }
-
-  onSubmit() {
+  onSubmit(evn) {
     this.isBusy = true;
     if (this.createInstitutionForm.valid) {
       this.payrollServ.createInstitution(this.value).subscribe(
         ({ message }) => {
           this.toastr.success(message, 'Message');
           this.createInstitutionForm.reset();
-          this.router.navigate(['/portal/payroll/institute-management']);
+          if (evn.srcElement.innerText == 'Save and Continue') {
+            this.router.navigate(['/portal/payroll/institute-management']);
+          }
         },
         (error) => {
           this.isBusy = false;
@@ -178,7 +179,7 @@ export class CreatePaymentInstitutionComponent implements OnInit {
   getItemDetails() {
     if (this.recordId !== undefined) {
       this.payrollServ
-        .fetchInstitutionDetails(this.recordId)
+        .fetchPayScaleDetails(this.recordId)
         .pipe(
           catchError((err: any): ObservableInput<any> => {
             return throwError(err);
@@ -200,7 +201,10 @@ export class CreatePaymentInstitutionComponent implements OnInit {
       institutionName: [this.itemDetails.institutionName, Validators.required],
       institutionId: [this.itemDetails.institutionId],
       accountName: [this.itemDetails.accountName, Validators.required],
-      accountNumber: [this.itemDetails.accountNumber, Validators.required],
+      accountNumber: [
+        this.itemDetails.accountNumber,
+        [Validators.required, Validators.minLength(10)],
+      ],
       bankId: [this.itemDetails.bankId, Validators.required],
     });
   }

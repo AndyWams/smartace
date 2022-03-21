@@ -46,6 +46,9 @@
     top: -1em;
     color: $red;
   }
+  .cursor {
+    cursor: pointer;
+  }
   .empty-state {
     .center {
       display: flex;

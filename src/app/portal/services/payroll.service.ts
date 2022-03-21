@@ -14,9 +14,10 @@ import {
   IPayElement,
   IPayElementCat,
   IPayElementList,
-  IPayrollSettings,
   IPayscale,
   IPayscaleList,
+  IPaySchedule,
+  ITaxSettings,
   ITaxType,
   ITaxTypeList,
 } from '../models';
@@ -34,7 +35,177 @@ export class PayrollService {
       }),
     };
   }
+  //Create Department
+  createDepartment(model: IDepartment): Observable<any> {
+    return this.http
+      .post<IDepartment>(
+        environment.apiBaseUrl + '/Department/Create',
+        model,
+        this.httpOptions
+      )
+      .pipe(
+        map((status) => status),
+        catchError(handleError)
+      );
+  }
 
+  //Create Employee
+  createEmployee(model: IEmployee): Observable<any> {
+    return this.http
+      .post<IEmployee>(
+        environment.apiBaseUrl + '/Employee/Create',
+        model,
+        this.httpOptions
+      )
+      .pipe(
+        map((status) => status),
+        catchError(handleError)
+      );
+  }
+
+  //Create Institution
+  createInstitution(model: IInstitution): Observable<any> {
+    return this.http
+      .post<IInstitution>(
+        environment.apiBaseUrl + '/Institution/Create',
+        model,
+        this.httpOptions
+      )
+      .pipe(
+        map((status) => status),
+        catchError(handleError)
+      );
+  }
+
+  //Create Institution Category
+  createInstitutionCat(model: IInstitutionCat): Observable<any> {
+    return this.http
+      .post<IInstitutionCat>(
+        environment.apiBaseUrl + '/InstitutionCategory/Create',
+        model,
+        this.httpOptions
+      )
+      .pipe(
+        map((status) => status),
+        catchError(handleError)
+      );
+  }
+  //Create Pay Element
+  createPayElement(model: IPayElement): Observable<any> {
+    return this.http
+      .post<IPayElement>(
+        environment.apiBaseUrl + '/PayElement/Create',
+        model,
+        this.httpOptions
+      )
+      .pipe(
+        map((status) => status),
+        catchError(handleError)
+      );
+  }
+  //Create Pay Element Category
+  createPayElementCategory(model: IPayElementCat): Observable<any> {
+    return this.http
+      .post<IPayElementCat>(
+        environment.apiBaseUrl + '/PayElementCategory/Create',
+        model,
+        this.httpOptions
+      )
+      .pipe(
+        map((status) => status),
+        catchError(handleError)
+      );
+  }
+
+  //Create Tax
+  createTax(model: any): Observable<any> {
+    return this.http
+      .post<any>(
+        environment.apiBaseUrl + '/Tax/Create',
+        model,
+        this.httpOptions
+      )
+      .pipe(
+        map((status) => status),
+        catchError(handleError)
+      );
+  }
+  //Create ParollItem
+  createParollItem(model: any): Observable<any> {
+    return this.http
+      .post<any>(
+        environment.apiBaseUrl + '/PayrollItem/Create',
+        model,
+        this.httpOptions
+      )
+      .pipe(
+        map((status) => status),
+        catchError(handleError)
+      );
+  }
+  //Create Payscale
+  createPayscale(model: IPayscale): Observable<any> {
+    return this.http
+      .post<IPayscale>(
+        environment.apiBaseUrl + '/PayScale/Create',
+        model,
+        this.httpOptions
+      )
+      .pipe(
+        map((status) => status),
+        catchError(handleError)
+      );
+  }
+  //Create Payschedule
+  createPaySchedule(model: IPaySchedule): Observable<any> {
+    return this.http
+      .post<IPaySchedule>(
+        environment.apiBaseUrl + '/PaySchedule/Create',
+        model,
+        this.httpOptions
+      )
+      .pipe(
+        map((status) => status),
+        catchError(handleError)
+      );
+  }
+
+  deleteInstitution(institutionId: string) {
+    return this.http.delete<any>(
+      environment.apiBaseUrl + `/Institution/Delete/${institutionId}`,
+      this.httpOptions
+    );
+  }
+  deletePayElement(id: string) {
+    return this.http.delete<any>(
+      environment.apiBaseUrl + `/PayElement/Delete/${id}`,
+      this.httpOptions
+    );
+  }
+  deletePayScale(id: string) {
+    return this.http.delete<any>(
+      environment.apiBaseUrl + `/PayScale/Delete/${id}`,
+      this.httpOptions
+    );
+  }
+  deleteTaxType(taxId: string) {
+    return this.http.delete<any>(
+      environment.apiBaseUrl + `/Tax/Delete/${taxId}`,
+      this.httpOptions
+    );
+  }
+  //Fetch Country
+  fetchCountries(): Observable<any> {
+    return this.http
+      .get<any>(environment.apiBaseUrl + '/Country/GetAll', this.httpOptions)
+      .pipe(catchError(handleError));
+  }
+  //Fetch State
+  fetchStates(): Observable<any> {
+    return this.http
+      .get<any>(environment.apiBaseUrl + '/State/GetAll', this.httpOptions)
+      .pipe(catchError(handleError));
+  }
   //Fetch AllBanks
   fetchAllBanks(): Observable<any> {
     return this.http
@@ -179,39 +350,31 @@ export class PayrollService {
       .pipe(catchError(handleError));
   }
 
-  //Create Department
-  createDepartment(model: IDepartment): Observable<any> {
+  //Fetch Tax Types
+  fetchSettingsDetails(): Observable<any> {
     return this.http
-      .post<IDepartment>(
-        environment.apiBaseUrl + '/Department/Create',
-        model,
+      .get<any>(
+        environment.apiBaseUrl + '/PayrollSettings/Details',
         this.httpOptions
       )
-      .pipe(
-        map((status) => status),
-        catchError(handleError)
-      );
+      .pipe(catchError(handleError));
   }
 
-  //Create Employee
-  createEmployee(model: IEmployee): Observable<any> {
+  //Fetch Payroll Items
+  fetchPayrollItems(): Observable<any> {
     return this.http
-      .post<IEmployee>(
-        environment.apiBaseUrl + '/Employee/Create',
-        model,
+      .get<any>(
+        environment.apiBaseUrl + '/PayrollItem/GetAll',
         this.httpOptions
       )
-      .pipe(
-        map((status) => status),
-        catchError(handleError)
-      );
+      .pipe(catchError(handleError));
   }
 
-  //Create Institution
-  createInstitution(model: IInstitution): Observable<any> {
+  //Save Tax
+  saveTax(model: ITaxSettings): Observable<any> {
     return this.http
-      .post<IInstitution>(
-        environment.apiBaseUrl + '/Institution/Create',
+      .post<ITaxSettings>(
+        environment.apiBaseUrl + '/PayrollSettings/SaveTax',
         model,
         this.httpOptions
       )
@@ -220,79 +383,11 @@ export class PayrollService {
         catchError(handleError)
       );
   }
-
-  //Create Institution Category
-  createInstitutionCat(model: IInstitutionCat): Observable<any> {
-    return this.http
-      .post<IInstitutionCat>(
-        environment.apiBaseUrl + '/InstitutionCategory/Create',
-        model,
-        this.httpOptions
-      )
-      .pipe(
-        map((status) => status),
-        catchError(handleError)
-      );
-  }
-  //Create Pay Element
-  createPayElement(model: IPayElement): Observable<any> {
-    return this.http
-      .post<IPayElement>(
-        environment.apiBaseUrl + '/PayElement/Create',
-        model,
-        this.httpOptions
-      )
-      .pipe(
-        map((status) => status),
-        catchError(handleError)
-      );
-  }
-
-  //Create Pay Element Category
-  createPayElementCategory(model: IPayElementCat): Observable<any> {
-    return this.http
-      .post<IPayElementCat>(
-        environment.apiBaseUrl + '/PayElementCategory/Create',
-        model,
-        this.httpOptions
-      )
-      .pipe(
-        map((status) => status),
-        catchError(handleError)
-      );
-  }
-
-  //Create ParollItem
-  createParollItem(model: any): Observable<any> {
+  //Save Tax
+  saveNHF(model: any): Observable<any> {
     return this.http
       .post<any>(
-        environment.apiBaseUrl + '/ParollItem/Create',
-        model,
-        this.httpOptions
-      )
-      .pipe(
-        map((status) => status),
-        catchError(handleError)
-      );
-  }
-  //Create Payscale
-  createPayscale(model: IPayscale): Observable<any> {
-    return this.http
-      .post<IPayscale>(
-        environment.apiBaseUrl + '/PayScale/Create',
-        model,
-        this.httpOptions
-      )
-      .pipe(
-        map((status) => status),
-        catchError(handleError)
-      );
-  }
-  //Save PayrollSettings
-  savePayrollSettings(model: IPayrollSettings): Observable<any> {
-    return this.http
-      .post<IPayrollSettings>(
-        environment.apiBaseUrl + '/PayrollSettings/Save',
+        environment.apiBaseUrl + '/PayrollSettings/SaveNHF',
         model,
         this.httpOptions
       )
@@ -302,31 +397,19 @@ export class PayrollService {
       );
   }
 
-  deleteInstitution(institutionId: string) {
-    return this.http.delete<any>(
-      environment.apiBaseUrl + `/Institution/Delete/${institutionId}`,
-      this.httpOptions
-    );
+  //Save Pension
+  savePension(model: any): Observable<any> {
+    return this.http
+      .post<any>(
+        environment.apiBaseUrl + '/PayrollSettings/SavePension',
+        model,
+        this.httpOptions
+      )
+      .pipe(
+        map((status) => status),
+        catchError(handleError)
+      );
   }
-  deletePayElement(id: string) {
-    return this.http.delete<any>(
-      environment.apiBaseUrl + `/PayElement/Delete/${id}`,
-      this.httpOptions
-    );
-  }
-  deletePayScale(id: string) {
-    return this.http.delete<any>(
-      environment.apiBaseUrl + `/PayScale/Delete/${id}`,
-      this.httpOptions
-    );
-  }
-  deleteTaxType(taxId: string) {
-    return this.http.delete<any>(
-      environment.apiBaseUrl + `/Tax/Delete/${taxId}`,
-      this.httpOptions
-    );
-  }
-
   //Update Institution
   updateInstitution(model: IInstitution): Observable<any> {
     return this.http
