@@ -70,7 +70,7 @@ export class CreatePayElementComponent implements OnInit {
       payrollItemId: [''],
       payType: [1, Validators.required],
       payElementName: ['', Validators.required],
-      payElementCategoryId: [''],
+      payElementCategoryId: [null],
       elementType: [0, Validators.required],
       earningType: [0],
       amountPerHour: [0],
@@ -262,6 +262,9 @@ export class CreatePayElementComponent implements OnInit {
         .filter((x: any) => x !== 0)
         .map((a: any) => {
           return {
+            amountPerHour: parseInt(
+              this.createPayElmForm.controls['amountPerHour'].value
+            ),
             payElementId: a.payElementId,
           };
         });
@@ -270,6 +273,7 @@ export class CreatePayElementComponent implements OnInit {
         payElementLine: ids,
       });
     }
+
     this.isBusy = true;
     if (this.createPayElmForm.invalid) {
       this.isBusy = false;

@@ -184,3 +184,21 @@ export const numberCheck = (args: any) => {
     return true;
   }
 };
+
+export const getFrequencyValue = (frequency: number) => {
+  let val: string = '';
+  switch (frequency) {
+    case (frequency = 1):
+      return (val = 'Daily');
+    case (frequency = 2):
+      return (val = 'Weekly');
+    case (frequency = 3):
+      return (val = 'Monthly');
+    case (frequency = 4):
+      return (val = 'BiAnnually');
+    case (frequency = 5):
+      return (val = 'Annually');
+    default:
+      return frequency;
+  }
+};

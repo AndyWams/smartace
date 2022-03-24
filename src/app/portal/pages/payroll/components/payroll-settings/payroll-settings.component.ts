@@ -101,7 +101,6 @@ export class PayrollSettingsComponent implements OnInit {
     this.locationValues.removeAt(index);
   }
   onSaveTax() {
-    console.log(this.taxFormValue);
     this.isBusy = true;
     if (this.saveTaxForm.invalid) {
       this.isBusy = false;

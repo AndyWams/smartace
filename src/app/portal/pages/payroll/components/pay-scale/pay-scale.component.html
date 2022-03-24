@@ -160,6 +160,9 @@
                     type="button"
                     mat-menu-item
                     [routerLink]="['/portal/payroll/view-payscale']"
+                    [queryParams]="{
+                      id: element['payScaleId']
+                    }"
                   >
                     View
                   </button>
@@ -192,7 +195,7 @@
           <ng-container *ngIf="disCol == 'pay Elements'">
             <td mat-cell *matCellDef="let element">
               <span *ngFor="let item of element['payScaleElements']">{{
-                item["payElement"] ? item["payElement"] : "---"
+                item["payElement"].payElementName
               }}</span>
             </td>
           </ng-container>

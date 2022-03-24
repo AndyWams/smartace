@@ -50,7 +50,7 @@ export class PayScaleComponent implements OnInit {
     this.displayedColumns = this.displayedColumns.concat(['action']);
   }
 
-  column = ['Name', 'pay Element', 'pay Frequency', 'no of Employees'];
+  column = ['Name', 'pay Elements', 'pay Frequency', 'no of Employees'];
   ngOnChanges() {}
   toggleCheck(event: any, index: any) {}
 

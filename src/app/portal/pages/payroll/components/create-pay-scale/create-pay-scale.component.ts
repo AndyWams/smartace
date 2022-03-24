@@ -27,6 +27,8 @@ export class CreatePayScaleComponent implements OnInit {
   payElementItems: any[] = [];
   employeeList: any[] = [];
   departmentList: any[] = [];
+  filteredPayElements: any[] = [];
+  filteredEmployee: any[] = [];
   pageSize: number = 10;
   currentPage: number = 1;
   emptyState: any;
@@ -73,6 +75,7 @@ export class CreatePayScaleComponent implements OnInit {
     this.displayedColumns = this.column;
   }
   column = ['Name', 'employee Id', 'department', 'employment Date'];
+  selected: any[] = [];
   ngOnChanges() {}
   get formRawValue(): any {
     return this.createPayScaleForm.getRawValue();
@@ -299,7 +302,20 @@ export class CreatePayScaleComponent implements OnInit {
         .subscribe((res) => {
           const { result } = res;
           this.itemDetails = result;
-          console.log(res);
+          this.filteredPayElements = this.itemDetails['payScaleElements'].map(
+            (x: any) => {
+              return {
+                payElementId: x.payElementId,
+              };
+            }
+          );
+          this.filteredEmployee = this.itemDetails['payScaleEmployees'].map(
+            (x: any) => {
+              return {
+                employeeId: x.employeeId,
+              };
+            }
+          );
 
           this.setFormControlElement();
         });
@@ -309,18 +325,44 @@ export class CreatePayScaleComponent implements OnInit {
     this.updatePayScaleForm = this.fb.group({
       payScaleName: [this.itemDetails.payScaleName, Validators.required],
       frequency: [this.itemDetails.frequency, Validators.required],
-      payScaleElements: [],
-      payScaleEmployees: [],
+      payScaleElements: [this.filteredPayElements],
+      payScaleEmployees: [this.filteredEmployee],
+      payScaleId: [this.itemDetails['payScaleId']],
     });
   }
   onUpdate() {
+    if (this.updatePayScaleForm.controls['payScaleElements'].value !== null) {
+      let ids = this.updatePayScaleForm.controls['payScaleElements'].value
+        .filter((x: any) => x !== 0)
+        .map((a: any) => {
+          return {
+            payElementId: a.payElementId,
+          };
+        });
+      this.updatePayScaleForm.patchValue({
+        payScaleElements: ids,
+      });
+    }
+    if (this.selection.selected.length !== 0) {
+      let empIds = this.selection.selected
+        .filter((x: any) => x !== undefined)
+        .map((a: any) => {
+          return {
+            employeeId: a.employeeId,
+          };
+        });
+      this.updatePayScaleForm.patchValue({
+        payScaleEmployees: empIds,
+      });
+    }
+
     this.isBusy = true;
     if (this.updatePayScaleForm.valid) {
       this.payrollServ.updatePayscale(this.value_).subscribe(
         ({ message }) => {
           this.toastr.success(message, 'Message');
           this.updatePayScaleForm.reset();
-          this.router.navigate(['/portal/payroll/pay-elements']);
+          this.router.navigate(['/portal/payroll/pay-scale']);
         },
         (error) => {
           this.isBusy = false;
