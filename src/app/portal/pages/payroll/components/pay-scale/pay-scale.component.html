@@ -194,9 +194,11 @@
           <!--Table  Row Content-->
           <ng-container *ngIf="disCol == 'pay Elements'">
             <td mat-cell *matCellDef="let element">
-              <span *ngFor="let item of element['payScaleElements']">{{
-                item["payElement"].payElementName
-              }}</span>
+              <span
+                *ngFor="let item of element['payScaleElements']"
+                class="me-2"
+                >{{ item["payElement"].payElementName }},</span
+              >
             </td>
           </ng-container>
           <ng-container *ngIf="disCol == 'pay Frequency'">
@@ -206,7 +208,7 @@
           </ng-container>
           <ng-container *ngIf="disCol == 'no of Employees'">
             <td mat-cell *matCellDef="let element">
-              <span>{{ element["payScaleEmployees"].length }}</span>
+              <span>{{ element["totalEmployees"] }}</span>
             </td>
           </ng-container>
           <td mat-cell *matCellDef="let element">

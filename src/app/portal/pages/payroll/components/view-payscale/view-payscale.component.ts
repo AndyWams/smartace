@@ -52,7 +52,6 @@ export class ViewPayscaleComponent implements OnInit {
   column = ['Name', 'employee Id', 'department', 'employment Date'];
   ngOnInit(): void {
     this.getRoutes();
-    this.getEmployees();
     this.getItemDetails();
     this.getDepartments();
     this.displayedColumns = this.column;
@@ -98,37 +97,13 @@ export class ViewPayscaleComponent implements OnInit {
         )
         .subscribe((res) => {
           const { result } = res;
+          const { payScaleEmployees } = result;
           this.itemDetails = result;
-        });
-    }
-  }
-  getEmployees() {
-    let model = {
-      pageSize: this.pageSize,
-      pageNumber: this.currentPage,
-      search: '',
-      sortColumn: '',
-      sortOrder: 1,
-    };
-    this.payrollServ
-      .fetchAllEmployees(model)
-      .pipe(
-        catchError((err: any): ObservableInput<any> => {
-          return throwError(err);
-        })
-      )
-      .subscribe(
-        (res) => {
-          const { result } = res;
-          const { data, pagination } = result;
-          this.employeeList = data;
+          this.employeeList = payScaleEmployees;
           this.dataSource = new MatTableDataSource(this.employeeList);
           this.dataSource.paginator = this.paginator;
-        },
-        (errors) => {
-          this.emptyState = errors;
-        }
-      );
+        });
+    }
   }
   getRoutes() {
     this.route.queryParams

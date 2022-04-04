@@ -179,7 +179,7 @@ export class CreatePaymentInstitutionComponent implements OnInit {
   getItemDetails() {
     if (this.recordId !== undefined) {
       this.payrollServ
-        .fetchPayScaleDetails(this.recordId)
+        .fetchInstitutionDetails(this.recordId)
         .pipe(
           catchError((err: any): ObservableInput<any> => {
             return throwError(err);

@@ -191,9 +191,7 @@
           <!--Table  Row Content-->
           <ng-container *ngIf="disCol == 'pay Type'">
             <td mat-cell *matCellDef="let element">
-              <span>{{
-                element["payType"] == 1 ? "Monthly" : "Time-Shift"
-              }}</span>
+              <span>{{ element["payTypeName"] }}</span>
             </td>
           </ng-container>
           <ng-container *ngIf="disCol == 'element Name'">
@@ -204,8 +202,8 @@
           <ng-container *ngIf="disCol == 'element Category'">
             <td mat-cell *matCellDef="let element">
               <span>{{
-                element["payElementCategory"]
-                  ? element["payElementCategory"].payElementCategoryName
+                element["payElementCategoryName"]
+                  ? element["payElementCategoryName"]
                   : "-----"
               }}</span>
             </td>
@@ -219,9 +217,7 @@
           </ng-container>
           <ng-container *ngIf="disCol == 'institution'">
             <td mat-cell *matCellDef="let element">
-              <span>{{
-                element[concatColumnString(disCol)].institutionName
-              }}</span>
+              <span>{{ element["institutionName"] }}</span>
             </td>
           </ng-container>
           <ng-container *ngIf="disCol == 'amount'">
@@ -418,9 +414,7 @@
                 >
                 <label>Pay Type </label>
                 <label
-                  ><span>{{
-                    itemDetails["payType"] == 1 ? "Monthly" : "Time-Shift"
-                  }}</span></label
+                  ><span>{{ itemDetails["payTypeName"] }}</span></label
                 >
                 <label>Element Name </label>
                 <label
@@ -428,9 +422,7 @@
                 >
                 <label>Element Type </label>
                 <label
-                  ><span>{{
-                    itemDetails["elementType"] == 1 ? "Earnings" : "Deductions"
-                  }}</span></label
+                  ><span>{{ itemDetails["elementTypeName"] }}</span></label
                 >
                 <label>Element Category </label>
                 <label
@@ -464,9 +456,19 @@
                   ><span>{{ itemDetails.payElementPercentage }}%</span></label
                 >
                 <label>Pay Element </label>
-                <label
-                  ><span>{{ itemDetails.payElementLine.length }}</span></label
+                <ng-container *ngIf="itemDetails['payElementLine'].length == 0"
+                  >----</ng-container
                 >
+                <ng-container *ngIf="itemDetails['payElementLine'].length">
+                  <div
+                    class="d-flex align-items-center"
+                    style="flex-wrap: wrap"
+                  >
+                    <span *ngFor="let item of itemDetails['payElementLine']"
+                      >{{ item["payElement"].payElementName }},</span
+                    >
+                  </div>
+                </ng-container>
                 <label>Taxable </label>
                 <label
                   ><span>{{

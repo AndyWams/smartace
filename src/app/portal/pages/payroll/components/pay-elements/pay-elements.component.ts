@@ -56,7 +56,6 @@ export class PayElementsComponent implements OnInit {
     this.getPaymentInstitution();
     this.getPayElementsCats();
     this.displayedColumns = this.column;
-    this.displayedColumns = this.displayedColumns.concat(['action']);
   }
 
   column = [
@@ -67,6 +66,7 @@ export class PayElementsComponent implements OnInit {
     'element Type',
     'amount',
     'institution',
+    'action',
   ];
   ngOnChanges() {
     this.getPayElements();

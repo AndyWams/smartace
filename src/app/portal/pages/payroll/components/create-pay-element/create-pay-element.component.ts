@@ -31,18 +31,18 @@ export class CreatePayElementComponent implements OnInit {
   @ViewChild('closebtn_') closebtn_: any;
   @ViewChild('closebtn__') closebtn__: any;
   @ViewChild('allSelected') allSelected: any;
-  @ViewChildren('options') _options: any;
+  // @ViewChildren('options') _options: any;
   @ViewChild('matSelect') select: any;
   queryString: string = '';
   predefinedPaymentMode: number = 1;
   taxMode: string = 'default';
   payType: number = 1;
-  _elementType: any;
   enumkey: any;
   enumKeys = [];
   taxTypes: any[] = [];
   payrollItemList: any[] = [];
   payElementCats: any[] = [];
+  filteredPayElements: any[] = [];
   payrollItem: string = 'default';
   _isChecked: boolean = false;
   isBusy: boolean = false;
@@ -166,6 +166,7 @@ export class CreatePayElementComponent implements OnInit {
     if (this.select.value.length == this.payElements.length) {
       this.allSelected.select();
     }
+    console.log(this.select);
   }
   getPaymentInstitution() {
     this.payrollServ
@@ -257,22 +258,37 @@ export class CreatePayElementComponent implements OnInit {
     this.createPayElmForm.controls['payElementLine'].disable();
   }
   onSubmit() {
+    let ids: any;
     if (this.createPayElmForm.controls['payElementLine'].value !== null) {
-      let ids = this.createPayElmForm.controls['payElementLine'].value
+      ids = this.createPayElmForm.controls['payElementLine'].value
         .filter((x: any) => x !== 0)
         .map((a: any) => {
           return {
-            amountPerHour: parseInt(
-              this.createPayElmForm.controls['amountPerHour'].value
-            ),
             payElementId: a.payElementId,
+            payElement: {
+              payElementName:
+                this.createPayElmForm.controls['payElementName'].value,
+              payElementAmount:
+                this.createPayElmForm.controls['payElementAmount'].value,
+            },
           };
         });
-      this.createPayElmForm.patchValue({
-        deductTax: true,
-        payElementLine: ids,
-      });
     }
+    this.createPayElmForm.patchValue({
+      amountPerHour: parseFloat(
+        `${this.createPayElmForm.controls['amountPerHour'].value}`.replace(
+          /,/g,
+          ''
+        )
+      ),
+      payElementAmount: parseFloat(
+        `${this.createPayElmForm.controls['payElementAmount'].value}`.replace(
+          /,/g,
+          ''
+        )
+      ),
+      payElementLine: ids,
+    });
 
     this.isBusy = true;
     if (this.createPayElmForm.invalid) {
@@ -369,6 +385,13 @@ export class CreatePayElementComponent implements OnInit {
         .subscribe((res) => {
           const { result } = res;
           this.itemDetails = result;
+          this.filteredPayElements = this.itemDetails['payElementLine'].map(
+            (x: any) => {
+              return {
+                payElementId: x.payElementId,
+              };
+            }
+          );
           this.setFormControlElement();
         });
     }
@@ -379,18 +402,24 @@ export class CreatePayElementComponent implements OnInit {
     } else {
       this._isChecked = false;
     }
+    if (this.itemDetails['paymentMode'] == 2) {
+      this.predefinedPaymentMode = 2;
+    } else {
+      this.predefinedPaymentMode = 1;
+    }
+
     this.updatePayElementForm = this.fb.group({
-      parollItem: [''],
+      payrollItemId: [this.itemDetails.payrollItemId],
       payType: [this.itemDetails.payType, Validators.required],
       payElementName: [this.itemDetails.payElementName, Validators.required],
       payElementCategoryId: [this.itemDetails.payElementCategoryId],
       elementType: [this.itemDetails.elementType, Validators.required],
-      earningType: [''],
-      amountPerHour: [''],
-      noOfWorkHours: [''],
+      earningType: [this.itemDetails.earningType],
+      amountPerHour: [this.itemDetails.amountPerHour],
+      noOfWorkHours: [this.itemDetails.noOfWorkHours],
       paymentMode: [this.itemDetails.paymentMode],
       payElementPercentage: [this.itemDetails.payElementPercentage],
-      payElementLine: [],
+      payElementLine: [this.filteredPayElements],
       payElementAmount: [this.itemDetails.payElementAmount],
       deductTax: [this.itemDetails.deductTax],
       taxId: [this.itemDetails.taxId],
@@ -400,6 +429,20 @@ export class CreatePayElementComponent implements OnInit {
     });
   }
   onUpdate() {
+    this.updatePayElementForm.patchValue({
+      amountPerHour: parseFloat(
+        `${this.updatePayElementForm.controls['amountPerHour'].value}`.replace(
+          /,/g,
+          ''
+        )
+      ),
+      payElementAmount: parseFloat(
+        `${this.updatePayElementForm.controls['payElementAmount'].value}`.replace(
+          /,/g,
+          ''
+        )
+      ),
+    });
     this.isBusy = true;
     if (this.updatePayElementForm.valid) {
       this.payrollServ.updatePayElement(this.value_).subscribe(

@@ -42,8 +42,8 @@
           >
             <mat-select-trigger>
               {{ payElementItems ? stripedObjValue : "" }}
-              <span class="more" *ngIf="payElements.length > 2">
-                +{{ payElementItems.slice(0, 2).length - 1 }} other item
+              <span class="more" *ngIf="payElementItems.length > 2">
+                +{{ payElementItems.length - 2 }} other item
               </span>
             </mat-select-trigger>
             <mat-option #allSelected (click)="toggleAllSelection()" [value]="0"
@@ -133,8 +133,8 @@
           >
             <mat-select-trigger>
               {{ payElementItems ? stripedObjValue : "" }}
-              <span class="more" *ngIf="payElements.length > 2">
-                +{{ payElementItems.slice(0, 2).length - 1 }} other item
+              <span class="more" *ngIf="payElementItems.length > 2">
+                +{{ payElementItems.length - 2 }} other item
               </span>
             </mat-select-trigger>
             <mat-option #allSelected (click)="toggleAllSelection()" [value]="0"
@@ -201,7 +201,14 @@
       >No record found! Please create a record.</span
     >
   </div>
-  <ng-container *ngIf="employeeList.length === 0 && !emptyState">
+  <ng-container
+    *ngIf="employeeList.length === 0 && !emptyState && queryString === 'edit'"
+  >
+    <app-loading-roller></app-loading-roller>
+  </ng-container>
+  <ng-container
+    *ngIf="employeeList.length === 0 && !emptyState && queryString === 'add'"
+  >
     <app-loading-roller></app-loading-roller>
   </ng-container>
   <!--Table Content-->
@@ -210,7 +217,7 @@
     [ngClass]="{ hide: employeeList.length == 0 }"
   >
     <div class="table-wrapper tbl-wrap">
-      <ng-container *ngIf="employeeList.length">
+      <ng-container *ngIf="employeeList.length && queryString === 'add'">
         <!--Table Toolbar Header-->
         <div class="toolbar mb-5 adjust-wrap">
           <div
@@ -339,7 +346,7 @@
                   [checked]="selection.isSelected(element)"
                 >
                   <span
-                    >{{ element["firstName"] }} {{ element["lastName"] }}</span
+                    >{{ element["firstName"] }} {{ element["firstName"] }}</span
                   >
                 </mat-checkbox>
               </td>
@@ -348,6 +355,15 @@
               <td mat-cell *matCellDef="let element">
                 <span>{{
                   element["employeeNo"] ? element["employeeNo"] : "----"
+                }}</span>
+              </td>
+            </ng-container>
+            <ng-container *ngIf="disCol == 'department'">
+              <td mat-cell *matCellDef="let element">
+                <span>{{
+                  element["department"].departmentName
+                    ? element["department"].departmentName
+                    : "----"
                 }}</span>
               </td>
             </ng-container>
@@ -360,10 +376,186 @@
                 }}</span>
               </td>
             </ng-container>
+            <td mat-cell *matCellDef="let element">
+              <span> {{ element[concatColumnString(disCol)] }}</span>
+            </td>
+          </ng-container>
+          <!--Mat-table  configurations-->
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns"
+            [ngClass]="{
+              'bg-wrap': selection.isSelected(row)
+            }"
+          ></tr>
+          <!-- Row shown when there is no matching data. -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">
+              No data matching the search item: "{{ input.value }}"
+            </td>
+          </tr>
+        </table>
+      </ng-container>
+      <ng-container *ngIf="employeeList.length && queryString === 'edit'">
+        <!--Table Toolbar Header-->
+        <div class="toolbar mb-5 adjust-wrap">
+          <div
+            class="d-flex align-items-center justify-content-start adjust-flex"
+          >
+            <div
+              class="d-flex align-items-center mr-1"
+              style="width: fit-content"
+            >
+              <!-- Master Checkbox-->
+              <mat-checkbox
+                (change)="$event ? masterToggle() : null"
+                [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()"
+                [aria-label]="checkboxLabel()"
+              >
+              </mat-checkbox>
+              <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item>
+                  <span>Option One</span>
+                </button>
+                <button mat-menu-item>
+                  <span>Option Two</span>
+                </button>
+              </mat-menu>
+            </div>
+            <div class="search-input mr-1">
+              <span><mat-icon>search</mat-icon></span>
+              <input
+                type="text"
+                placeholder="Search"
+                (keyup)="applyFilter($event)"
+                #input
+              />
+            </div>
+            <!-- Employee  Filter-->
+            <!-- <div>
+              <button
+                mat-stroked-button
+                class="mat-stroked-secondary mr-1"
+                data-bs-toggle="modal"
+                data-bs-target="#employeeFilterBy"
+              >
+                Filter <ion-icon name="options" class="mx-3"></ion-icon>
+              </button>
+            </div> -->
+            <!-- Sort by -->
+            <div class="d-flex align-items-center mr-1">
+              <label class="me-3">Sort by</label>
+              <button
+                mat-stroked-button
+                class="mat-stroked-secondary"
+                [matMenuTriggerFor]="sortby"
+              >
+                Most recent
+                <mat-icon class="ms-2">keyboard_arrow_down</mat-icon>
+              </button>
+              <mat-menu #sortby="matMenu">
+                <button mat-menu-item>
+                  <span>Option One</span>
+                </button>
+                <button mat-menu-item>
+                  <span>Option Two</span>
+                </button>
+              </mat-menu>
+            </div>
+            <div class="mr-1" *ngIf="queryString == 'edit'">
+              <button mat-flat-button class="btn-danger">
+                Remove Employee
+              </button>
+            </div>
+            <!--  Bulk upload-->
+            <div>
+              <button
+                mat-stroked-button
+                class="mat-stroked-primary mat-stroked-secondary"
+                data-bs-toggle="modal"
+                data-bs-target="#bulkUpload"
+              >
+                <mat-icon class="me-3">file_upload</mat-icon>
+                Bulk Upload
+              </button>
+            </div>
+            <div>
+              <button
+                mat-mini-fab
+                class="mx-2"
+                color="primary"
+                *ngIf="show_ref"
+                matTooltip="Refresh List"
+                (click)="getEmployees()"
+              >
+                <mat-icon>refresh</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!--Table Layout-->
+        <table
+          mat-table
+          [dataSource]="dataSource"
+          class="table custom-table w--100"
+          style="width: 100%"
+        >
+          <ng-container
+            *ngFor="
+              let disCol of displayedColumns;
+              let colIndex = index;
+              let last = last
+            "
+            [matColumnDef]="disCol"
+          >
+            <th mat-header-cell *matHeaderCellDef>
+              {{ disCol }}
+            </th>
+            <!--Table  Row Content-->
+            <ng-container *ngIf="colIndex === 0">
+              <td *matCellDef="let element">
+                <mat-checkbox
+                  [value]="element"
+                  (click)="$event.stopPropagation()"
+                  (change)="$event ? selection.toggle(element) : null"
+                  [checked]="selection.isSelected(element)"
+                >
+                  <span
+                    >{{ element["employee"].firstName }}
+                    {{ element["employee"].lastName }}</span
+                  >
+                </mat-checkbox>
+              </td>
+            </ng-container>
+            <ng-container *ngIf="disCol == 'employee Id'">
+              <td mat-cell *matCellDef="let element">
+                <span>{{
+                  element["employee"].employeeNo
+                    ? element["employee"].employeeNo
+                    : "----"
+                }}</span>
+              </td>
+            </ng-container>
             <ng-container *ngIf="disCol == 'department'">
               <td mat-cell *matCellDef="let element">
                 <span>{{
-                  element[concatColumnString(disCol)].departmentName
+                  element["employee"].department.departmentName
+                    ? element["employee"].department.departmentName
+                    : "----"
+                }}</span>
+              </td>
+            </ng-container>
+            <ng-container *ngIf="disCol == 'employment Date'">
+              <td mat-cell *matCellDef="let element">
+                <span>{{
+                  element["employee"].employementDate
+                    ? (element["employee"].employementDate | date: "mediumDate")
+                    : "----"
                 }}</span>
               </td>
             </ng-container>
