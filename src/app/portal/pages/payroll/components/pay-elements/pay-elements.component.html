@@ -136,10 +136,7 @@
               <mat-checkbox
                 [value]="element"
                 (click)="$event.stopPropagation()"
-                (change)="
-                  $event ? selection.toggle(element) : null;
-                  toggleCheck($event, i)
-                "
+                (change)="$event ? selection.toggle(element) : null"
                 [checked]="selection.isSelected(element)"
               >
                 <span>{{ element["payElementName"] }}</span>

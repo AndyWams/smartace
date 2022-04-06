@@ -5,7 +5,7 @@
       mat-stroked-button
       class="me-3"
       (click)="gotoView('next')"
-      *ngIf="screen == 2"
+      *ngIf="payScheduleList.length !== 0 && screen == 2"
     >
       Assign Pay Schedule
     </button>
@@ -13,21 +13,13 @@
       mat-flat-button
       data-bs-toggle="modal"
       data-bs-target="#createPaySchedule"
-      *ngIf="screen == 2 || screen === 3"
+      *ngIf="payScheduleList.length !== 0 || screen === 3"
     >
       Add New
     </button>
   </div>
 </div>
-<div class="d-flex align-items-center mb-4" *ngIf="screen == 3">
-  <button mat-button (click)="gotoView('prev')">
-    <span class="icon-circ me-3"
-      ><mat-icon mat-icon-button>arrow_back</mat-icon></span
-    >
-    Back
-  </button>
-</div>
-<div class="bg-white" *ngIf="screen == 1">
+<div class="bg-white" *ngIf="emptyState">
   <div class="empty-state">
     <div class="center">
       <label>
@@ -46,51 +38,19 @@
     </div>
   </div>
 </div>
-<div class="bg-white" *ngIf="screen == 3">
-  <div class="title-sm">Assign Pay Schedule</div>
-  <form>
-    <div class="form-wrap">
-      <mat-radio-group aria-label="Select an option">
-        <div class="grid grid-four-alt mt-5">
-          <div
-            class="radio-item"
-            *ngFor="let item of _scheduleOption; let i = index"
-            #radioItem
-          >
-            <label
-              >{{ item.title }} <span>{{ item.subTitle }}</span></label
-            >
-            <mat-radio-button
-              class="custom mt-auto"
-              [value]="item.value"
-              (change)="handdleScheduleToggle($event, i)"
-              [id]="item.value"
-            ></mat-radio-button>
-          </div>
-        </div>
-      </mat-radio-group>
-    </div>
-  </form>
-</div>
-<ng-container *ngIf="screen == 2">
-  <app-table [_data]="data" _identifier="PAYSCHEDULE"></app-table>
-</ng-container>
 
-<div
-  class="d-flex justify-content-center align-items-center my-3 empty-state"
-  *ngIf="emptyState"
->
-  <span class="txt-grey txt-md">No record found! Please create a record.</span>
-</div>
-<!-- <ng-container *ngIf="payScheduleList.length === 0 && !emptyState">
+<ng-container *ngIf="payScheduleList.length === 0 && !emptyState">
   <app-loading-roller></app-loading-roller>
-</ng-container> -->
+</ng-container>
 <div
   class="overflow--wrap _visible"
   [ngClass]="{ hide: payScheduleList.length == 0 }"
 >
-  <div class="table-wrapper tbl-wrap">
-    <ng-container *ngIf="payScheduleList.length !== 0">
+  <div
+    class="table-wrapper tbl-wrap _visble"
+    [ngClass]="{ hide: screen !== 2 }"
+  >
+    <ng-container *ngIf="payScheduleList.length !== 0 && screen == 2">
       <div class="toolbar mb-5 adjust-wrap">
         <div
           class="d-flex align-items-center justify-content-start adjust-flex"
@@ -204,97 +164,40 @@
               <mat-checkbox
                 [value]="element"
                 (click)="$event.stopPropagation()"
-                (change)="
-                  $event ? selection.toggle(element) : null;
-                  toggleCheck($event, i)
-                "
+                (change)="$event ? selection.toggle(element) : null"
                 [checked]="selection.isSelected(element)"
               >
-                <span>{{ element["payElementName"] }}</span>
+                <span>{{ element["payScheduleName"] }}</span>
               </mat-checkbox>
             </td>
           </ng-container>
           <!--Action Column-->
           <ng-container *ngIf="last">
             <td mat-cell *matCellDef="let element">
-              <div class="dropdown">
-                <span class="dropdown-toggle" [matMenuTriggerFor]="menu">
-                  <ion-icon name="ellipsis-horizontal"></ion-icon>
-                </span>
-                <mat-menu #menu="matMenu">
-                  <button
-                    type="button"
-                    mat-menu-item
-                    data-bs-toggle="modal"
-                    data-bs-target="#viewPayElement"
-                    (click)="getItemDetails(element['payElementId'])"
-                  >
-                    View
-                  </button>
-                  <button
-                    mat-menu-item
-                    [routerLink]="['/portal/payroll/pay-element-setup']"
-                    [queryParams]="{
-                      query: 'edit',
-                      id: element['payElementId']
-                    }"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    type="button"
-                    mat-menu-item
-                    class="txt-danger"
-                    data-bs-toggle="modal"
-                    data-bs-target="#deletePayElement"
-                    (click)="getItemDetails(element['payElementId'])"
-                  >
-                    Delete
-                  </button>
-                </mat-menu>
-              </div>
+              <button
+                type="button"
+                mat-button
+                class="btn-link"
+                data-bs-toggle="modal"
+                data-bs-target="#editPayschedule"
+                (click)="getItemDetails(element['payScheduleId'])"
+              >
+                Edit
+              </button>
             </td>
           </ng-container>
 
           <!--Table  Row Content-->
-          <ng-container *ngIf="disCol == 'pay Type'">
+          <ng-container *ngIf="disCol == 'pay Frequency'">
             <td mat-cell *matCellDef="let element">
               <span>{{
-                element["payType"] == 1 ? "Monthly" : "Time-Shift"
+                element["payFrequency"] ? element["payFrequency"] : "----"
               }}</span>
             </td>
           </ng-container>
-          <ng-container *ngIf="disCol == 'element Name'">
+          <ng-container *ngIf="disCol == 'pay Date'">
             <td mat-cell *matCellDef="let element">
-              <span>{{ element["payElementName"] }}</span>
-            </td>
-          </ng-container>
-          <ng-container *ngIf="disCol == 'element Category'">
-            <td mat-cell *matCellDef="let element">
-              <span>{{
-                element["payElementCategory"].payElementCategoryName
-              }}</span>
-            </td>
-          </ng-container>
-          <ng-container *ngIf="disCol == 'element Type'">
-            <td mat-cell *matCellDef="let element">
-              <span>{{
-                element["elementType"] == 1 ? "Earnings" : "Deductions"
-              }}</span>
-            </td>
-          </ng-container>
-          <ng-container *ngIf="disCol == 'institution'">
-            <td mat-cell *matCellDef="let element">
-              <span>{{
-                element[concatColumnString(disCol)].institutionName
-              }}</span>
-            </td>
-          </ng-container>
-          <ng-container *ngIf="disCol == 'amount'">
-            <td mat-cell *matCellDef="let element">
-              <span>{{
-                element["payElementAmount"] | currency: "₦":"symbol"
-              }}</span>
+              <span>{{ element["payDate"] | date: "mediumDate" }}</span>
             </td>
           </ng-container>
           <td mat-cell *matCellDef="let element">
@@ -320,10 +223,48 @@
         </tr>
       </table>
     </ng-container>
-    <mat-paginator showFirstLastButtons [pageSize]="pageSize"></mat-paginator>
+    <mat-paginator
+      showFirstLastButtons
+      [pageSize]="pageSize"
+      class="_visble"
+      [ngClass]="{ hide: screen == 3 }"
+    ></mat-paginator>
   </div>
 </div>
-
+<div class="d-flex align-items-center mb-4" *ngIf="screen == 3">
+  <button mat-button (click)="gotoView('prev')">
+    <span class="icon-circ me-3"
+      ><mat-icon mat-icon-button>arrow_back</mat-icon></span
+    >
+    Back
+  </button>
+</div>
+<div class="bg-white" *ngIf="screen == 3">
+  <div class="title-sm">Assign Pay Schedule</div>
+  <form>
+    <div class="form-wrap">
+      <mat-radio-group aria-label="Select an option">
+        <div class="grid grid-four-alt mt-5">
+          <div
+            class="radio-item"
+            *ngFor="let item of _scheduleOption; let i = index"
+            #radioItem
+          >
+            <label
+              >{{ item.title }} <span>{{ item.subTitle }}</span></label
+            >
+            <mat-radio-button
+              class="custom mt-auto"
+              [value]="item.value"
+              (change)="handdleScheduleToggle($event, i)"
+              [id]="item.value"
+            ></mat-radio-button>
+          </div>
+        </div>
+      </mat-radio-group>
+    </div>
+  </form>
+</div>
 <div class="modal fade" id="createPaySchedule" role="dialog">
   <div class="modal-dialog modal-wrapper">
     <div class="modal-content-wrap">
@@ -357,6 +298,29 @@
                 />
               </div>
               <div class="input">
+                <label>Pay Type</label>
+                <mat-select
+                  placeholder="Select pay type"
+                  class="select"
+                  formControlName="payType"
+                  [ngClass]="{
+                    'is-invalid':
+                      createPaySheduleForm.controls['payType'].hasError(
+                        'required'
+                      ) && createPaySheduleForm.controls['payType'].touched
+                  }"
+                >
+                  <mat-option disabled="" selected="" value="">
+                    Select pay type
+                  </mat-option>
+                  <mat-option
+                    *ngFor="let type of enumkey?.payType"
+                    [value]="type.value"
+                    >{{ type.text }}</mat-option
+                  >
+                </mat-select>
+              </div>
+              <div class="input">
                 <label>Pay Frequency</label>
                 <mat-select
                   placeholder="Select pay frequency"
@@ -380,15 +344,28 @@
                 </mat-select>
               </div>
               <div class="input">
-                <label>Day of the Month</label>
+                <label>Start Date</label>
                 <input
                   type="date"
-                  formControlName="date"
+                  formControlName="startDate"
                   [ngClass]="{
                     'is-invalid':
-                      createPaySheduleForm.controls['date'].hasError(
+                      createPaySheduleForm.controls['startDate'].hasError(
                         'required'
-                      ) && createPaySheduleForm.controls['date'].touched
+                      ) && createPaySheduleForm.controls['startDate'].touched
+                  }"
+                />
+              </div>
+              <div class="input">
+                <label>End Date</label>
+                <input
+                  type="date"
+                  formControlName="endDate"
+                  [ngClass]="{
+                    'is-invalid':
+                      createPaySheduleForm.controls['endDate'].hasError(
+                        'required'
+                      ) && createPaySheduleForm.controls['endDate'].touched
                   }"
                 />
               </div>
@@ -396,31 +373,31 @@
                 <label>Deadline to run Payroll</label>
                 <input
                   type="date"
-                  formControlName="deadline"
+                  formControlName="deadlineDate"
                   [ngClass]="{
                     'is-invalid':
-                      createPaySheduleForm.controls['deadline'].hasError(
+                      createPaySheduleForm.controls['deadlineDate'].hasError(
                         'required'
-                      ) && createPaySheduleForm.controls['deadline'].touched
+                      ) && createPaySheduleForm.controls['deadlineDate'].touched
                   }"
                 />
               </div>
               <div class="input">
-                <label>Pay Period</label>
+                <label>Pay Date</label>
                 <input
                   type="date"
-                  formControlName="payPeriod"
+                  formControlName="payDate"
                   [ngClass]="{
                     'is-invalid':
-                      createPaySheduleForm.controls['payPeriod'].hasError(
+                      createPaySheduleForm.controls['payDate'].hasError(
                         'required'
-                      ) && createPaySheduleForm.controls['payPeriod'].touched
+                      ) && createPaySheduleForm.controls['payDate'].touched
                   }"
                 />
               </div>
               <div class="d-flex align-items-center mt-5">
                 <button
-                  type="button"
+                  type="submit"
                   mat-flat-button
                   class="me-3"
                   [disabled]="!createPaySheduleForm.valid"
@@ -432,6 +409,165 @@
                   mat-stroked-button
                   data-bs-dismiss="modal"
                   #closebtn
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="editPayschedule" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Update Pay Schedule</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <ng-container *ngIf="!itemDetails">
+          <app-loading-roller></app-loading-roller>
+        </ng-container>
+        <div class="container" *ngIf="itemDetails">
+          <form
+            class="pb-3"
+            [formGroup]="updatePayScheduleForm"
+            (ngSubmit)="onUpdate()"
+          >
+            <div class="form-wrap scroll w--400">
+              <div class="input">
+                <label>Pay Schedule Name</label>
+                <input
+                  type="text"
+                  placeholder="Enter name"
+                  formControlName="payScheduleName"
+                  [ngClass]="{
+                    'is-invalid':
+                      updatePayScheduleForm.controls[
+                        'payScheduleName'
+                      ].hasError('required') &&
+                      updatePayScheduleForm.controls['payScheduleName'].touched
+                  }"
+                />
+              </div>
+              <div class="input">
+                <label>Pay Type</label>
+                <mat-select
+                  placeholder="Select pay type"
+                  class="select"
+                  formControlName="payType"
+                  [ngClass]="{
+                    'is-invalid':
+                      updatePayScheduleForm.controls['payType'].hasError(
+                        'required'
+                      ) && updatePayScheduleForm.controls['payType'].touched
+                  }"
+                >
+                  <mat-option disabled="" selected="" value="">
+                    Select pay type
+                  </mat-option>
+                  <mat-option
+                    *ngFor="let type of enumkey?.payType"
+                    [value]="type.value"
+                    >{{ type.text }}</mat-option
+                  >
+                </mat-select>
+              </div>
+              <div class="input">
+                <label>Pay Frequency</label>
+                <mat-select
+                  placeholder="Select pay frequency"
+                  class="select"
+                  formControlName="frequency"
+                  [ngClass]="{
+                    'is-invalid':
+                      updatePayScheduleForm.controls['frequency'].hasError(
+                        'required'
+                      ) && updatePayScheduleForm.controls['frequency'].touched
+                  }"
+                >
+                  <mat-option disabled="" selected="" value="">
+                    Select pay frequency
+                  </mat-option>
+                  <mat-option
+                    *ngFor="let type of enumkey?.frequency"
+                    [value]="type.value"
+                    >{{ type.text }}</mat-option
+                  >
+                </mat-select>
+              </div>
+              <div class="input">
+                <label>Start Date</label>
+                <input
+                  type="date"
+                  formControlName="startDate"
+                  [ngClass]="{
+                    'is-invalid':
+                      updatePayScheduleForm.controls['startDate'].hasError(
+                        'required'
+                      ) && updatePayScheduleForm.controls['startDate'].touched
+                  }"
+                />
+              </div>
+              <div class="input">
+                <label>End Date</label>
+                <input
+                  type="date"
+                  formControlName="endDate"
+                  [ngClass]="{
+                    'is-invalid':
+                      updatePayScheduleForm.controls['endDate'].hasError(
+                        'required'
+                      ) && updatePayScheduleForm.controls['endDate'].touched
+                  }"
+                />
+              </div>
+              <div class="input">
+                <label>Deadline to run Payroll</label>
+                <input
+                  type="date"
+                  formControlName="deadlineDate"
+                  [ngClass]="{
+                    'is-invalid':
+                      updatePayScheduleForm.controls['deadlineDate'].hasError(
+                        'required'
+                      ) &&
+                      updatePayScheduleForm.controls['deadlineDate'].touched
+                  }"
+                />
+              </div>
+              <div class="input">
+                <label>Pay Date</label>
+                <input
+                  type="date"
+                  formControlName="payDate"
+                  [ngClass]="{
+                    'is-invalid':
+                      updatePayScheduleForm.controls['payDate'].hasError(
+                        'required'
+                      ) && updatePayScheduleForm.controls['payDate'].touched
+                  }"
+                />
+              </div>
+              <div class="d-flex align-items-center mt-5">
+                <button
+                  type="submit"
+                  mat-flat-button
+                  class="me-3"
+                  [disabled]="!updatePayScheduleForm.valid"
+                >
+                  Save <mat-spinner *ngIf="isBusy"> </mat-spinner>
+                </button>
+                <button
+                  type="button"
+                  mat-stroked-button
+                  data-bs-dismiss="modal"
+                  #closebtn_
                 >
                   Cancel
                 </button>

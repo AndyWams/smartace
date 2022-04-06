@@ -59,8 +59,11 @@
             <mat-option disabled="" selected="" value="">
               Select payroll schedule
             </mat-option>
-            <mat-option value="Opt1">Option One</mat-option>
-            <mat-option value="Opt2">Option Two</mat-option>
+            <mat-option
+              *ngFor="let item of paySchedules"
+              [value]="item.payScheduleId"
+              >{{ item.payScheduleName }}</mat-option
+            >
           </mat-select>
         </div>
       </div>

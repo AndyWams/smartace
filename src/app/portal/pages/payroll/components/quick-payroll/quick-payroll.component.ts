@@ -36,6 +36,7 @@ export class QuickPayrollComponent implements OnInit {
   itemDetails: any;
   enumkey: any;
   enumKeys = [];
+  paySchedules: any[] = [];
 
   public createQuickPayrollForm: FormGroup = new FormGroup({});
   public filterForm: FormGroup = new FormGroup({});
@@ -78,10 +79,25 @@ export class QuickPayrollComponent implements OnInit {
   ];
   ngOnInit(): void {
     this.getEmployees();
-    this.displayedColumns = this.column;
-    this.displayedColumns_ = this.column_;
-    this.displayedColumns = this.displayedColumns.concat(['action']);
-    this.displayedColumns_ = this.displayedColumns_.concat(['action']);
+    this.getPaySchedules();
+    this.displayedColumns = [
+      'name',
+      'emp Id',
+      'total earning',
+      'total deduction',
+      'net pay',
+      'hours worked',
+      'action',
+    ];
+    this.displayedColumns_ = [
+      'name',
+      'gross monthly salary',
+      'earnings',
+      'deductions',
+      'net salary',
+      'prorate deduction',
+      'action',
+    ];
   }
   get formRawValue(): any {
     return this.createQuickPayrollForm.getRawValue();
@@ -162,6 +178,19 @@ export class QuickPayrollComponent implements OnInit {
       )
       .subscribe((res) => {
         this.enumkey = res;
+      });
+  }
+  getPaySchedules() {
+    this.payrollServ
+      .fetchPaySchedules()
+      .pipe(
+        catchError((err: any): ObservableInput<any> => {
+          return throwError(err);
+        })
+      )
+      .subscribe((res) => {
+        const { result } = res;
+        this.paySchedules = result;
       });
   }
   onSubmit() {

@@ -71,7 +71,6 @@ export class PayElementsComponent implements OnInit {
   ngOnChanges() {
     this.getPayElements();
   }
-  toggleCheck(event: any, index: any) {}
 
   isAllSelected() {
     const numSelected = this.selection.selected.length;

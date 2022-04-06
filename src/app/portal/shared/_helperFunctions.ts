@@ -210,3 +210,6 @@ export const compareObjects = (obj1: any, obj2: any) => {
     return true;
   else return false;
 };
+export const formatDate = (dt: any) => {
+  return dt.split('T')[0];
+};

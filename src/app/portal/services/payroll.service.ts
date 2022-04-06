@@ -316,7 +316,34 @@ export class PayrollService {
       )
       .pipe(catchError(handleError));
   }
-
+  //Fetch  PaySchedule Details
+  fetchPayScheduleDetails(id: any): Observable<any> {
+    return this.http
+      .get<any>(
+        environment.apiBaseUrl + `/PaySchedule/Details/${id}`,
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
+  }
+  //Fetch All PaySchedule List
+  fetchAllPaySchedule(model: any) {
+    return this.http
+      .post<any>(
+        environment.apiBaseUrl + '/PaySchedule/List',
+        model,
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
+  }
+  //Fetch PaySchedules Types
+  fetchPaySchedules(): Observable<any> {
+    return this.http
+      .get<any>(
+        environment.apiBaseUrl + '/PaySchedule/GetAll',
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
+  }
   //Fetch Institution Category
   fetchInstitutionCategory(): Observable<any> {
     return this.http
@@ -437,6 +464,18 @@ export class PayrollService {
     return this.http
       .put<IPayElement>(
         environment.apiBaseUrl + '/PayElement/Edit',
+        model,
+        this.httpOptions
+      )
+      .pipe(
+        map((status) => status),
+        catchError(handleError)
+      );
+  }
+  updatePaySchedule(model: any): Observable<any> {
+    return this.http
+      .put<any>(
+        environment.apiBaseUrl + '/PaySchedule/Edit',
         model,
         this.httpOptions
       )

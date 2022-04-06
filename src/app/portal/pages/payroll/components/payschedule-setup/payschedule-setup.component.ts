@@ -15,7 +15,8 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { payscheduleData, scehduleOption } from 'src/assets/raw_data';
+import { scehduleOption } from 'src/assets/raw_data';
+import { formatDate } from 'src/app/portal/shared/_helperFunctions';
 
 @Component({
   selector: 'app-payschedule-setup',
@@ -27,6 +28,7 @@ export class PayscheduleSetupComponent implements OnInit {
   @ViewChild('matSelect') select: any;
   @ViewChildren('radioItem') radioItem: any;
   @ViewChild('closebtn') closebtn: any;
+  @ViewChild('closebtn_') closebtn_: any;
   screen: number = 1;
   selectedItem: any;
   pageSize: number = 10;
@@ -38,10 +40,15 @@ export class PayscheduleSetupComponent implements OnInit {
   enumKeys = [];
   _payscheduleID: any;
   isBusy: boolean = false;
+  show_ref: boolean = false;
+  date = new Date().toISOString();
+  formatdate = formatDate;
   public createPaySheduleForm: FormGroup = new FormGroup({});
+  public updatePayScheduleForm: FormGroup = new FormGroup({});
   public dataSource: MatTableDataSource<any> = new MatTableDataSource();
   public selection = new SelectionModel(true, []);
   public displayedColumns: string[];
+  _scheduleOption = scehduleOption;
   constructor(
     private renderer: Renderer2,
     private payrollServ: PayrollService,
@@ -51,25 +58,27 @@ export class PayscheduleSetupComponent implements OnInit {
   ) {
     this.createPaySheduleForm = this.fb.group({
       payScheduleName: [null, Validators.required],
-      frequency: [null, Validators.required],
-      date: [null, Validators.required],
-      deadline: [null, Validators.required],
-      payPeriod: [null, Validators.required],
+      payType: [null, Validators.required],
+      frequency: [null],
+      startDate: [null, Validators.required],
+      endDate: [null, Validators.required],
+      deadlineDate: [null, Validators.required],
+      payDate: [null, Validators.required],
     });
   }
-
-  data = payscheduleData;
-  _scheduleOption = scehduleOption;
-  column = ['Name', 'pay Frequency', 'pay Date'];
   ngOnInit(): void {
+    this.getPaySchedules();
     this.getEnums();
-    this.displayedColumns = this.column;
-    this.displayedColumns = this.displayedColumns.concat(['action']);
+    this.displayedColumns = ['Name', 'pay Frequency', 'pay Date', 'action'];
   }
 
   get formRawValue(): any {
     return this.createPaySheduleForm.getRawValue();
   }
+  get value_() {
+    return this.updatePayScheduleForm.getRawValue();
+  }
+
   gotoView(screenType?: string, screenIndex?: number) {
     if (screenType === 'next') {
       this.screen = this.screen + 1;
@@ -132,6 +141,39 @@ export class PayscheduleSetupComponent implements OnInit {
         this.enumkey = res;
       });
   }
+  getPaySchedules() {
+    let model = {
+      pageNumber: this.currentPage,
+      pageSize: this.pageSize,
+      search: null,
+      sortColumn: null,
+      sortOrder: 1,
+    };
+    this.payrollServ
+      .fetchAllPaySchedule(model)
+      .pipe(
+        catchError((err: any): ObservableInput<any> => {
+          return throwError(err);
+        })
+      )
+      .subscribe(
+        (res) => {
+          const { result } = res;
+          const { data, pagination } = result;
+          this.payScheduleList = data;
+          this.dataSource = new MatTableDataSource(this.payScheduleList);
+          this.dataSource.paginator = this.paginator;
+          this.show_ref = false;
+          this.screen = 2;
+        },
+        (errors) => {
+          this.emptyState = errors;
+          if (this.emptyState) {
+            this.payScheduleList = [];
+          }
+        }
+      );
+  }
   onSubmit() {
     this.isBusy = true;
     if (this.createPaySheduleForm.invalid) {
@@ -145,7 +187,9 @@ export class PayscheduleSetupComponent implements OnInit {
           this.toastr.success(message, 'Message');
           this.createPaySheduleForm.reset();
           this.closebtn._elementRef.nativeElement.click();
+          this.getPaySchedules();
           this.screen = 2;
+          this.emptyState = false;
         },
         (error) => {
           this.isBusy = false;
@@ -156,6 +200,72 @@ export class PayscheduleSetupComponent implements OnInit {
         () => {
           this.isBusy = false;
           this.createPaySheduleForm.reset();
+        }
+      );
+    }
+  }
+  getItemDetails(id) {
+    if (id !== undefined) {
+      this.payrollServ
+        .fetchPayScheduleDetails(id)
+        .pipe(
+          catchError((err: any): ObservableInput<any> => {
+            return throwError(err);
+          })
+        )
+        .subscribe((res) => {
+          const { result } = res;
+          this.itemDetails = result;
+          this.setFormControlElement();
+        });
+    }
+  }
+  setFormControlElement() {
+    this.updatePayScheduleForm = this.fb.group({
+      payScheduleName: [
+        this.itemDetails['payScheduleName'],
+        Validators.required,
+      ],
+      payType: [this.itemDetails['payType'], Validators.required],
+      frequency: [this.itemDetails['frequency']],
+      startDate: [
+        this.formatdate(this.itemDetails['startDate']),
+        Validators.required,
+      ],
+      endDate: [
+        this.formatdate(this.itemDetails['endDate']),
+        Validators.required,
+      ],
+      deadlineDate: [
+        this.formatdate(this.itemDetails['deadlineDate']),
+        Validators.required,
+      ],
+      payDate: [
+        this.formatdate(this.itemDetails['payDate']),
+        Validators.required,
+      ],
+      payScheduleId: [this.itemDetails['payScheduleId']],
+    });
+  }
+  onUpdate() {
+    this.isBusy = true;
+    if (this.updatePayScheduleForm.valid) {
+      this.payrollServ.updatePaySchedule(this.value_).subscribe(
+        ({ message }) => {
+          this.toastr.success(message, 'Message');
+          this.updatePayScheduleForm.reset();
+          this.closebtn_._elementRef.nativeElement.click();
+          this.getPaySchedules();
+        },
+        (error) => {
+          this.isBusy = false;
+          this.toastr.error(error, 'Message', {
+            timeOut: 3000,
+          });
+        },
+        () => {
+          this.isBusy = false;
+          this.updatePayScheduleForm.reset();
         }
       );
     }

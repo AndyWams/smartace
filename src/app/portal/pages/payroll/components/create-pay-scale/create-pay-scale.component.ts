@@ -83,9 +83,13 @@ export class CreatePayScaleComponent implements OnInit {
     this.getDepartments();
     this.getPayElements();
     this.getEnums();
-    this.displayedColumns = this.column;
+    this.displayedColumns = [
+      'Name',
+      'employee Id',
+      'department',
+      'employment Date',
+    ];
   }
-  column = ['Name', 'employee Id', 'department', 'employment Date'];
 
   ngOnChanges() {}
   get formRawValue(): any {
@@ -344,7 +348,6 @@ export class CreatePayScaleComponent implements OnInit {
         );
     }
   }
-
   setFormControlElement() {
     this.updatePayScaleForm = this.fb.group({
       payScaleName: [this.itemDetails.payScaleName, Validators.required],
