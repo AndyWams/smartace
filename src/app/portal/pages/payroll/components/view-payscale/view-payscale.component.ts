@@ -45,7 +45,7 @@ export class ViewPayscaleComponent implements OnInit {
   ) {
     this.filterForm = this.fb.group({
       employeeId: [null, Validators.required],
-      departmentId: [null, Validators.required],
+      departmentId: [null],
       employementDate: [null],
     });
   }
@@ -54,6 +54,7 @@ export class ViewPayscaleComponent implements OnInit {
     this.getRoutes();
     this.getItemDetails();
     this.getDepartments();
+    this.getPayScaleEmployees();
     this.displayedColumns = this.column;
   }
   isAllSelected() {
@@ -97,13 +98,44 @@ export class ViewPayscaleComponent implements OnInit {
         )
         .subscribe((res) => {
           const { result } = res;
-          const { payScaleEmployees } = result;
           this.itemDetails = result;
-          this.employeeList = payScaleEmployees;
-          this.dataSource = new MatTableDataSource(this.employeeList);
-          this.dataSource.paginator = this.paginator;
         });
     }
+  }
+  getPayScaleEmployees() {
+    let model = {
+      pageSize: this.pageSize,
+      pageNumber: this.currentPage,
+      search: '',
+      sortColumn: '',
+      sortOrder: 1,
+      payScaleId: this._payscaleID,
+      filter: {
+        employeeId: null,
+        departmentId: null,
+        employementDate: null,
+      },
+    };
+    this.payrollServ
+      .fetchAllPayscaleEmployees(model)
+      .pipe(
+        catchError((err: any): ObservableInput<any> => {
+          return throwError(err);
+        })
+      )
+      .subscribe(
+        (res) => {
+          const { result } = res;
+          const { data, pagination } = result;
+          this.employeeList = data;
+          this.dataSource = new MatTableDataSource(this.employeeList);
+          this.dataSource.paginator = this.paginator;
+          this.show_ref = false;
+        },
+        (errors) => {
+          this.emptyState = errors;
+        }
+      );
   }
   getRoutes() {
     this.route.queryParams
@@ -133,6 +165,7 @@ export class ViewPayscaleComponent implements OnInit {
       search: '',
       sortColumn: '',
       sortOrder: 1,
+      payScaleId: this._payscaleID,
       filter: {
         employeeId: this.filterForm.controls['employeeId'].value,
         departmentId: this.filterForm.controls['departmentId'].value,
@@ -145,7 +178,7 @@ export class ViewPayscaleComponent implements OnInit {
     }
     if (this.filterForm.valid) {
       this.payrollServ
-        .fetchAllEmployees(model)
+        .fetchAllPayscaleEmployees(model)
         .pipe(
           catchError((err: any): ObservableInput<any> => {
             return throwError(err);
@@ -182,10 +215,9 @@ export class ViewPayscaleComponent implements OnInit {
   }
   confirmDelete() {
     this.isBusy_ = true;
-
     if (this.itemDetails !== undefined) {
       this.payrollServ
-        .deletePayScale(this.itemDetails.payScaleId)
+        .deletePayScale(this._payscaleID)
         .pipe(
           catchError((err: any): ObservableInput<any> => {
             return throwError(err);

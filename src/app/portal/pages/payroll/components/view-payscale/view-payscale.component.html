@@ -70,7 +70,7 @@
               />
             </div>
             <!-- Employee  Filter-->
-            <!-- <div>
+            <div>
               <button
                 mat-stroked-button
                 class="mat-stroked-secondary mr-1"
@@ -79,7 +79,7 @@
               >
                 Filter <ion-icon name="options" class="mx-3"></ion-icon>
               </button>
-            </div> -->
+            </div>
             <!-- Sort by -->
             <div class="d-flex align-items-center mr-1">
               <label class="me-3">Sort by</label>
@@ -108,7 +108,7 @@
                 color="primary"
                 *ngIf="show_ref"
                 matTooltip="Refresh List"
-                (click)="getEmployees()"
+                (click)="getPayScaleEmployees()"
               >
                 <mat-icon>refresh</mat-icon>
               </button>

@@ -202,3 +202,11 @@ export const getFrequencyValue = (frequency: number) => {
       return frequency;
   }
 };
+export const compareObjects = (obj1: any, obj2: any) => {
+  if (
+    obj1?.payElementName == obj2?.payElementName &&
+    obj1?.payElementId == obj2?.payElementId
+  )
+    return true;
+  else return false;
+};

@@ -39,7 +39,7 @@ export class PayScaleComponent implements OnInit {
     this.filterForm = this.fb.group({
       payScaleName: ['', Validators.required],
       payScaleElements: [null],
-      frequency: ['', Validators.required],
+      frequency: [''],
     });
   }
 
@@ -177,7 +177,6 @@ export class PayScaleComponent implements OnInit {
       filter: {
         payScaleName: this.filterForm.controls['payScaleName'].value,
         frequency: this.filterForm.controls['frequency'].value,
-        // payScaleElements: this.filterForm.controls['payScaleElements'].value,
       },
     };
     if (this.filterForm.invalid) {

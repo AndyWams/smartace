@@ -124,12 +124,13 @@
         <label>Pay Elements</label>
         <div class="input mb-0">
           <mat-select
+            formControlName="payScaleElements"
+            [compareWith]="compareFunc"
             placeholder="Pay element"
             class="select"
             multiple
             #matSelect
             (selectionChange)="handlePayElementChange($event)"
-            formControlName="payScaleElements"
           >
             <mat-select-trigger>
               {{ payElementItems ? stripedObjValue : "" }}
@@ -304,7 +305,7 @@
                 Bulk Upload
               </button>
             </div>
-            <div>
+            <div *ngIf="queryString == 'add'">
               <button
                 mat-mini-fab
                 class="mx-2"
@@ -346,7 +347,7 @@
                   [checked]="selection.isSelected(element)"
                 >
                   <span
-                    >{{ element["firstName"] }} {{ element["firstName"] }}</span
+                    >{{ element["firstName"] }} {{ element["lastName"] }}</span
                   >
                 </mat-checkbox>
               </td>
@@ -436,17 +437,17 @@
                 #input
               />
             </div>
-            <!-- Employee  Filter-->
-            <!-- <div>
+            <!-- Payscale Employee Filter-->
+            <div>
               <button
                 mat-stroked-button
                 class="mat-stroked-secondary mr-1"
                 data-bs-toggle="modal"
-                data-bs-target="#employeeFilterBy"
+                data-bs-target="#payscaleEmployeeFilterBy"
               >
                 Filter <ion-icon name="options" class="mx-3"></ion-icon>
               </button>
-            </div> -->
+            </div>
             <!-- Sort by -->
             <div class="d-flex align-items-center mr-1">
               <label class="me-3">Sort by</label>
@@ -484,14 +485,14 @@
                 Bulk Upload
               </button>
             </div>
-            <div>
+            <div *ngIf="queryString == 'edit'">
               <button
                 mat-mini-fab
                 class="mx-2"
                 color="primary"
                 *ngIf="show_ref"
                 matTooltip="Refresh List"
-                (click)="getEmployees()"
+                (click)="getItemDetails()"
               >
                 <mat-icon>refresh</mat-icon>
               </button>
@@ -499,6 +500,7 @@
           </div>
         </div>
         <!--Table Layout-->
+
         <table
           mat-table
           [dataSource]="dataSource"
@@ -526,8 +528,7 @@
                   [checked]="selection.isSelected(element)"
                 >
                   <span
-                    >{{ element["employee"].firstName }}
-                    {{ element["employee"].lastName }}</span
+                    >{{ element["firstName"] }} {{ element["lastName"] }}</span
                   >
                 </mat-checkbox>
               </td>
@@ -535,17 +536,15 @@
             <ng-container *ngIf="disCol == 'employee Id'">
               <td mat-cell *matCellDef="let element">
                 <span>{{
-                  element["employee"].employeeNo
-                    ? element["employee"].employeeNo
-                    : "----"
+                  element["employeeNo"] ? element["employeeNo"] : "----"
                 }}</span>
               </td>
             </ng-container>
             <ng-container *ngIf="disCol == 'department'">
               <td mat-cell *matCellDef="let element">
                 <span>{{
-                  element["employee"].department.departmentName
-                    ? element["employee"].department.departmentName
+                  element["department"].departmentName
+                    ? element["department"].departmentName
                     : "----"
                 }}</span>
               </td>
@@ -553,8 +552,8 @@
             <ng-container *ngIf="disCol == 'employment Date'">
               <td mat-cell *matCellDef="let element">
                 <span>{{
-                  element["employee"].employementDate
-                    ? (element["employee"].employementDate | date: "mediumDate")
+                  element["employementDate"]
+                    ? (element["employementDate"] | date: "mediumDate")
                     : "----"
                 }}</span>
               </td>
@@ -686,6 +685,89 @@
                   mat-stroked-button
                   data-bs-dismiss="modal"
                   #closebtn_
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="payscaleEmployeeFilterBy" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Filter By</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <form
+            class="pb-3"
+            [formGroup]="filterForm"
+            (ngSubmit)="onFilterPayScaleEmployees()"
+          >
+            <div class="form-wrap w--400">
+              <div class="input">
+                <label>ID</label>
+                <input
+                  type="text"
+                  placeholder="Enter id"
+                  formControlName="employeeId"
+                  [ngClass]="{
+                    'is-invalid':
+                      filterForm.controls['employeeId'].hasError('required') &&
+                      filterForm.controls['employeeId'].touched
+                  }"
+                />
+              </div>
+              <div class="input">
+                <label>Department</label>
+                <mat-select
+                  placeholder="Department"
+                  class="select"
+                  formControlName="departmentId"
+                  [ngClass]="{
+                    'is-invalid':
+                      filterForm.controls['departmentId'].hasError(
+                        'required'
+                      ) && filterForm.controls['departmentId'].touched
+                  }"
+                >
+                  <mat-option disabled="" selected="" value="">
+                    Select category
+                  </mat-option>
+                  <mat-option
+                    *ngFor="let item of departmentList"
+                    [value]="item.departmentId"
+                    >{{ item.departmentName }}</mat-option
+                  >
+                </mat-select>
+              </div>
+              <div class="input">
+                <label>Employement Date</label>
+                <input type="date" formControlName="employementDate" />
+              </div>
+              <p *ngIf="noRecord" class="txt-grey txt-md">No record found!</p>
+              <div class="d-flex align-items-center mt-5">
+                <button
+                  type="submit"
+                  mat-flat-button
+                  class="me-3"
+                  [disabled]="!filterForm.valid"
+                >
+                  Apply <mat-spinner *ngIf="isBusy_"> </mat-spinner>
+                </button>
+                <button
+                  type="button"
+                  mat-stroked-button
+                  data-bs-dismiss="modal"
+                  #closebtn
                 >
                   Cancel
                 </button>

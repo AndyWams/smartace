@@ -297,6 +297,16 @@ export class PayrollService {
       )
       .pipe(catchError(handleError));
   }
+  //Fetch All Payscale Employees
+  fetchAllPayscaleEmployees(model: any) {
+    return this.http
+      .post<any>(
+        environment.apiBaseUrl + '/PayScale/EmployeeList',
+        model,
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
+  }
   //Fetch  Payscale Details
   fetchPayScaleDetails(id: any): Observable<any> {
     return this.http

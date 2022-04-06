@@ -644,6 +644,7 @@
               class="select"
               multiple
               #matSelect
+              [compareWith]="compareFunc"
               formControlName="payElementLine"
               (selectionChange)="handlePayElementChange($event)"
             >

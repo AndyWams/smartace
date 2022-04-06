@@ -19,7 +19,11 @@ import { filter } from 'rxjs/internal/operators/filter';
 import { catchError } from 'rxjs/operators';
 import { IPayElement } from 'src/app/portal/models';
 import { PayrollService } from 'src/app/portal/services/payroll.service';
-import { commaFormatted, numberCheck } from 'src/app/portal/shared';
+import {
+  commaFormatted,
+  compareObjects,
+  numberCheck,
+} from 'src/app/portal/shared/_helperFunctions';
 
 @Component({
   selector: 'app-create-pay-element',
@@ -54,6 +58,7 @@ export class CreatePayElementComponent implements OnInit {
   payElementItems: any[] = [];
   commaFormat = commaFormatted;
   numberCheck = numberCheck;
+  compareFunc = compareObjects;
   public createPayElmForm: FormGroup = new FormGroup({});
   public createPayrollItemForm: FormGroup = new FormGroup({});
   public createElementCatForm: FormGroup = new FormGroup({});
@@ -166,7 +171,6 @@ export class CreatePayElementComponent implements OnInit {
     if (this.select.value.length == this.payElements.length) {
       this.allSelected.select();
     }
-    console.log(this.select);
   }
   getPaymentInstitution() {
     this.payrollServ
@@ -252,7 +256,6 @@ export class CreatePayElementComponent implements OnInit {
         this.payrollItemList = result;
       });
   }
-
   checkInputDisabled() {
     this.createPayElmForm.controls['payElementPercentage'].disable();
     this.createPayElmForm.controls['payElementLine'].disable();
@@ -389,9 +392,11 @@ export class CreatePayElementComponent implements OnInit {
             (x: any) => {
               return {
                 payElementId: x.payElementId,
+                payElementName: x.payElement.payElementName,
               };
             }
           );
+          this.payElementItems = this.filteredPayElements;
           this.setFormControlElement();
         });
     }
