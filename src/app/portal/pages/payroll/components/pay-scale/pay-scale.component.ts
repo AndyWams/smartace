@@ -16,6 +16,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class PayScaleComponent implements OnInit {
   @ViewChild('closebtn') closebtn: any;
+  @ViewChild('closebtn_') closebtn_: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   payscaleList: any[] = [];
   payElementList: any[] = [];
@@ -46,14 +47,16 @@ export class PayScaleComponent implements OnInit {
   ngOnInit(): void {
     this.getPayscale();
     this.getPayElements();
-    this.displayedColumns = this.column;
-    this.displayedColumns = this.displayedColumns.concat(['action']);
+    this.displayedColumns = [
+      'Name',
+      'pay Elements',
+      'pay Frequency',
+      'no of Employees',
+      'action',
+    ];
   }
 
-  column = ['Name', 'pay Elements', 'pay Frequency', 'no of Employees'];
   ngOnChanges() {}
-  toggleCheck(event: any, index: any) {}
-
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
@@ -67,7 +70,6 @@ export class PayScaleComponent implements OnInit {
 
     this.selection.select(...this.dataSource.data);
   }
-
   checkboxLabel(row?: any): string {
     if (!row) {
       return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
@@ -85,7 +87,6 @@ export class PayScaleComponent implements OnInit {
     const myArray = strtext.split(' ');
     return myArray.join('');
   }
-
   getItemDetails(id: any) {
     if (id !== undefined) {
       this.payrollServ
@@ -144,12 +145,14 @@ export class PayScaleComponent implements OnInit {
         },
         (errors) => {
           this.emptyState = errors;
+          if (this.emptyState) {
+            this.payscaleList = [];
+          }
         }
       );
   }
   confirmDelete() {
     this.isBusy = true;
-
     if (this.itemDetails !== undefined) {
       this.payrollServ
         .deletePayScale(this.itemDetails.payScaleId)
@@ -161,7 +164,7 @@ export class PayScaleComponent implements OnInit {
         .subscribe(({ message }) => {
           this.isBusy = false;
           this.toastr.success(message, 'Success');
-          this.closebtn._elementRef.nativeElement.click();
+          this.closebtn_._elementRef.nativeElement.click();
           this.getPayscale();
         });
     }

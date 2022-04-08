@@ -43,3 +43,7 @@ mat-spinner {
 .mat-select-disabled .mat-select-value {
   color: rgba(205, 215, 220, 0.5) !important;
 }
+.mat-checkbox-label {
+  display: flex;
+  align-items: center;
+}

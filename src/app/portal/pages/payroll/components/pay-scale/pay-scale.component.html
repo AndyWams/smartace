@@ -138,10 +138,7 @@
               <mat-checkbox
                 [value]="element"
                 (click)="$event.stopPropagation()"
-                (change)="
-                  $event ? selection.toggle(element) : null;
-                  toggleCheck($event, i)
-                "
+                (change)="$event ? selection.toggle(element) : null"
                 [checked]="selection.isSelected(element)"
               >
                 <span>{{ element["payScaleName"] }}</span>
@@ -331,9 +328,11 @@
         </div>
         <div class="modal-footer d-flex justify-content-end align-items-center">
           <button mat-flat-button class="me-3" (click)="confirmDelete()">
-            Delete
+            Delete <mat-spinner *ngIf="isBusy"> </mat-spinner>
           </button>
-          <button mat-stroked-button data-bs-dismiss="modal">Cancel</button>
+          <button mat-stroked-button data-bs-dismiss="modal" #closebtn_>
+            Cancel
+          </button>
         </div>
       </div>
     </div>

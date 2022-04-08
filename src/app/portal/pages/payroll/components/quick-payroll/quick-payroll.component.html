@@ -118,19 +118,16 @@
           <mat-select
             class="select"
             placeholder="Select pay scale"
-            formControlName="payScale"
-            [ngClass]="{
-              'is-invalid':
-                createQuickPayrollForm.controls['payScale'].hasError(
-                  'required'
-                ) && createQuickPayrollForm.controls['payScale'].touched
-            }"
+            formControlName="payScaleId"
           >
             <mat-option disabled="" selected="" value="">
-              Select payment channel
+              Select payscale
             </mat-option>
-            <mat-option value="">Payscale One</mat-option>
-            <mat-option value="">Payscale Two</mat-option>
+            <mat-option
+              *ngFor="let item of payScales"
+              [value]="item.payScaleId"
+              >{{ item.payScaleName }}</mat-option
+            >
           </mat-select>
         </div>
       </div>

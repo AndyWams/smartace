@@ -35,14 +35,12 @@ export class CreatePayElementComponent implements OnInit {
   @ViewChild('closebtn_') closebtn_: any;
   @ViewChild('closebtn__') closebtn__: any;
   @ViewChild('allSelected') allSelected: any;
-  // @ViewChildren('options') _options: any;
   @ViewChild('matSelect') select: any;
   queryString: string = '';
   predefinedPaymentMode: number = 1;
   taxMode: string = 'default';
   payType: number = 1;
-  enumkey: any;
-  enumKeys = [];
+  enumkey: any[] = [];
   taxTypes: any[] = [];
   payrollItemList: any[] = [];
   payElementCats: any[] = [];
@@ -72,7 +70,7 @@ export class CreatePayElementComponent implements OnInit {
     private fb: FormBuilder
   ) {
     this.createPayElmForm = this.fb.group({
-      payrollItemId: [''],
+      payrollItemId: ['', Validators.required],
       payType: [1, Validators.required],
       payElementName: ['', Validators.required],
       payElementCategoryId: [null],
@@ -133,6 +131,7 @@ export class CreatePayElementComponent implements OnInit {
     this.predefinedPaymentMode = event.value;
     if (this.predefinedPaymentMode == 1) {
       this.createPayElmForm.controls['payElementLine'].setValue([]);
+      this.createPayElmForm.controls['payElementPercentage'].setValue(0);
     }
   }
   handleTaxModeToggle(event: any) {
@@ -141,6 +140,12 @@ export class CreatePayElementComponent implements OnInit {
   handleSlideToggle(event: any) {
     this._isChecked = event.checked;
     this.taxMode = 'default';
+    if (this._isChecked == false) {
+      this.createPayElmForm.controls['taxId'].setValue(null);
+      this.createPayElmForm.controls['taxValue'].setValue(null);
+      this.updatePayElementForm.controls['taxValue'].setValue(null);
+      this.updatePayElementForm.controls['taxValue'].setValue(null);
+    }
   }
   handlePayTypeSelect(event: any) {
     this.payType = event.source._value;
@@ -292,7 +297,6 @@ export class CreatePayElementComponent implements OnInit {
       ),
       payElementLine: ids,
     });
-
     this.isBusy = true;
     if (this.createPayElmForm.invalid) {
       this.isBusy = false;
@@ -434,6 +438,16 @@ export class CreatePayElementComponent implements OnInit {
     });
   }
   onUpdate() {
+    !this.updatePayElementForm.controls['deductTax'].value
+      ? (this.updatePayElementForm.controls['taxId'].setValue(null),
+        this.updatePayElementForm.controls['taxValue'].setValue(null))
+      : null;
+    this.updatePayElementForm.controls['paymentMode'].value == 1
+      ? (this.updatePayElementForm.controls['payElementPercentage'].setValue(
+          null
+        ),
+        this.updatePayElementForm.controls['payElementLine'].setValue([]))
+      : null;
     this.updatePayElementForm.patchValue({
       amountPerHour: parseFloat(
         `${this.updatePayElementForm.controls['amountPerHour'].value}`.replace(
@@ -441,6 +455,7 @@ export class CreatePayElementComponent implements OnInit {
           ''
         )
       ),
+      taxId: this.updatePayElementForm.controls['taxId'].value,
       payElementAmount: parseFloat(
         `${this.updatePayElementForm.controls['payElementAmount'].value}`.replace(
           /,/g,

@@ -58,10 +58,9 @@ export class PayscheduleSetupComponent implements OnInit {
   ) {
     this.createPaySheduleForm = this.fb.group({
       payScheduleName: [null, Validators.required],
-      payType: [null, Validators.required],
       frequency: [null],
-      startDate: [null, Validators.required],
-      endDate: [null, Validators.required],
+      payPeriodDate: [null, Validators.required],
+      dateBecomeActive: [null, Validators.required],
       deadlineDate: [null, Validators.required],
       payDate: [null, Validators.required],
     });
@@ -222,20 +221,19 @@ export class PayscheduleSetupComponent implements OnInit {
   }
   setFormControlElement() {
     this.updatePayScheduleForm = this.fb.group({
+      payPeriodDate: [
+        this.formatdate(this.itemDetails['payPeriodDate']),
+        Validators.required,
+      ],
+      dateBecomeActive: [
+        this.formatdate(this.itemDetails['dateBecomeActive']),
+        Validators.required,
+      ],
       payScheduleName: [
         this.itemDetails['payScheduleName'],
         Validators.required,
       ],
-      payType: [this.itemDetails['payType'], Validators.required],
       frequency: [this.itemDetails['frequency']],
-      startDate: [
-        this.formatdate(this.itemDetails['startDate']),
-        Validators.required,
-      ],
-      endDate: [
-        this.formatdate(this.itemDetails['endDate']),
-        Validators.required,
-      ],
       deadlineDate: [
         this.formatdate(this.itemDetails['deadlineDate']),
         Validators.required,

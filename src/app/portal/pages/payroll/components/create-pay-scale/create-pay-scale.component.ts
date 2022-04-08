@@ -46,9 +46,9 @@ export class CreatePayScaleComponent implements OnInit {
   noRecord: boolean = false;
   show_ref: boolean = false;
   itemDetails: any;
-  enumkey: any;
+  enumkey: any[] = [];
   _payscaleID: any;
-  selectedItem: FormControl;
+
   compareFunc = compareObjects;
   public createPayScaleForm: FormGroup = new FormGroup({});
   public updatePayScaleForm: FormGroup = new FormGroup({});

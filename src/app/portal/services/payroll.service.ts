@@ -287,6 +287,12 @@ export class PayrollService {
       )
       .pipe(catchError(handleError));
   }
+  //Fetch PayScale
+  fetchPayScales(): Observable<any> {
+    return this.http
+      .get<any>(environment.apiBaseUrl + '/PayScale/GetAll', this.httpOptions)
+      .pipe(catchError(handleError));
+  }
   //Fetch All Payscale
   fetchAllPayscale(model: IPayscaleList) {
     return this.http
@@ -335,7 +341,7 @@ export class PayrollService {
       )
       .pipe(catchError(handleError));
   }
-  //Fetch PaySchedules Types
+  //Fetch PaySchedules
   fetchPaySchedules(): Observable<any> {
     return this.http
       .get<any>(

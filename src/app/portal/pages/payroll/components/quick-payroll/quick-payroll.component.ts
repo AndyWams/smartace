@@ -37,6 +37,7 @@ export class QuickPayrollComponent implements OnInit {
   enumkey: any;
   enumKeys = [];
   paySchedules: any[] = [];
+  payScales: any[] = [];
 
   public createQuickPayrollForm: FormGroup = new FormGroup({});
   public filterForm: FormGroup = new FormGroup({});
@@ -57,8 +58,8 @@ export class QuickPayrollComponent implements OnInit {
       endDate: [null, Validators.required],
       payrollSchedule: [null, Validators.required],
       paymentChannel: [null, Validators.required],
-      runBy: [null, Validators.required],
-      payScale: [null, Validators.required],
+      runBy: [this.runByItem, Validators.required],
+      payScaleId: [null],
     });
   }
   column = [
@@ -80,6 +81,7 @@ export class QuickPayrollComponent implements OnInit {
   ngOnInit(): void {
     this.getEmployees();
     this.getPaySchedules();
+    this.getPayScale();
     this.displayedColumns = [
       'name',
       'emp Id',
@@ -105,6 +107,9 @@ export class QuickPayrollComponent implements OnInit {
 
   handleRunBy(event: any) {
     this.runByItem = event.source._value;
+    this.runByItem !== 'Payscale'
+      ? this.createQuickPayrollForm.controls['payScaleId'].setValue([])
+      : null;
   }
   handlePayChannel(event: any) {
     this.payChannel = event.source._value;
@@ -191,6 +196,19 @@ export class QuickPayrollComponent implements OnInit {
       .subscribe((res) => {
         const { result } = res;
         this.paySchedules = result;
+      });
+  }
+  getPayScale() {
+    this.payrollServ
+      .fetchPayScales()
+      .pipe(
+        catchError((err: any): ObservableInput<any> => {
+          return throwError(err);
+        })
+      )
+      .subscribe((res) => {
+        const { result } = res;
+        this.payScales = result;
       });
   }
   onSubmit() {
