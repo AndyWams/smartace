@@ -93,6 +93,7 @@ export class CreateNewEmployeeComponent implements OnInit {
         ({ message, data }) => {
           this.toastr.success(message, 'Message');
           this.createEmpForm.reset();
+          this.isBusy = false;
           this.router.navigate(['/portal/dashboard']);
         },
         (error) => {

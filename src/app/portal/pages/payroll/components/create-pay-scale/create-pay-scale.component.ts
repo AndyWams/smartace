@@ -321,7 +321,6 @@ export class CreatePayScaleComponent implements OnInit {
           (res) => {
             const { result } = res;
             this.itemDetails = result;
-
             this.filteredPayElements = this.itemDetails['payScaleElements'].map(
               (x: any) => {
                 return {

@@ -21,7 +21,7 @@ export class ModalsComponent implements OnInit {
   @Input() runByItem;
   @Input() itemDetails: any;
   payChannel: string = 'Master';
-  payScale: string = '';
+
   isBusy: boolean = false;
   constructor(
     private payrollServ: PayrollService,
@@ -33,9 +33,6 @@ export class ModalsComponent implements OnInit {
     this.itemDetails; //Watch for changes
   }
 
-  handlePayAssignee(event: any) {
-    this.payScale = event.source._value;
-  }
   confirmDelete() {
     this.isBusy = true;
 

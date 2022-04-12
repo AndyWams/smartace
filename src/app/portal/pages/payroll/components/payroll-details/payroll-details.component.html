@@ -1,6 +1,9 @@
 <ng-container>
   <div class="header d-flex align-items-center justify-content-between mb-4">
-    <div class="title">Payroll Details - Test Pay</div>
+    <div class="title">
+      Payroll Details -
+      <span *ngIf="itemDetails">{{ itemDetails["payrollScheduleName"] }}</span>
+    </div>
   </div>
   <div class="d-flex align-items-center mb-4">
     <a href="javascript:window.history.go(-1)" mat-button>
@@ -13,13 +16,36 @@
   <div class="bg-white">
     <div class="title-sm mb-5">Overview</div>
     <div class="overview">
-      <div class="grid grid--repeat--five w--full">
+      <ng-container *ngIf="!itemDetails">
+        <app-loading-roller></app-loading-roller>
+      </ng-container>
+      <div class="grid grid--repeat--five w--full" *ngIf="itemDetails">
         <div class="d-flex">
-          <label><span>Payroll Period</span>1st Dec - 25th Dec</label>
+          <label
+            ><span>Payroll Period</span
+            >{{ itemDetails["period"] ? itemDetails["period"] : "---" }}</label
+          >
         </div>
-        <label><span>Payroll Schedule</span>Monthly</label>
-        <label><span>Payroll Channel</span>Bank transfer</label>
-        <label><span>Bank Balance</span>NGN350,000.00</label>
+        <label
+          ><span>Payroll Schedule</span
+          >{{
+            itemDetails["payrollScheduleName"]
+              ? itemDetails["payrollScheduleName"]
+              : "---"
+          }}</label
+        >
+        <label
+          ><span>Payroll Channel</span
+          >{{ payChannel(itemDetails["paymentChannel"]) }}</label
+        >
+        <label
+          ><span>Bank Balance</span
+          >{{
+            itemDetails["bankBalance"] == 0
+              ? (0 | currency: "₦":"symbol")
+              : (itemDetails["bankBalance"] | currency: "₦":"symbol")
+          }}</label
+        >
         <label
           ><span>Status</span
           ><span
@@ -31,10 +57,28 @@
             >{{ queryString }}</span
           ></label
         >
-        <label><span>Last pay date</span>1st Dec - 25th Dec</label>
-        <label><span>No of Employees</span>234</label>
-        <label><span>Date Initiated</span>25th Dec.</label>
-        <label><span>Initiated By</span>Tolu Allen</label>
+        <label
+          ><span>Last pay date</span
+          >{{
+            itemDetails["lastPayDate"]
+              ? (itemDetails["lastPayDate"] | date: "mediumDate")
+              : "---"
+          }}</label
+        >
+        <label
+          ><span>No of Employees</span
+          >{{ itemDetails["totalEmployees"] }}</label
+        >
+        <label
+          ><span>Date Initiated</span
+          >{{ itemDetails["createdOn"] | date: "mediumDate" }}</label
+        >
+        <label
+          ><span>Initiated By</span
+          >{{
+            itemDetails["initiatedBy"] ? itemDetails["initiatedBy"] : "---"
+          }}</label
+        >
       </div>
     </div>
   </div>
@@ -219,8 +263,12 @@
     </div>
   </div>
   <div class="d-flex align-items-center mt-5" *ngIf="queryString === 'Pending'">
-    <button mat-flat-button>Approved</button>
-    <button mat-flat-button class="btn-danger mx-3">Decline Payroll</button>
+    <button mat-flat-button (click)="onApprove()">
+      Approved <mat-spinner *ngIf="isBusy"> </mat-spinner>
+    </button>
+    <button mat-flat-button class="btn-danger mx-3" (click)="onDecline()">
+      Decline Payroll <mat-spinner *ngIf="isBusy_"> </mat-spinner>
+    </button>
     <button mat-stroked-button>Rerun Payroll</button>
   </div>
 </ng-container>
@@ -241,19 +289,15 @@
               <div class="input">
                 <mat-select
                   placeholder="Pay element"
+                  class="select"
                   multiple
                   #matSelect
                   (selectionChange)="handlePayElementChange($event)"
                 >
                   <mat-select-trigger>
-                    {{
-                      _selectedPayElements
-                        ? _selectedPayElements.slice(0, 2)
-                        : ""
-                    }}
-                    <span class="more" *ngIf="_selectedPayElements.length > 2">
-                      +{{ _selectedPayElements.slice(0, 2).length - 1 }} other
-                      item
+                    {{ payElements ? stripedObjValue : "" }}
+                    <span class="more" *ngIf="payElementItems.length > 2">
+                      +{{ payElementItems.length - 2 }} other item
                     </span>
                   </mat-select-trigger>
                   <mat-option
@@ -263,25 +307,26 @@
                     >All</mat-option
                   >
                   <mat-option
-                    #options
-                    *ngFor="let option of options"
-                    [value]="option.value"
+                    *ngFor="let item of payElements"
+                    [value]="item"
                     (click)="toggleOne()"
                   >
-                    {{ option.label }}
+                    {{ item.payElementName }}
                   </mat-option>
                 </mat-select>
               </div>
-              <ng-container *ngIf="_selectedPayElements.length !== 0">
-                <div class="chips_wrap d-flex align-items-center">
-                  <div
-                    class="_chips animate__animated animate__bounceIn"
-                    *ngFor="let chip of _selectedPayElements; let i = index"
-                  >
-                    <span>{{ chip }}</span>
-                    <span (click)="dropItem(i)"
-                      ><ion-icon name="close"></ion-icon
-                    ></span>
+              <ng-container *ngIf="payElementItems.length !== 0">
+                <div class="grid">
+                  <div class="chips_wrap d-flex align-items-center">
+                    <div
+                      class="_chips animate__animated animate__bounceIn"
+                      *ngFor="let chip of payElementItems; let i = index"
+                    >
+                      <span>{{ chip.payElementName }}</span>
+                      <span (click)="dropItem(i)"
+                        ><ion-icon name="close"></ion-icon
+                      ></span>
+                    </div>
                   </div>
                 </div>
               </ng-container>

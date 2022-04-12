@@ -35,6 +35,37 @@ export class PayrollService {
       }),
     };
   }
+  //approve Payroll
+  approvePayroll(id: any): Observable<any> {
+    return this.http
+      .get<any>(
+        environment.apiBaseUrl + `/Payroll/ApprovePayroll/${id}`,
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
+  }
+  //assign Employees to Payscale
+  assignEmployeesToPayScale(model: any): Observable<any> {
+    return this.http
+      .post<any>(
+        environment.apiBaseUrl + '/PayScale/AssignEmployeeToScale',
+        model,
+        this.httpOptions
+      )
+      .pipe(
+        map((status) => status),
+        catchError(handleError)
+      );
+  }
+  //check employees not in payscale
+  checkEmployeesNotInPayScale() {
+    return this.http
+      .get<any>(
+        environment.apiBaseUrl + '/Payroll/CheckEmployeeNotInPayScale',
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
+  }
   //Create Department
   createDepartment(model: IDepartment): Observable<any> {
     return this.http
@@ -130,6 +161,19 @@ export class PayrollService {
         catchError(handleError)
       );
   }
+  //Create Quick Payroll
+  createQuickParoll(model: any): Observable<any> {
+    return this.http
+      .post<any>(
+        environment.apiBaseUrl + '/Payroll/QuickPayroll',
+        model,
+        this.httpOptions
+      )
+      .pipe(
+        map((status) => status),
+        catchError(handleError)
+      );
+  }
   //Create ParollItem
   createParollItem(model: any): Observable<any> {
     return this.http
@@ -169,6 +213,15 @@ export class PayrollService {
         catchError(handleError)
       );
   }
+  //approve Payroll
+  declinePayrollApproval(id: any): Observable<any> {
+    return this.http
+      .get<any>(
+        environment.apiBaseUrl + `/Payroll/RejectPayroll/${id}`,
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
+  }
 
   deleteInstitution(institutionId: string) {
     return this.http.delete<any>(
@@ -191,6 +244,12 @@ export class PayrollService {
   deleteTaxType(taxId: string) {
     return this.http.delete<any>(
       environment.apiBaseUrl + `/Tax/Delete/${taxId}`,
+      this.httpOptions
+    );
+  }
+  deletePayroll(payrollId: string) {
+    return this.http.delete<any>(
+      environment.apiBaseUrl + `/Payroll/DeletePayroll/${payrollId}`,
       this.httpOptions
     );
   }
@@ -258,6 +317,15 @@ export class PayrollService {
     return this.http
       .get<any>(
         environment.apiBaseUrl + `/PayElement/Details/${id}`,
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
+  }
+  // fetchPayrollLogDetails
+  fetchPayrollLogDetails(id: any): Observable<any> {
+    return this.http
+      .get<any>(
+        environment.apiBaseUrl + `/Payroll/PayrollLogDetails/${id}`,
         this.httpOptions
       )
       .pipe(catchError(handleError));
@@ -350,6 +418,16 @@ export class PayrollService {
       )
       .pipe(catchError(handleError));
   }
+  //Fetch Payrollrunlog
+  fetchPayrollRunLog(model: any) {
+    return this.http
+      .post<any>(
+        environment.apiBaseUrl + `/Payroll/Payrolllog`,
+        model,
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
+  }
   //Fetch Institution Category
   fetchInstitutionCategory(): Observable<any> {
     return this.http
@@ -411,6 +489,20 @@ export class PayrollService {
         this.httpOptions
       )
       .pipe(catchError(handleError));
+  }
+
+  //Fetch Employees By PayscaleId
+  returnEmployeesNetByPayScaleId(model: any): Observable<any> {
+    return this.http
+      .post<any>(
+        environment.apiBaseUrl + '/PayScale/ReturnEmployeesNetPayByPayScaleId',
+        model,
+        this.httpOptions
+      )
+      .pipe(
+        map((status) => status),
+        catchError(handleError)
+      );
   }
 
   //Save Tax

@@ -23,21 +23,25 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class QuickPayrollComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild('closebtn_') closebtn_: any;
   @ViewChild('closebtn') closebtn: any;
   runByItem: string = 'Payscale';
-  payChannel: string = 'Master';
+  payChannel: number = 1;
   employeeList: any[] = [];
+  unAssignedEmployees: any[] = [];
   pageSize: number = 10;
   currentPage: number = 1;
   emptyState: any;
+  emptyState_: any;
   isBusy: boolean = false;
   isBusy_: boolean = false;
   noRecord: boolean = false;
-  itemDetails: any;
-  enumkey: any;
-  enumKeys = [];
+  enumkey: any[] = [];
   paySchedules: any[] = [];
   payScales: any[] = [];
+  payScaleId: any;
+  isLoading: boolean = false;
+  payScale: string = '';
 
   public createQuickPayrollForm: FormGroup = new FormGroup({});
   public filterForm: FormGroup = new FormGroup({});
@@ -47,41 +51,25 @@ export class QuickPayrollComponent implements OnInit {
   public displayedColumns: string[];
   public displayedColumns_: string[];
   constructor(
-    private route: ActivatedRoute,
     private payrollServ: PayrollService,
     private toastr: ToastrService,
-    private router: Router,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router
   ) {
     this.createQuickPayrollForm = this.fb.group({
       startDate: ['', Validators.required],
       endDate: [null, Validators.required],
-      payrollSchedule: [null, Validators.required],
-      paymentChannel: [null, Validators.required],
-      runBy: [this.runByItem, Validators.required],
-      payScaleId: [null],
+      paymentChannel: [1, Validators.required],
+      employees: [null],
+      payScheduleId: [null],
+      runBy: [this.runByItem],
     });
   }
-  column = [
-    'name',
-    'emp Id',
-    'total earning',
-    'total deduction',
-    'net pay',
-    'hours worked',
-  ];
-  column_ = [
-    'name',
-    'gross monthly salary',
-    'earnings',
-    'deductions',
-    'net salary',
-    'prorate deduction',
-  ];
+
   ngOnInit(): void {
-    this.getEmployees();
     this.getPaySchedules();
     this.getPayScale();
+    this.getEnums();
     this.displayedColumns = [
       'name',
       'emp Id',
@@ -107,12 +95,24 @@ export class QuickPayrollComponent implements OnInit {
 
   handleRunBy(event: any) {
     this.runByItem = event.source._value;
-    this.runByItem !== 'Payscale'
-      ? this.createQuickPayrollForm.controls['payScaleId'].setValue([])
-      : null;
+    this.selection.clear();
+    this.employeeList = [];
+    if (this.runByItem == 'Gross/net') {
+      this.getEmployees();
+    } else {
+      this.emptyState = null;
+      this.isLoading = false;
+    }
   }
   handlePayChannel(event: any) {
     this.payChannel = event.source._value;
+  }
+  handlePayScaleSelect(event: any) {
+    this.payScaleId = event.source._value;
+    this.getEmployees();
+  }
+  handlePayAssignee(event: any) {
+    this.payScale = event.source._value;
   }
   isAllSelected() {
     const numSelected = this.selection.selected.length;
@@ -126,7 +126,6 @@ export class QuickPayrollComponent implements OnInit {
     }
     this.selection.select(...this.dataSource.data);
   }
-
   checkboxLabel(row?: any): string {
     if (!row) {
       return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
@@ -151,9 +150,11 @@ export class QuickPayrollComponent implements OnInit {
       search: '',
       sortColumn: '',
       sortOrder: 1,
+      payScaleId: this.payScaleId,
     };
+    this.isLoading = true;
     this.payrollServ
-      .fetchAllEmployees(model)
+      .returnEmployeesNetByPayScaleId(model)
       .pipe(
         catchError((err: any): ObservableInput<any> => {
           return throwError(err);
@@ -167,9 +168,31 @@ export class QuickPayrollComponent implements OnInit {
           this.dataSource = new MatTableDataSource(this.employeeList);
           this.dataSource_ = new MatTableDataSource(this.employeeList);
           this.dataSource.paginator = this.paginator;
+          this.isLoading = false;
+          this.emptyState = null;
         },
         (errors) => {
           this.emptyState = errors;
+        }
+      );
+  }
+  runCheckForUnAssignedEmployees() {
+    this.payrollServ
+      .checkEmployeesNotInPayScale()
+      .pipe(
+        catchError((err: any): ObservableInput<any> => {
+          return throwError(err);
+        })
+      )
+      .subscribe(
+        (res) => {
+          const { result } = res;
+          this.unAssignedEmployees = result;
+        },
+        (err) => {
+          if (err) {
+            this.emptyState_ = err;
+          }
         }
       );
   }
@@ -212,20 +235,6 @@ export class QuickPayrollComponent implements OnInit {
       });
   }
   onSubmit() {
-    if (
-      this.createQuickPayrollForm.controls['payScaleElements'].value !== null
-    ) {
-      let ids = this.createQuickPayrollForm.controls['payScaleElements'].value
-        .filter((x: any) => x !== 0)
-        .map((a: any) => {
-          return {
-            payElementId: a.payElementId,
-          };
-        });
-      this.createQuickPayrollForm.patchValue({
-        payScaleElements: ids,
-      });
-    }
     if (this.selection.selected.length !== 0) {
       let empIds = this.selection.selected
         .filter((x: any) => x !== undefined)
@@ -235,7 +244,10 @@ export class QuickPayrollComponent implements OnInit {
           };
         });
       this.createQuickPayrollForm.patchValue({
-        payScaleEmployees: empIds,
+        employees: empIds,
+        paymentChannel: parseInt(
+          this.createQuickPayrollForm.controls['paymentChannel'].value
+        ),
       });
     }
 
@@ -246,11 +258,13 @@ export class QuickPayrollComponent implements OnInit {
     }
     if (this.createQuickPayrollForm.valid) {
       //Make api call here...
-      this.payrollServ.createPayscale(this.formRawValue).subscribe(
+      this.payrollServ.createQuickParoll(this.formRawValue).subscribe(
         ({ message, data }) => {
           this.toastr.success(message, 'Message');
           this.createQuickPayrollForm.reset();
-          this.router.navigate(['/portal/payroll/pay-scale']);
+          this.isBusy = false;
+          this.closebtn_._elementRef.nativeElement.click();
+          this.router.navigate(['/portal/payroll-run-log']);
         },
         (error) => {
           this.isBusy = false;

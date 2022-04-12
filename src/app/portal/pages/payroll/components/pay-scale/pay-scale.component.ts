@@ -8,6 +8,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { getFrequencyValue } from 'src/app/portal/shared/_helperFunctions';
 
 @Component({
   selector: 'app-pay-scale',
@@ -27,6 +28,7 @@ export class PayScaleComponent implements OnInit {
   isBusy: boolean = false;
   show_ref: boolean = false;
   itemDetails: any;
+  frequencyValue = getFrequencyValue;
   public dataSource: MatTableDataSource<any> = new MatTableDataSource();
   public selection = new SelectionModel(true, []);
   public displayedColumns: string[];

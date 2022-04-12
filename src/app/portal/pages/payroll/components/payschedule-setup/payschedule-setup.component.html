@@ -241,7 +241,7 @@
 </div>
 <div class="bg-white" *ngIf="screen == 3">
   <div class="title-sm">Assign Pay Schedule</div>
-  <form>
+  <form [formGroup]="assignEmployeesForm" (ngSubmit)="onAssign()">
     <div class="form-wrap">
       <mat-radio-group aria-label="Select an option">
         <div class="grid grid-four-alt mt-5">

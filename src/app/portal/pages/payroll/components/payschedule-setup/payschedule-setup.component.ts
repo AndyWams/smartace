@@ -44,6 +44,7 @@ export class PayscheduleSetupComponent implements OnInit {
   date = new Date().toISOString();
   formatdate = formatDate;
   public createPaySheduleForm: FormGroup = new FormGroup({});
+  public assignEmployeesForm: FormGroup = new FormGroup({});
   public updatePayScheduleForm: FormGroup = new FormGroup({});
   public dataSource: MatTableDataSource<any> = new MatTableDataSource();
   public selection = new SelectionModel(true, []);
@@ -63,6 +64,10 @@ export class PayscheduleSetupComponent implements OnInit {
       dateBecomeActive: [null, Validators.required],
       deadlineDate: [null, Validators.required],
       payDate: [null, Validators.required],
+    });
+    this.assignEmployeesForm = this.fb.group({
+      payScaleId: [null, Validators.required],
+      employeeId: [null],
     });
   }
   ngOnInit(): void {
@@ -268,4 +273,5 @@ export class PayscheduleSetupComponent implements OnInit {
       );
     }
   }
+  onAssign() {}
 }

@@ -202,6 +202,39 @@ export const getFrequencyValue = (frequency: number) => {
       return frequency;
   }
 };
+export const getPaymentChannelValue = (id: number) => {
+  let val: string = '';
+  switch (id) {
+    case (id = 1):
+      return (val = 'Master Card');
+    case (id = 2):
+      return (val = 'Bank Payment');
+    default:
+      return id;
+  }
+};
+export const getPayTypeValue = (id: number) => {
+  let val: string = '';
+  switch (id) {
+    case (id = 1):
+      return (val = 'Monthly');
+    case (id = 2):
+      return (val = 'Time-Shift');
+    default:
+      return id;
+  }
+};
+export const getElementTypeValue = (id: number) => {
+  let val: string = '';
+  switch (id) {
+    case (id = 1):
+      return (val = 'Earnings');
+    case (id = 2):
+      return (val = 'Deductions');
+    default:
+      return id;
+  }
+};
 export const compareObjects = (obj1: any, obj2: any) => {
   if (
     obj1?.payElementName == obj2?.payElementName &&

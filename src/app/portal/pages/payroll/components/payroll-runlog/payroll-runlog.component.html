@@ -1,4 +1,253 @@
 <div class="header d-flex align-items-center justify-content-between mb-4">
   <div class="title">Payroll Run Log</div>
 </div>
-<app-table [_data]="data" _identifier="PAYROLLRUNLOG"></app-table>
+<div
+  class="d-flex justify-content-center align-items-center my-3 empty-state"
+  *ngIf="emptyState"
+>
+  <span class="txt-grey txt-md">No record found! Please create a record.</span>
+</div>
+<ng-container *ngIf="payrollList.length === 0 && !emptyState">
+  <app-loading-roller></app-loading-roller>
+</ng-container>
+
+<div
+  class="overflow--wrap _visible"
+  [ngClass]="{ hide: payrollList.length == 0 }"
+>
+  <div class="table-wrapper tbl-wrap">
+    <div class="toolbar mb-5 adjust-wrap">
+      <div class="d-flex align-items-center justify-content-start adjust-flex">
+        <div class="d-flex align-items-center mr-1" style="width: fit-content">
+          <!-- Master Checkbox-->
+          <mat-checkbox
+            (change)="$event ? masterToggle() : null"
+            [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()"
+            [aria-label]="checkboxLabel()"
+          >
+          </mat-checkbox>
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item>
+              <span>Option One</span>
+            </button>
+            <button mat-menu-item>
+              <span>Option Two</span>
+            </button>
+          </mat-menu>
+        </div>
+        <div class="search-input mr-1">
+          <span><mat-icon>search</mat-icon></span>
+          <input
+            type="text"
+            placeholder="Search"
+            (keyup)="applyFilter($event)"
+            #input
+          />
+        </div>
+        <!-- Employee  Filter-->
+        <div>
+          <button mat-stroked-button class="mat-stroked-secondary mr-1">
+            Filter <ion-icon name="options" class="mx-3"></ion-icon>
+          </button>
+        </div>
+        <!-- Sort by -->
+        <div class="d-flex align-items-center mr-1">
+          <label class="me-3">Sort by</label>
+          <button
+            mat-stroked-button
+            class="mat-stroked-secondary"
+            [matMenuTriggerFor]="sortby"
+          >
+            Most recent
+            <mat-icon class="ms-2">keyboard_arrow_down</mat-icon>
+          </button>
+          <mat-menu #sortby="matMenu">
+            <button mat-menu-item>
+              <span>Option One</span>
+            </button>
+            <button mat-menu-item>
+              <span>Option Two</span>
+            </button>
+          </mat-menu>
+        </div>
+      </div>
+    </div>
+    <!--Table Layout-->
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      class="table custom-table w--100"
+      style="width: 100%"
+    >
+      <ng-container
+        *ngFor="
+          let disCol of displayedColumns;
+          let colIndex = index;
+          let last = last
+        "
+        [matColumnDef]="disCol"
+      >
+        <th mat-header-cell *matHeaderCellDef>
+          {{ disCol }}
+        </th>
+        <!--Action Column-->
+        <ng-container *ngIf="last">
+          <td mat-cell *matCellDef="let element">
+            <div class="dropdown">
+              <span class="dropdown-toggle" [matMenuTriggerFor]="menu">
+                <ion-icon name="ellipsis-horizontal"></ion-icon>
+              </span>
+              <mat-menu #menu="matMenu" class="mat-menu-content padded-menu">
+                <a
+                  [routerLink]="['/portal/payroll/payroll-details']"
+                  [queryParams]="{
+                    query:
+                      element['payrollStatus'] == 1 ? 'Approved' : 'Pending',
+                    id: element['payrollId']
+                  }"
+                  mat-flat-button
+                  class="btn-orange"
+                >
+                  View Details
+                </a>
+                <a routerLink="/portal/payroll/payslip-analysis" mat-flat-button
+                  >Payslip Analysis</a
+                >
+                <a
+                  routerLink="/portal/payroll/payroll-analysis"
+                  mat-flat-button
+                  class="btn-light-blue"
+                  >Payroll Analysis</a
+                >
+                <button
+                  mat-flat-button
+                  class="btn-danger"
+                  data-bs-toggle="modal"
+                  data-bs-target="#deletePayroll"
+                  (click)="getItemDetails(element['payrollId'])"
+                >
+                  Delete
+                </button>
+              </mat-menu>
+            </div>
+          </td>
+        </ng-container>
+        <!--Table  Row Content-->
+        <ng-container *ngIf="colIndex === 0">
+          <td *matCellDef="let element">
+            <mat-checkbox
+              [value]="element"
+              (click)="$event.stopPropagation()"
+              (change)="$event ? selection.toggle(element) : null"
+              [checked]="selection.isSelected(element)"
+            >
+              <span>{{ element["payrollScheduleName"] }}</span>
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <ng-container *ngIf="disCol == 'ref no'">
+          <td mat-cell *matCellDef="let element">
+            <span>{{
+              element["batchRefNo"] ? element["batchRefNo"] : "----"
+            }}</span>
+          </td>
+        </ng-container>
+        <ng-container *ngIf="disCol == 'period'">
+          <td mat-cell *matCellDef="let element">
+            <span>{{
+              element["period"]
+                ? (element["period"] | date: "mediumDate")
+                : "---"
+            }}</span>
+          </td>
+        </ng-container>
+        <ng-container *ngIf="disCol == 'date approved'">
+          <td mat-cell *matCellDef="let element">
+            <span>{{
+              element["approveDate"]
+                ? (element["approveDate"] | date: "mediumDate")
+                : "---"
+            }}</span>
+          </td>
+        </ng-container>
+        <ng-container *ngIf="disCol == 'approved by'">
+          <td mat-cell *matCellDef="let element">
+            <span>{{
+              element["approvedByUser"] ? element["approvedByUser"] : "---"
+            }}</span>
+          </td>
+        </ng-container>
+        <ng-container *ngIf="disCol == 'status'">
+          <td mat-cell *matCellDef="let element">
+            <span
+              class="tag me-0"
+              [ngClass]="{
+                'status-approved': element['payrollStatus'] === 1,
+                'status-pending': element['payrollStatus'] === 2
+              }"
+            >
+              {{ element["payrollStatus"] == 1 ? "Approved" : "Pending" }}</span
+            >
+          </td>
+        </ng-container>
+        <td mat-cell *matCellDef="let element">
+          <span> {{ element[concatColumnString(disCol)] }}</span>
+        </td>
+      </ng-container>
+      <!--Mat-table  configurations-->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        [ngClass]="{
+          'bg-wrap': selection.isSelected(row),
+          'border-green': row.payrollStatus === 1,
+          'border-red': row.payrollStatus === 2
+        }"
+      ></tr>
+      <!-- Row shown when there is no matching data. -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">
+          No data matching the search item: "{{ input.value }}"
+        </td>
+      </tr>
+    </table>
+    <mat-paginator showFirstLastButtons [pageSize]="pageSize"></mat-paginator>
+  </div>
+</div>
+<div class="modal fade" id="deletePayroll" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Delete Payroll</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <div class="pb-3">
+            <div class="center">
+              <p>
+                Are you sure you want to delete this item? They will no longer
+                be accessible.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-end align-items-center">
+          <button mat-flat-button class="me-3" (click)="confirmDelete()">
+            Delete <mat-spinner *ngIf="isBusy"> </mat-spinner>
+          </button>
+          <button mat-stroked-button data-bs-dismiss="modal" #closebtn>
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

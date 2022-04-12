@@ -200,7 +200,7 @@
           </ng-container>
           <ng-container *ngIf="disCol == 'pay Frequency'">
             <td mat-cell *matCellDef="let element">
-              <span>{{ element["frequency"] }}</span>
+              <span>{{ frequencyValue(element["frequency"]) }}</span>
             </td>
           </ng-container>
           <ng-container *ngIf="disCol == 'no of Employees'">
