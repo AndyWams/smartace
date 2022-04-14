@@ -74,7 +74,7 @@ import { LoadingRollerComponent } from '../../components/loading-roller/loading-
       positionClass: 'toast-top-right',
     }),
   ],
-  providers: [{ provide: ToastrService }],
+  providers: [{ provide: ToastrService }, TableComponent],
   exports: [PayrollComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

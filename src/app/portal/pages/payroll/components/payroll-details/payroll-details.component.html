@@ -2,7 +2,7 @@
   <div class="header d-flex align-items-center justify-content-between mb-4">
     <div class="title">
       Payroll Details -
-      <span *ngIf="itemDetails">{{ itemDetails["payrollScheduleName"] }}</span>
+      <span *ngIf="itemDetails">{{ itemDetails["payScheduleName"] }}</span>
     </div>
   </div>
   <div class="d-flex align-items-center mb-4">
@@ -21,16 +21,17 @@
       </ng-container>
       <div class="grid grid--repeat--five w--full" *ngIf="itemDetails">
         <div class="d-flex">
-          <label
+          <label style="font-size: 14px"
             ><span>Payroll Period</span
-            >{{ itemDetails["period"] ? itemDetails["period"] : "---" }}</label
+            >{{ itemDetails["startDate"] | date: "mediumDate" }} -
+            {{ itemDetails["endDate"] | date: "mediumDate" }}</label
           >
         </div>
         <label
           ><span>Payroll Schedule</span
           >{{
-            itemDetails["payrollScheduleName"]
-              ? itemDetails["payrollScheduleName"]
+            itemDetails["payScheduleName"]
+              ? itemDetails["payScheduleName"]
               : "---"
           }}</label
         >
@@ -51,10 +52,13 @@
           ><span
             class="tag"
             [ngClass]="{
-              'status-approved': queryString === 'Approved',
-              'status-pending': queryString === 'Pending'
+              'status-approved':
+                statusValue(itemDetails['payrollStatus']) == 'Approved',
+              'status-pending':
+                statusValue(itemDetails['payrollStatus']) == 'Pending' ||
+                statusValue(itemDetails['payrollStatus']) == 'Rejected'
             }"
-            >{{ queryString }}</span
+            >{{ statusValue(itemDetails["payrollStatus"]) }}</span
           ></label
         >
         <label
@@ -82,7 +86,7 @@
       </div>
     </div>
   </div>
-  <div class="grid grid--2fr--1fr mt-4">
+  <div class="grid grid--2fr--1fr mt-4" *ngIf="itemDetails">
     <div class="bg-white colored-border border-blue">
       <div class="d-flex align-items-center justify-content-between mb-4">
         <div class="title-sm">Pay Element Breakdown</div>
@@ -91,186 +95,165 @@
           class="btn--primary"
           data-bs-toggle="modal"
           data-bs-target="#addPayElement"
-          *ngIf="queryString === 'Pending'"
+          *ngIf="
+            statusValue(itemDetails['payrollStatus']) == 'Pending' ||
+            statusValue(itemDetails['payrollStatus']) == 'Rejected'
+          "
         >
           <mat-icon class="me-2">add</mat-icon>
           Add Pay Element
         </button>
       </div>
-      <section>
+      <ng-container *ngIf="!itemDetails">
+        <app-loading-roller></app-loading-roller>
+      </ng-container>
+      <section *ngIf="itemDetails">
         <div class="title-md fw-500 mb-3">Earnings</div>
         <div class="grid grid--repeat--two list-items grid-row-gap-20">
-          <div class="d-flex justify-content-between">
-            <label>Basic</label>
-            <label>₦ 78,768.81</label>
-          </div>
-          <div class="d-flex justify-content-center">
-            <button
-              mat-button
-              class="btn--primary"
-              data-bs-toggle="modal"
-              data-bs-target="#editPayElement"
-              *ngIf="queryString === 'Pending'"
+          <ng-container *ngFor="let item of payElementBreakdownList">
+            <ng-container
+              *ngIf="elementTypeValue(item['elementType']) == 'Earnings'"
             >
-              Edit
-            </button>
-          </div>
-          <div class="d-flex justify-content-between">
-            <label>Transport</label>
-            <label>₦ 78,768.81</label>
-          </div>
-          <div class="d-flex justify-content-center">
-            <button
-              mat-button
-              class="btn--primary"
-              data-bs-toggle="modal"
-              data-bs-target="#editPayElement"
-              *ngIf="queryString === 'Pending'"
-            >
-              Edit
-            </button>
-          </div>
-          <div class="d-flex justify-content-between">
-            <label>Feeding</label>
-            <label>₦ 56,000.81</label>
-          </div>
-          <div class="d-flex justify-content-center">
-            <button
-              mat-button
-              class="btn--primary"
-              data-bs-toggle="modal"
-              data-bs-target="#editPayElement"
-              *ngIf="queryString === 'Pending'"
-            >
-              Edit
-            </button>
-          </div>
+              <div class="d-flex justify-content-between">
+                <label>{{ item["payElementName"] }}</label>
+                <label>{{
+                  item["totalAmount"] | currency: "₦":"symbol"
+                }}</label>
+              </div>
+              <div class="d-flex justify-content-center">
+                <button
+                  mat-button
+                  class="btn--primary"
+                  data-bs-toggle="modal"
+                  data-bs-target="#editPayElement"
+                  *ngIf="
+                    statusValue(itemDetails['payrollStatus']) == 'Pending' ||
+                    statusValue(itemDetails['payrollStatus']) == 'Rejected'
+                  "
+                >
+                  Edit
+                </button>
+              </div>
+            </ng-container>
+          </ng-container>
           <div class="d-flex justify-content-between mt-4">
             <label>TOTAL EARNINGS</label>
-            <label>₦ 576,768.81</label>
+            <label>{{
+              itemDetails["totalEarning"] | currency: "₦":"symbol"
+            }}</label>
           </div>
         </div>
       </section>
-      <section class="mt-5 pt-4">
+      <section class="mt-5 pt-4" *ngIf="itemDetails">
         <div class="title-md fw-500 mb-3">Deductions</div>
         <div class="grid grid--repeat--two list-items grid-row-gap-20">
-          <div class="d-flex justify-content-between">
-            <label>Pension</label>
-            <label>₦ 98,543.81</label>
-          </div>
-          <div class="d-flex justify-content-center">
-            <button
-              mat-button
-              class="btn--primary"
-              data-bs-toggle="modal"
-              data-bs-target="#editPayElement"
-              *ngIf="queryString === 'Pending'"
+          <ng-container *ngFor="let item of payElementBreakdownList">
+            <ng-container
+              *ngIf="elementTypeValue(item['elementType']) == 'Deductions'"
             >
-              Edit
-            </button>
-          </div>
-          <div class="d-flex justify-content-between">
-            <label>Tax</label>
-            <label>₦ 21,800.81</label>
-          </div>
-          <div class="d-flex justify-content-center">
-            <button
-              mat-button
-              class="btn--primary"
-              data-bs-toggle="modal"
-              data-bs-target="#editPayElement"
-              *ngIf="queryString === 'Pending'"
-            >
-              Edit
-            </button>
-          </div>
-          <div class="d-flex justify-content-between">
-            <label>Loan</label>
-            <label>₦ 2,050.81</label>
-          </div>
-          <div class="d-flex justify-content-center">
-            <button
-              mat-button
-              class="btn--primary"
-              data-bs-toggle="modal"
-              data-bs-target="#editPayElement"
-              *ngIf="queryString === 'Pending'"
-            >
-              Edit
-            </button>
-          </div>
-          <div class="d-flex justify-content-between">
-            <label>Loan</label>
-            <label>₦ 2,050.81</label>
-          </div>
-          <div class="d-flex justify-content-center">
-            <button
-              mat-button
-              class="btn--primary"
-              data-bs-toggle="modal"
-              data-bs-target="#editPayElement"
-              *ngIf="queryString === 'Pending'"
-            >
-              Edit
-            </button>
-          </div>
-          <div class="d-flex justify-content-between">
-            <label>Loan</label>
-            <label>₦ 2,050.81</label>
-          </div>
-          <div class="d-flex justify-content-center">
-            <button
-              mat-button
-              class="btn--primary"
-              data-bs-toggle="modal"
-              data-bs-target="#editPayElement"
-              *ngIf="queryString === 'Pending'"
-            >
-              Edit
-            </button>
-          </div>
-          <div class="d-flex justify-content-between mt-4">
-            <label>TOTAL DEDUCTIONS</label>
-            <label>₦ 576,768.81</label>
-          </div>
+              <div class="d-flex justify-content-between">
+                <label>{{ item["payElementName"] }}</label>
+                <label>{{
+                  item["totalAmount"] | currency: "₦":"symbol"
+                }}</label>
+              </div>
+              <div class="d-flex justify-content-center">
+                <button
+                  mat-button
+                  class="btn--primary"
+                  data-bs-toggle="modal"
+                  data-bs-target="#editPayElement"
+                  *ngIf="
+                    statusValue(itemDetails['payrollStatus']) == 'Pending' ||
+                    statusValue(itemDetails['payrollStatus']) == 'Rejected'
+                  "
+                >
+                  Edit
+                </button>
+              </div>
+            </ng-container>
+          </ng-container>
         </div>
       </section>
-      <div class="total">
+      <div class="total" *ngIf="itemDetails">
         <div class="d-flex justify-content-between align-items-center">
           <label>TOTAL (GROSS)</label>
-          <label>₦ 576,768.81</label>
+          <label>{{
+            itemDetails["totalGross"]
+              ? (itemDetails["totalGross"] | currency: "₦":"symbol")
+              : "---"
+          }}</label>
         </div>
       </div>
     </div>
     <div class="sticky">
-      <div class="bg-white colored-border border-green">
+      <ng-container *ngIf="!itemDetails">
+        <app-loading-roller></app-loading-roller>
+      </ng-container>
+      <div class="bg-white colored-border border-green" *ngIf="itemDetails">
         <section>
           <div class="title-md fw-500 mb-4">Summary</div>
           <div class="grid grid--1fr--1fr grid-row-gap-20">
             <label>Total Earnings</label>
-            <label>₦ 78,768.81</label>
+            <label>{{
+              itemDetails["totalEarning"] | currency: "₦":"symbol"
+            }}</label>
             <label>Total Deductions</label>
-            <label>₦ 76,532.81</label>
+            <label>{{
+              itemDetails["totalDeduction"] | currency: "₦":"symbol"
+            }}</label>
           </div>
           <div class="total adjust">
             <div class="d-flex justify-content-between align-items-center">
               <label>TOTAL (GROSS)</label>
-              <label>₦ 576,768.81</label>
+              <label>{{
+                itemDetails["totalGross"]
+                  ? (itemDetails["totalGross"] | currency: "₦":"symbol")
+                  : "---"
+              }}</label>
             </div>
           </div>
         </section>
       </div>
     </div>
   </div>
-  <div class="d-flex align-items-center mt-5" *ngIf="queryString === 'Pending'">
-    <button mat-flat-button (click)="onApprove()">
-      Approved <mat-spinner *ngIf="isBusy"> </mat-spinner>
-    </button>
-    <button mat-flat-button class="btn-danger mx-3" (click)="onDecline()">
-      Decline Payroll <mat-spinner *ngIf="isBusy_"> </mat-spinner>
-    </button>
-    <button mat-stroked-button>Rerun Payroll</button>
-  </div>
+  <ng-container *ngIf="itemDetails">
+    <div
+      class="d-flex align-items-center mt-5"
+      *ngIf="
+        statusValue(itemDetails['payrollStatus']) == 'Pending' ||
+        statusValue(itemDetails['payrollStatus']) == 'Rejected'
+      "
+    >
+      <button
+        mat-flat-button
+        (click)="onApprove()"
+        *ngIf="statusValue(itemDetails['payrollStatus']) !== 'Rejected'"
+      >
+        Approve <mat-spinner *ngIf="isBusy"> </mat-spinner>
+      </button>
+      <button
+        mat-flat-button
+        class="btn-danger ms-3"
+        (click)="onDecline()"
+        *ngIf="
+          statusValue(itemDetails['payrollStatus']) == 'Pending' ||
+          !statusValue(itemDetails['payrollStatus']) == 'Rejected'
+        "
+      >
+        Decline Payroll <mat-spinner *ngIf="isBusy_"> </mat-spinner>
+      </button>
+      <button
+        mat-stroked-button
+        [ngClass]="{
+          'ms-3':
+            statusValue(itemDetails['payrollStatus']) == 'Pending' || 'Rejected'
+        }"
+      >
+        Rerun Payroll
+      </button>
+    </div>
+  </ng-container>
 </ng-container>
 <!--Modal-->
 <div class="modal fade" id="addPayElement" role="dialog">

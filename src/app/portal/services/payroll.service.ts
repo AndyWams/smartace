@@ -39,7 +39,7 @@ export class PayrollService {
   approvePayroll(id: any): Observable<any> {
     return this.http
       .get<any>(
-        environment.apiBaseUrl + `/Payroll/ApprovePayroll/${id}`,
+        environment.apiBaseUrl + `/Payroll/AprrovePayroll/${id}`,
         this.httpOptions
       )
       .pipe(catchError(handleError));
@@ -49,6 +49,19 @@ export class PayrollService {
     return this.http
       .post<any>(
         environment.apiBaseUrl + '/PayScale/AssignEmployeeToScale',
+        model,
+        this.httpOptions
+      )
+      .pipe(
+        map((status) => status),
+        catchError(handleError)
+      );
+  }
+  //compute payroll
+  computePayroll(model: any): Observable<any> {
+    return this.http
+      .post<any>(
+        environment.apiBaseUrl + '/Payroll/ComputePayroll',
         model,
         this.httpOptions
       )
@@ -277,6 +290,17 @@ export class PayrollService {
       .get<any>(environment.apiBaseUrl + '/Department/GetAll', this.httpOptions)
       .pipe(catchError(handleError));
   }
+  // fetch Employee details by Payscale Id
+  fetchEmployeeDetailsByPayscaleId(id: any): Observable<any> {
+    return this.http
+      .get<any>(
+        environment.apiBaseUrl +
+          `/PayScale/ReturnEmployeePayDetailsByEmployeeId/${id}`,
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
+  }
+
   //Fetch All Employees
   fetchAllEmployees(model: IEmployeeList) {
     return this.http
@@ -490,7 +514,45 @@ export class PayrollService {
       )
       .pipe(catchError(handleError));
   }
-
+  //Get Employee Payslip
+  getEmployeePaySlip(model: any) {
+    return this.http
+      .post<any>(
+        environment.apiBaseUrl + '/Payroll/GetEmployeePayslip',
+        model,
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
+  }
+  //Get Gross/Net
+  getGrossNet(model: any) {
+    return this.http
+      .post<any>(
+        environment.apiBaseUrl + '/Payroll/GetGrossNet',
+        model,
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
+  }
+  //Get gross net breakdown
+  getGrossNetBreakdown(id: any): Observable<any> {
+    return this.http
+      .get<any>(
+        environment.apiBaseUrl + `/Payroll/GrossNetBreakdown/${id}`,
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
+  }
+  //Payroll log Analysis
+  payrollLogPayslipAnalysis(model: any) {
+    return this.http
+      .post<any>(
+        environment.apiBaseUrl + '/Payroll/PayrollLogPayslipAnalysis',
+        model,
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
+  }
   //Fetch Employees By PayscaleId
   returnEmployeesNetByPayScaleId(model: any): Observable<any> {
     return this.http
@@ -503,6 +565,36 @@ export class PayrollService {
         map((status) => status),
         catchError(handleError)
       );
+  }
+  //Return Employee Net Pay
+  returnEmployeeNetPay(model: any) {
+    return this.http
+      .post<any>(
+        environment.apiBaseUrl + '/PayScale/ReturnEmployeesNetPay',
+        model,
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
+  }
+  //Report BankSchedule list
+  reportBankScheduleList(model: any) {
+    return this.http
+      .post<any>(
+        environment.apiBaseUrl + '/Report/BankScheduleList',
+        model,
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
+  }
+  //Report BankSchedule Details
+  reportBankScheduleDetails(model: any) {
+    return this.http
+      .post<any>(
+        environment.apiBaseUrl + '/Report/BankScheduleDetails',
+        model,
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
   }
 
   //Save Tax
@@ -531,7 +623,6 @@ export class PayrollService {
         catchError(handleError)
       );
   }
-
   //Save Pension
   savePension(model: any): Observable<any> {
     return this.http

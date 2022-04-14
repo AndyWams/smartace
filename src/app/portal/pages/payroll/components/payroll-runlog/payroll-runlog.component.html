@@ -105,8 +105,7 @@
                 <a
                   [routerLink]="['/portal/payroll/payroll-details']"
                   [queryParams]="{
-                    query:
-                      element['payrollStatus'] == 1 ? 'Approved' : 'Pending',
+                    query: statusValue(element['payrollStatus']),
                     id: element['payrollId']
                   }"
                   mat-flat-button
@@ -114,7 +113,12 @@
                 >
                   View Details
                 </a>
-                <a routerLink="/portal/payroll/payslip-analysis" mat-flat-button
+                <a
+                  routerLink="/portal/payroll/payslip-analysis"
+                  [queryParams]="{
+                    id: element['payrollId']
+                  }"
+                  mat-flat-button
                   >Payslip Analysis</a
                 >
                 <a
@@ -158,11 +162,11 @@
         </ng-container>
         <ng-container *ngIf="disCol == 'period'">
           <td mat-cell *matCellDef="let element">
-            <span>{{
-              element["period"]
-                ? (element["period"] | date: "mediumDate")
-                : "---"
-            }}</span>
+            <span>
+              {{ element["startDate"] | date: "mediumDate" }}
+              -
+              {{ element["endDate"] | date: "mediumDate" }}
+            </span>
           </td>
         </ng-container>
         <ng-container *ngIf="disCol == 'date approved'">
@@ -186,11 +190,14 @@
             <span
               class="tag me-0"
               [ngClass]="{
-                'status-approved': element['payrollStatus'] === 1,
-                'status-pending': element['payrollStatus'] === 2
+                'status-approved':
+                  statusValue(element['payrollStatus']) == 'Approved',
+                'status-pending':
+                  statusValue(element['payrollStatus']) == 'Pending' ||
+                  statusValue(element['payrollStatus']) == 'Rejected'
               }"
             >
-              {{ element["payrollStatus"] == 1 ? "Approved" : "Pending" }}</span
+              {{ statusValue(element["payrollStatus"]) }}</span
             >
           </td>
         </ng-container>
@@ -206,7 +213,7 @@
         [ngClass]="{
           'bg-wrap': selection.isSelected(row),
           'border-green': row.payrollStatus === 1,
-          'border-red': row.payrollStatus === 2
+          'border-red': row.payrollStatus === 2 || row.payrollStatus === 3
         }"
       ></tr>
       <!-- Row shown when there is no matching data. -->

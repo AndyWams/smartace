@@ -8,13 +8,11 @@ import {
 import { ObservableInput, throwError } from 'rxjs';
 import { catchError, filter } from 'rxjs/operators';
 import { PayrollService } from 'src/app/portal/services/payroll.service';
-import * as _helperFunc from 'src/app/portal/shared/_helperFunctions';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ToastrService } from 'ngx-toastr';
-import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { getStatusValue } from 'src/app/portal/shared/_helperFunctions';
 
 @Component({
   selector: 'app-payroll-runlog',
@@ -33,6 +31,7 @@ export class PayrollRunlogComponent implements OnInit {
   show_ref: boolean = false;
   payrollId: any;
   itemDetails: any;
+  statusValue = getStatusValue;
   public dataSource: MatTableDataSource<any> = new MatTableDataSource();
   public selection = new SelectionModel(true, []);
   public displayedColumns: string[];

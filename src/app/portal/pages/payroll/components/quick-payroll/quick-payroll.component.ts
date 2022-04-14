@@ -28,11 +28,13 @@ export class QuickPayrollComponent implements OnInit {
   runByItem: string = 'Payscale';
   payChannel: number = 1;
   employeeList: any[] = [];
+  grossList: any[] = [];
   unAssignedEmployees: any[] = [];
   pageSize: number = 10;
   currentPage: number = 1;
   emptyState: any;
   emptyState_: any;
+  emptyState__: any = true;
   isBusy: boolean = false;
   isBusy_: boolean = false;
   noRecord: boolean = false;
@@ -41,6 +43,7 @@ export class QuickPayrollComponent implements OnInit {
   payScales: any[] = [];
   payScaleId: any;
   isLoading: boolean = false;
+  isLoading_: boolean = false;
   payScale: string = '';
 
   public createQuickPayrollForm: FormGroup = new FormGroup({});
@@ -96,12 +99,21 @@ export class QuickPayrollComponent implements OnInit {
   handleRunBy(event: any) {
     this.runByItem = event.source._value;
     this.selection.clear();
-    this.employeeList = [];
-    if (this.runByItem == 'Gross/net') {
-      this.getEmployees();
-    } else {
+    this.getListLength(this.runByItem);
+  }
+  getListLength(runby: string) {
+    if (runby == 'Payscale') {
+      this.employeeList = [];
+      this.grossList = [];
       this.emptyState = null;
+      this.emptyState__ = true;
       this.isLoading = false;
+    } else {
+      this.emptyState__ = false;
+      this.employeeList = [];
+      this.emptyState = true;
+      this.isLoading_ = true;
+      this.getGrossnet();
     }
   }
   handlePayChannel(event: any) {
@@ -109,6 +121,7 @@ export class QuickPayrollComponent implements OnInit {
   }
   handlePayScaleSelect(event: any) {
     this.payScaleId = event.source._value;
+    this.grossList = [];
     this.getEmployees();
   }
   handlePayAssignee(event: any) {
@@ -116,7 +129,10 @@ export class QuickPayrollComponent implements OnInit {
   }
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
+    const numRows =
+      this.runByItem == 'Payscale'
+        ? this.dataSource.data.length
+        : this.dataSource_.data.length;
     return numSelected === numRows;
   }
   masterToggle() {
@@ -124,7 +140,9 @@ export class QuickPayrollComponent implements OnInit {
       this.selection.clear();
       return;
     }
-    this.selection.select(...this.dataSource.data);
+    this.runByItem == 'Payscale'
+      ? this.selection.select(...this.dataSource.data)
+      : this.selection.select(...this.dataSource_.data);
   }
   checkboxLabel(row?: any): string {
     if (!row) {
@@ -166,13 +184,43 @@ export class QuickPayrollComponent implements OnInit {
           const { data, pagination } = result;
           this.employeeList = data;
           this.dataSource = new MatTableDataSource(this.employeeList);
-          this.dataSource_ = new MatTableDataSource(this.employeeList);
           this.dataSource.paginator = this.paginator;
           this.isLoading = false;
           this.emptyState = null;
         },
         (errors) => {
           this.emptyState = errors;
+        }
+      );
+  }
+  getGrossnet() {
+    let model = {
+      pageSize: this.pageSize,
+      pageNumber: this.currentPage,
+      search: '',
+      sortColumn: '',
+      sortOrder: 1,
+    };
+    this.isLoading_ = true;
+    this.payrollServ
+      .returnEmployeeNetPay(model)
+      .pipe(
+        catchError((err: any): ObservableInput<any> => {
+          return throwError(err);
+        })
+      )
+      .subscribe(
+        (res) => {
+          const { result } = res;
+          const { data } = result;
+          this.grossList = data;
+          this.dataSource_ = new MatTableDataSource(this.grossList);
+          this.dataSource_.paginator = this.paginator;
+          this.isLoading_ = false;
+          this.emptyState__ = null;
+        },
+        (errors) => {
+          this.emptyState__ = errors;
         }
       );
   }
@@ -264,7 +312,7 @@ export class QuickPayrollComponent implements OnInit {
           this.createQuickPayrollForm.reset();
           this.isBusy = false;
           this.closebtn_._elementRef.nativeElement.click();
-          this.router.navigate(['/portal/payroll-run-log']);
+          this.router.navigate(['/portal/payroll/payroll-run-log']);
         },
         (error) => {
           this.isBusy = false;

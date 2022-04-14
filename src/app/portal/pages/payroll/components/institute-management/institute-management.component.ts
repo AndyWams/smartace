@@ -55,7 +55,6 @@ export class InstituteManagementComponent implements OnInit {
     this.getInstitutionCat();
     this.getBankList();
     this.displayedColumns = this.column;
-    this.displayedColumns = this.displayedColumns.concat(['action']);
   }
 
   column = [
@@ -65,6 +64,7 @@ export class InstituteManagementComponent implements OnInit {
     'account Number',
     'bank',
     'created On',
+    'actions',
   ];
   ngOnChanges() {
     this.getInstitution();

@@ -202,6 +202,19 @@ export const getFrequencyValue = (frequency: number) => {
       return frequency;
   }
 };
+export const getStatusValue = (status: number) => {
+  let val: string = '';
+  switch (status) {
+    case (status = 1):
+      return (val = 'Approved');
+    case (status = 2):
+      return (val = 'Pending');
+    case (status = 3):
+      return (val = 'Rejected');
+    default:
+      return status;
+  }
+};
 export const getPaymentChannelValue = (id: number) => {
   let val: string = '';
   switch (id) {

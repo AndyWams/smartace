@@ -6,12 +6,15 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { ObservableInput, throwError } from 'rxjs';
 import { catchError, filter } from 'rxjs/operators';
 import { PayrollService } from 'src/app/portal/services/payroll.service';
 import {
   compareObjects,
+  getElementTypeValue,
   getPaymentChannelValue,
+  getStatusValue,
 } from 'src/app/portal/shared/_helperFunctions';
 
 @Component({
@@ -29,6 +32,7 @@ export class PayrollDetailsComponent implements OnInit {
   payElementDuration: string = 'oneOff';
   payElements: string[] = [];
   payElementItems: any[] = [];
+  payElementBreakdownList: any[] = [];
   enumkey: any[] = [];
   itemDetails: any;
   payrollId: string;
@@ -36,6 +40,8 @@ export class PayrollDetailsComponent implements OnInit {
   isBusy_: boolean = false;
   payChannel = getPaymentChannelValue;
   compareFunc = compareObjects;
+  statusValue = getStatusValue;
+  elementTypeValue = getElementTypeValue;
   options = [
     { value: 'Pay Element 1', label: 'Pay Element 1' },
     { value: 'Pay Element 2', label: 'Pay Element 2' },
@@ -46,6 +52,7 @@ export class PayrollDetailsComponent implements OnInit {
     private payrollServ: PayrollService,
     private route: ActivatedRoute,
     private router: Router,
+    private toastr: ToastrService,
     private renderer: Renderer2
   ) {}
 
@@ -146,13 +153,24 @@ export class PayrollDetailsComponent implements OnInit {
             return throwError(err);
           })
         )
-        .subscribe((res) => {
-          const { result } = res;
-          this.isBusy = false;
-          if (result) {
-            this.router.navigate(['/portal/payroll-run-log']);
+        .subscribe(
+          (res) => {
+            const { result } = res;
+            this.isBusy = false;
+            if (result) {
+              this.router.navigate(['/portal/payroll/payroll-run-log']);
+            }
+          },
+          (error) => {
+            this.isBusy = false;
+            this.toastr.error(error, 'Message', {
+              timeOut: 3000,
+            });
+          },
+          () => {
+            this.isBusy = false;
           }
-        });
+        );
     }
   }
   onDecline() {
@@ -165,13 +183,24 @@ export class PayrollDetailsComponent implements OnInit {
             return throwError(err);
           })
         )
-        .subscribe((res) => {
-          const { result } = res;
-          this.isBusy_ = false;
-          if (result) {
-            this.router.navigate(['/portal/payroll-run-log']);
+        .subscribe(
+          (res) => {
+            const { result } = res;
+            this.isBusy_ = false;
+            if (result) {
+              this.router.navigate(['/portal/payroll/payroll-run-log']);
+            }
+          },
+          (error) => {
+            this.isBusy_ = false;
+            this.toastr.error(error, 'Message', {
+              timeOut: 3000,
+            });
+          },
+          () => {
+            this.isBusy_ = false;
           }
-        });
+        );
     }
   }
   getRoutes() {
@@ -198,6 +227,7 @@ export class PayrollDetailsComponent implements OnInit {
         .subscribe((res) => {
           const { result } = res;
           this.itemDetails = result;
+          this.payElementBreakdownList = this.itemDetails.payElements;
         });
     }
   }

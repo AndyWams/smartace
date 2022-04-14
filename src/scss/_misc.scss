@@ -666,6 +666,9 @@ mat-select-trigger {
   &.hide {
     visibility: hidden !important;
   }
+  &.hide_ {
+    display: none;
+  }
 }
 ._visble {
   &.hide {

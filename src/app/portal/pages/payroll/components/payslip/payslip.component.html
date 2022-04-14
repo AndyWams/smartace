@@ -19,148 +19,132 @@
 </div>
 <div class="bg-white">
   <section class="overview">
-    <div class="_header d-flex justify-content-between align-items-center">
+    <ng-container *ngIf="!itemDetails">
+      <app-loading-roller></app-loading-roller>
+    </ng-container>
+    <div
+      class="_header d-flex justify-content-between align-items-center"
+      *ngIf="itemDetails"
+    >
       <div class="address d-flex flex-column">
         <label>Triton</label>
-        <label>3 Ablore Street, Off Freedom Way, Lekki Phase 1, Lagos</label>
-        <small>Info@tritonworldgroup.ng</small>
+        <label>{{
+          itemDetails["address"] ? itemDetails["address"] : "---"
+        }}</label>
+        <small>{{
+          itemDetails["emailAddress"] ? itemDetails["emailAddress"] : "---"
+        }}</small>
       </div>
       <div class="logo">
         <img src="assets/img/triton.svg" alt="logo" />
       </div>
     </div>
-    <div class="_sub_header grid grid--1fr--1fr my-5">
+    <div class="_sub_header grid grid--1fr--1fr my-5" *ngIf="itemDetails">
       <div class="grid grid--1fr--1fr grid-row-gap-20">
         <label>EMPLOYEE ID:</label>
-        <label><span>SC2345</span></label>
+        <label
+          ><span>{{
+            itemDetails["employeeNo"] ? itemDetails["employeeNo"] : "---"
+          }}</span></label
+        >
         <label>EMPLOYEE NAME:</label>
-        <label><span>Tara Badmus</span></label>
+        <label
+          ><span>{{
+            itemDetails["employeeName"] ? itemDetails["employeeName"] : "---"
+          }}</span></label
+        >
         <label>EMPLOYEE ADDRESS:</label>
-        <label><span>5, Lorem Ipsum, Lekki, Lagos.</span></label>
+        <label
+          ><span>{{
+            itemDetails["contactAddress"]
+              ? itemDetails["contactAddress"]
+              : "---"
+          }}</span></label
+        >
       </div>
       <div class="grid grid--1fr--1fr grid-row-gap-20">
         <label>EMPLOYEE CONTACT:</label>
-        <label><span>+234 813 285 3417</span></label>
+        <label
+          ><span>{{
+            itemDetails["phoneNumber"] ? itemDetails["phoneNumber"] : "---"
+          }}</span></label
+        >
         <label>SALARY DATE:</label>
-        <label><span>1st Dec 2021</span></label>
+        <label
+          ><span>{{
+            itemDetails["payDate"]
+              ? (itemDetails["payDate"] | date: "mediumDate")
+              : "---"
+          }}</span></label
+        >
         <label>MODE OF PAYMENT:</label>
-        <label><span>Lorem Ipsum</span></label>
+        <label
+          ><span>{{
+            itemDetails["paymentChannel"]
+              ? _paymentChannelValue(itemDetails["paymentChannel"])
+              : "---"
+          }}</span></label
+        >
       </div>
     </div>
     <mat-divider></mat-divider>
   </section>
-  <section class="grid grid--1fr--1fr grid-column-gap-30 details mt-5">
+  <section
+    class="grid grid--1fr--1fr grid-column-gap-30 details mt-5"
+    *ngIf="itemDetails"
+  >
     <aside>
       <div class="header"><label>earnings</label></div>
       <mat-divider></mat-divider>
-      <div class="d-flex align-items-center justify-content-between">
-        <label>Regular Earnings</label>
-        <label>₦ 76,532.81</label>
-      </div>
-      <mat-divider></mat-divider>
-      <div class="d-flex align-items-center justify-content-between">
-        <label>Overtime</label>
-        <label>₦ 76,532.81</label>
-      </div>
-      <mat-divider></mat-divider>
-      <div class="d-flex align-items-center justify-content-between">
-        <label>Incentive Pay</label>
-        <label>₦ 76,532.81</label>
-      </div>
-      <mat-divider></mat-divider>
-      <div class="d-flex align-items-center justify-content-between">
-        <label>Bonus</label>
-        <label>₦ 76,532.81</label>
-      </div>
-      <mat-divider></mat-divider>
-      <div class="d-flex align-items-center justify-content-between">
-        <label>Maintenance Allowance</label>
-        <label>₦ 76,532.81</label>
-      </div>
-      <mat-divider></mat-divider>
-      <div class="d-flex align-items-center justify-content-between">
-        <label>House Rent Allowance</label>
-        <label>₦ 76,532.81</label>
-      </div>
-      <mat-divider></mat-divider>
-      <div class="d-flex align-items-center justify-content-between">
-        <label>Education Allowance</label>
-        <label>₦ 76,532.81</label>
-      </div>
-      <mat-divider></mat-divider>
-      <div class="d-flex align-items-center justify-content-between">
-        <label>Car Allowance</label>
-        <label>Other Allowance</label>
-      </div>
-      <mat-divider></mat-divider>
-      <div class="d-flex align-items-center justify-content-between">
-        <label>Other Allowance</label>
-        <label>₦ 76,532.81</label>
-      </div>
+      <ng-container *ngFor="let item of payElementBreakdownList">
+        <ng-container
+          *ngIf="elementTypeValue(item['elementType']) == 'Earnings'"
+        >
+          <div class="d-flex align-items-center justify-content-between">
+            <label>{{ item["payElementName"] }}</label>
+            <label>{{ item["totalAmount"] | currency: "₦":"symbol" }}</label>
+          </div>
+          <mat-divider></mat-divider>
+        </ng-container>
+      </ng-container>
       <div class="footer">
         <div class="d-flex align-items-center justify-content-between">
           <label>Total Earnings</label>
-          <label>₦ 100,768.60</label>
+          <label>{{
+            itemDetails["totalEarning"] | currency: "₦":"symbol"
+          }}</label>
         </div>
       </div>
     </aside>
     <aside>
       <div class="header"><label>deductions</label></div>
       <mat-divider></mat-divider>
-      <div class="d-flex align-items-center justify-content-between">
-        <label>Provident Fund</label>
-        <label>₦ 76,532.81</label>
-      </div>
-      <mat-divider></mat-divider>
-      <div class="d-flex align-items-center justify-content-between">
-        <label>Federal Witholding</label>
-        <label>₦ 76,532.81</label>
-      </div>
-      <mat-divider></mat-divider>
-      <div class="d-flex align-items-center justify-content-between">
-        <label>Federal MED</label>
-        <label>₦ 76,532.81</label>
-      </div>
-      <mat-divider></mat-divider>
-      <div class="d-flex align-items-center justify-content-between">
-        <label>Federal OASDI</label>
-        <label>₦ 76,532.81</label>
-      </div>
-      <mat-divider></mat-divider>
-      <div class="d-flex align-items-center justify-content-between">
-        <label>State Witholding</label>
-        <label>₦ 76,532.81</label>
-      </div>
-      <mat-divider></mat-divider>
-      <div class="d-flex align-items-center justify-content-between">
-        <label>Income Tax</label>
-        <label>₦ 76,532.81</label>
-      </div>
-      <mat-divider></mat-divider>
-      <div class="d-flex align-items-center justify-content-between">
-        <label>Professional Tax</label>
-        <label>₦ 76,532.81</label>
-      </div>
-      <mat-divider></mat-divider>
-      <div class="d-flex align-items-center justify-content-between">
-        <label>Personal Loan</label>
-        <label>₦ 76,532.81</label>
-      </div>
-      <mat-divider></mat-divider>
-      <div class="d-flex align-items-center justify-content-between">
-        <label>Advance Salary</label>
-        <label>₦ 76,532.81</label>
-      </div>
+      <ng-container *ngFor="let item of payElementBreakdownList">
+        <ng-container
+          *ngIf="elementTypeValue(item['elementType']) == 'Deductions'"
+        >
+          <div class="d-flex align-items-center justify-content-between">
+            <label>{{ item["payElementName"] }}</label>
+            <label>{{ item["totalAmount"] | currency: "₦":"symbol" }}</label>
+          </div>
+          <mat-divider></mat-divider>
+        </ng-container>
+      </ng-container>
       <div class="footer">
         <div class="d-flex align-items-center justify-content-between">
-          <label>Total Earnings</label>
-          <label>₦ 100,768.60</label>
+          <label>Total Deductions</label>
+          <label>{{
+            itemDetails["totalDeduction"] | currency: "₦":"symbol"
+          }}</label>
         </div>
       </div>
     </aside>
   </section>
-  <div class="total d-flex align-items-center justify-content-between">
+  <div
+    class="total d-flex align-items-center justify-content-between"
+    *ngIf="itemDetails"
+  >
     <label>net salary</label>
-    <label>₦ 400,000.81</label>
+    <label>{{ itemDetails["netPay"] | currency: "₦":"symbol" }}</label>
   </div>
 </div>

@@ -8,7 +8,11 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ObservableInput, throwError } from 'rxjs';
 import { filter } from 'rxjs/internal/operators/filter';
+import { catchError } from 'rxjs/operators';
+import { PayrollService } from 'src/app/portal/services/payroll.service';
+import { getElementTypeValue } from 'src/app/portal/shared/_helperFunctions';
 
 @Component({
   selector: 'app-review-employee-payroll',
@@ -23,7 +27,15 @@ export class ReviewEmployeePayrollComponent implements OnInit, AfterViewInit {
   @ViewChild('matSelect') select: any;
   queryString: string;
   payElementDuration: string = 'oneOff';
+  payElements: string[] = [];
+  payElementItems: any[] = [];
+  enumkey: any[] = [];
   _selectedPayElements: string[] = [];
+  employeeId: any;
+  itemDetails: any;
+
+  payElementBreakdownList: any[] = [];
+  elementTypeValue = getElementTypeValue;
   options = [
     { value: 'Pay Element 1', label: 'Pay Element 1' },
     { value: 'Pay Element 2', label: 'Pay Element 2' },
@@ -31,6 +43,7 @@ export class ReviewEmployeePayrollComponent implements OnInit, AfterViewInit {
   ];
 
   constructor(
+    private payrollServ: PayrollService,
     private route: ActivatedRoute,
     private router: Router,
     private renderer: Renderer2
@@ -39,21 +52,77 @@ export class ReviewEmployeePayrollComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     window.scrollTo(0, 0);
     this.getRoutes();
+    this.getPayElements();
+    this.getEnums();
   }
   ngAfterViewInit() {
     this.onDateLoad();
   }
 
+  get stripedObjValue() {
+    if (this.payElements.length !== 0) {
+      return this.payElementItems.slice(0, 2).map((x: any) => x.payElementName);
+    }
+  }
+
+  getEnums() {
+    this.payrollServ
+      .fetchEnums()
+      .pipe(
+        catchError((err: any): ObservableInput<any> => {
+          return throwError(err);
+        })
+      )
+      .subscribe((res) => {
+        this.enumkey = res;
+      });
+  }
+  getPayElements() {
+    this.payrollServ
+      .fetchPayElement()
+      .pipe(
+        catchError((err: any): ObservableInput<any> => {
+          return throwError(err);
+        })
+      )
+      .subscribe((res) => {
+        const { result } = res;
+        this.payElements = result;
+      });
+  }
   dropItem(index: number) {
     let x = index;
     this.allSelected.deselect();
-    this._options._results[x].deselect();
+    this.select.selected[x].deselect();
     this._options._results.splice(x, 1);
+  }
+  toggleAllSelection() {
+    if (this.allSelected.selected) {
+      this.select.options._results.map((item) => {
+        item.select();
+      });
+    } else {
+      this.select.options._results.map((item) => {
+        item.deselect();
+      });
+    }
+  }
+  handlePayElementChange(event: any) {
+    let result = event.source._value.filter((t) => t !== 0);
+    this.payElementItems = result.map((x) => x);
+  }
+  toggleOne() {
+    if (this.allSelected.selected) {
+      this.allSelected.deselect();
+      return false;
+    }
+    if (this.select.value.length == this.payElements.length) {
+      this.allSelected.select();
+    }
   }
   handleToggle(event: any) {
     this.payElementDuration = event.value;
   }
-
   onDateLoad() {
     var dtToday = new Date();
     var month: any = dtToday.getMonth() + 1;
@@ -73,32 +142,29 @@ export class ReviewEmployeePayrollComponent implements OnInit, AfterViewInit {
       .pipe(filter((params) => params.query))
       .subscribe((params) => {
         this.queryString = params.query;
+        this.employeeId = params.id;
+        this.getItemDetails();
       });
     if (this.queryString === '') {
       this.router.navigate(['/portal/payroll/quick-payroll']);
     }
   }
-  toggleAllSelection() {
-    if (this.allSelected.selected) {
-      this.select.options._results.map((item) => {
-        item.select();
-      });
-    } else {
-      this.select.options._results.map((item) => {
-        item.deselect();
-      });
-    }
-  }
-  handlePayElementChange(event: any) {
-    let result = event.source._value.filter((t) => t !== 0);
-    this._selectedPayElements = result;
-  }
 
-  toggleOne() {
-    if (this.allSelected.selected) {
-      this.allSelected.deselect();
-      return false;
+  onDateChange() {}
+  getItemDetails() {
+    if (this.employeeId !== undefined) {
+      this.payrollServ
+        .fetchEmployeeDetailsByPayscaleId(this.employeeId)
+        .pipe(
+          catchError((err: any): ObservableInput<any> => {
+            return throwError(err);
+          })
+        )
+        .subscribe((res) => {
+          const { result } = res;
+          this.itemDetails = result;
+          this.payElementBreakdownList = this.itemDetails['items'];
+        });
     }
   }
-  onDateChange() {}
 }
