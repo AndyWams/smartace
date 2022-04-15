@@ -30,6 +30,7 @@ export class PayslipAnalysisComponent implements OnInit {
   isBusy: boolean = false;
   show_ref: boolean = false;
   payrollId: any;
+  payscheduleName: any;
   _printElement = printElement;
   public selection = new SelectionModel(true, []);
   public displayedColumns: string[];
@@ -106,8 +107,9 @@ export class PayslipAnalysisComponent implements OnInit {
       )
       .subscribe(
         (res) => {
-          const { result } = res;
+          const { result, payscheduleName } = res;
           this.payslipAnalysisList = result;
+          this.payscheduleName = payscheduleName;
           this.dataSource = new MatTableDataSource(this.payslipAnalysisList);
           this.dataSource.paginator = this.paginator;
           this.show_ref = false;
