@@ -1,14 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import {
-  allElementReport,
-  bankScheduleReport,
-  deductionReport,
-  earningReport,
-  payslipAnalysisReport,
-  pensionDetailReport,
-  summaryReport,
-  taxDetailReport,
-} from 'src/assets/raw_data';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { ToastrService } from 'ngx-toastr';
+import { ObservableInput, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { PayrollService } from 'src/app/portal/services/payroll.service';
 
 @Component({
   selector: 'app-report',
@@ -16,10 +13,18 @@ import {
   styleUrls: ['./report.component.scss'],
 })
 export class ReportComponent implements OnInit {
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   data: any;
   reportMode: string = 'Period';
   reportType: string = '';
   screen: number = 1;
+  pageSize: number = 10;
+  currentPage: number = 1;
+  emptyState: any;
+  noRecord: boolean = false;
+  show_ref: boolean = false;
+  bankScheduleList: any[] = [];
+  isBusy: boolean = false;
   _reports: string[] = [
     'Bank Schedule Report',
     'Earning Report',
@@ -31,12 +36,26 @@ export class ReportComponent implements OnInit {
     'Pension Details Report',
     'Payslip Analysis Report',
   ];
-  constructor() {}
+  public reportForm: FormGroup = new FormGroup({});
+  public dataSource: MatTableDataSource<any> = new MatTableDataSource();
+  constructor(
+    private payrollServ: PayrollService,
+    private fb: FormBuilder,
+    private toastr: ToastrService
+  ) {
+    this.reportForm = this.fb.group({
+      reportType: [''],
+      period: [null, Validators.required],
+    });
+  }
 
   ngOnInit(): void {}
+
+  get formRawValue(): any {
+    return this.reportForm.getRawValue();
+  }
   handleReportSelect(event: any) {
     this.reportType = event.source._value;
-    this.data = this.getDataSource(this.reportType);
   }
   handleReportMode(event: any) {
     this.reportMode = event.value;
@@ -49,107 +68,75 @@ export class ReportComponent implements OnInit {
       this.screen = this.screen - 1;
     }
   }
-  getReportType = (reportType: string) => {
-    let result: string[] = [];
-    let someReports = {
-      'Bank Schedule Report': [
-        'name',
-        'scId',
-        'department',
-        'bank',
-        'accountNo',
-        'earnings',
-        'deductions',
-        'netPay',
-      ],
-      'Earning Report': [
-        'name',
-        'scId',
-        'department',
-        'location',
-        'leave',
-        'bonus',
-        'others',
-      ],
-      'Deduction Report': [
-        'name',
-        'scId',
-        'department',
-        'location',
-        'cooperative',
-        'loan',
-        'others',
-      ],
-      'All Element Sheet Report': [
-        'name',
-        'scId',
-        'department',
-        'location',
-        'cooperative',
-        'loan',
-        'leave',
-      ],
-      'Deduction Summary Report': [
-        'name',
-        'scId',
-        'department',
-        'location',
-        'cooperative',
-        'loan',
-        'leave',
-      ],
-      'Payment Summary Report': ['elementName', 'amount', 'location'],
-      'Tax Details Report': ['name', 'scId', 'taxId'],
-      'Pension Details Report': [
-        'name',
-        'scId',
-        'pfaCode',
-        'pfaName',
-        'pensionPin',
-        'periodName',
-        'employeeContribution',
-        'employerContribution',
-        'remittance',
-      ],
-      'Payslip Analysis Report': [
-        'name',
-        'empId',
-        'totalCurrentEarning',
-        'totalCurrentEarning',
-        'totalPreviousEarning',
-        'percentageEarningDiff',
-        'totalCurrentDeduction',
-      ],
+  fetchBankScheduleListReport() {
+    let model = {
+      pageSize: this.pageSize,
+      pageNumber: this.currentPage,
+      search: '',
+      sortColumn: '',
+      sortOrder: 1,
+      period: this.reportForm.controls['period'].value,
     };
-
-    if (someReports.hasOwnProperty(reportType)) {
-      result = someReports[reportType];
+    this.isBusy = true;
+    if (this.reportForm.invalid) {
+      this.isBusy = false;
+      return;
     }
-    return result;
-  };
+    if (this.reportForm.valid) {
+      this.payrollServ
+        .generateBankScheduleListReport(model)
+        .pipe(
+          catchError((err: any): ObservableInput<any> => {
+            return throwError(err);
+          })
+        )
+        .subscribe(
+          (res) => {
+            const { result } = res;
+            this.isBusy = false;
+            this.reportForm.reset();
+            this.bankScheduleList = result;
+            this.dataSource = new MatTableDataSource(this.bankScheduleList);
+            this.dataSource.paginator = this.paginator;
+            this.show_ref = false;
+            this.data = this.bankScheduleList;
+            this.gotoView('next');
+          },
+          (errors) => {
+            this.emptyState = errors;
+            if (this.emptyState) {
+              this.bankScheduleList = [];
+            }
+          }
+        );
+    }
+  }
 
   getDataSource(repType: string) {
-    let _data: any;
     switch (repType) {
       case (repType = 'Bank Schedule Report'):
-        return (_data = bankScheduleReport);
+        this.fetchBankScheduleListReport();
+        return this.data;
       case (repType = 'Earning Report'):
-        return (_data = earningReport);
+        return null;
       case (repType = 'Deduction Report'):
-        return (_data = deductionReport);
+        return null;
       case (repType = 'All Element Sheet Report'):
-        return (_data = allElementReport);
+        return null;
       case (repType = 'Deduction Summary Report'):
-        return (_data = summaryReport);
+        return null;
       case (repType = 'Payment Summary Report'):
-        return (_data = summaryReport);
+        return null;
       case (repType = 'Tax Details Report'):
-        return (_data = taxDetailReport);
+        return null;
       case (repType = 'Pension Details Report'):
-        return (_data = pensionDetailReport);
+        return null;
       case (repType = 'Payslip Analysis Report'):
-        return (_data = payslipAnalysisReport);
+        return null;
     }
-    return _data;
+    return this.data;
+  }
+  onGenerate() {
+    this.getDataSource(this.reportType);
   }
 }

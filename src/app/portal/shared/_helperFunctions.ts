@@ -89,11 +89,11 @@ export const getReportType = (reportType: string) => {
   let result: string[] = [];
   let someReports = {
     'Bank Schedule Report': [
-      'name',
-      'scId',
-      'department',
-      'bank',
-      'account No',
+      'employee Name',
+      'employee No',
+      'department Name ',
+      'bank Name',
+      'account Number',
       'earnings',
       'deductions',
       'net Pay',

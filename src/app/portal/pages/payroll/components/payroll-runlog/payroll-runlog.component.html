@@ -50,7 +50,12 @@
         </div>
         <!-- Employee  Filter-->
         <div>
-          <button mat-stroked-button class="mat-stroked-secondary mr-1">
+          <button
+            mat-stroked-button
+            class="mat-stroked-secondary mr-1"
+            data-bs-toggle="modal"
+            data-bs-target="#payrollRunLogFilterBy"
+          >
             Filter <ion-icon name="options" class="mx-3"></ion-icon>
           </button>
         </div>
@@ -253,6 +258,67 @@
           <button mat-stroked-button data-bs-dismiss="modal" #closebtn>
             Cancel
           </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="payrollRunLogFilterBy" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Filter By</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <form class="pb-3">
+            <div class="form-wrap w--400">
+              <div class="input">
+                <label>Name of Schedule</label>
+                <input type="text" placeholder="Name of schedule" />
+              </div>
+              <div class="d-flex align-items-center">
+                <div class="input me-3">
+                  <label for="">Period From</label>
+                  <input type="date" required />
+                </div>
+                <div class="input">
+                  <label for="">Period To</label>
+                  <input type="date" required />
+                </div>
+              </div>
+              <div class="input mb-0">
+                <label>Status</label>
+                <mat-select
+                  placeholder="Payroll schedule"
+                  class="select"
+                  required
+                >
+                  <mat-option disabled="" selected="" value="">
+                    Select
+                  </mat-option>
+                  <mat-option value="">Option One</mat-option>
+                  <mat-option value="">Option Two</mat-option>
+                </mat-select>
+              </div>
+
+              <div class="d-flex align-items-center mt-5">
+                <button type="button" mat-flat-button class="me-3">
+                  Apply
+                </button>
+                <button
+                  type="button"
+                  mat-stroked-button
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
     </div>

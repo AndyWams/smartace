@@ -75,8 +75,6 @@ export class TableComponent implements OnInit {
       return (this.displayedColumns = this.displayedColumns.concat(['action']));
     }
   }
-  //Grab checkbox value here...
-  toggleCheck(event: any, index: any) {}
 
   isAllSelected() {
     const numSelected = this.selection.selected.length;
@@ -126,7 +124,7 @@ export class TableComponent implements OnInit {
   getItemDetails(id: any) {
     if (id !== undefined) {
       this.payrollServ
-        .fetchInstitutionDetails(id)
+        .BankScheduleDetails(id)
         .pipe(
           catchError((err: any): ObservableInput<any> => {
             return throwError(err);

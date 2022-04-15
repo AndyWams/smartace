@@ -195,7 +195,11 @@
 
           <!--Table  Row Content-->
           <ng-container *ngIf="disCol == 'pay Elements'">
-            <td mat-cell *matCellDef="let element">
+            <td
+              mat-cell
+              *matCellDef="let element"
+              style="display: flex; flex-wrap: wrap"
+            >
               <span
                 *ngFor="let item of element['payScaleElements']"
                 class="me-2"

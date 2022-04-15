@@ -4,7 +4,7 @@
 </div>
 <div class="bg-white" *ngIf="screen == 1">
   <div class="form-wrap w--700">
-    <form>
+    <form [formGroup]="reportForm" (ngSubmit)="onGenerate()">
       <div class="grid align-items-center">
         <label>Report</label>
         <div class="input mb-0">
@@ -12,7 +12,7 @@
             placeholder="Select report"
             class="select"
             (selectionChange)="handleReportSelect($event)"
-            required
+            formControlName="reportType"
           >
             <mat-option disabled="" selected="" value="">
               Select report
@@ -48,11 +48,19 @@
           <div class="d-flex align-items-center">
             <div class="input mb-0 me-3">
               <label for="">From</label>
-              <input type="date" required />
+              <input
+                type="date"
+                formControlName="period"
+                [ngClass]="{
+                  'is-invalid':
+                    reportForm.controls['period'].hasError('required') &&
+                    reportForm.controls['period'].touched
+                }"
+              />
             </div>
             <div class="input mb-0">
               <label for="">To</label>
-              <input type="date" required />
+              <input type="date" />
             </div>
           </div>
         </div>
@@ -60,13 +68,8 @@
       <div class="grid">
         <span>&nbsp;</span>
         <div class="mt-3">
-          <button
-            mat-flat-button
-            type="button"
-            [disabled]="reportType === ''"
-            (click)="gotoView('next')"
-          >
-            Run Report
+          <button type="submit" mat-flat-button [disabled]="!reportForm.valid">
+            Run Report <mat-spinner *ngIf="isBusy"> </mat-spinner>
           </button>
         </div>
       </div>

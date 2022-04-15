@@ -35,7 +35,6 @@ export class ModalsComponent implements OnInit {
 
   confirmDelete() {
     this.isBusy = true;
-
     if (this.itemDetails !== undefined) {
       this.payrollServ
         .deleteInstitution(this.itemDetails.institutionId)

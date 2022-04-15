@@ -107,9 +107,9 @@ export class PayslipAnalysisComponent implements OnInit {
       )
       .subscribe(
         (res) => {
-          const { result, payscheduleName } = res;
-          this.payslipAnalysisList = result;
-          this.payscheduleName = payscheduleName;
+          const { result } = res;
+          this.payslipAnalysisList = result.items;
+          this.payscheduleName = result.payScheduleName;
           this.dataSource = new MatTableDataSource(this.payslipAnalysisList);
           this.dataSource.paginator = this.paginator;
           this.show_ref = false;

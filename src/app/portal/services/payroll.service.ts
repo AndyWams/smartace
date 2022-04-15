@@ -31,7 +31,7 @@ export class PayrollService {
     this.httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${environment.userToken}`,
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
       }),
     };
   }
@@ -56,6 +56,16 @@ export class PayrollService {
         map((status) => status),
         catchError(handleError)
       );
+  }
+  //BankSchedule Details
+  BankScheduleDetails(model: any) {
+    return this.http
+      .post<any>(
+        environment.apiBaseUrl + '/Report/BankScheduleDetails',
+        model,
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
   }
   //compute payroll
   computePayroll(model: any): Observable<any> {
@@ -530,6 +540,17 @@ export class PayrollService {
       )
       .pipe(catchError(handleError));
   }
+  //BankSchedule List Report
+  generateBankScheduleListReport(model: any) {
+    return this.http
+      .post<any>(
+        environment.apiBaseUrl + '/Report/BankScheduleList',
+        model,
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
+  }
+
   //Get Gross/Net
   getGrossNet(model: any) {
     return this.http

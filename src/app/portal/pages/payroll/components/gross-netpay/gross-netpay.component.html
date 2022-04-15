@@ -59,7 +59,7 @@
               mat-stroked-button
               class="mat-stroked-secondary mr-1"
               data-bs-toggle="modal"
-              data-bs-target="#payslipAnalysisFilterBy"
+              data-bs-target="#grossFilterBy"
             >
               Filter <ion-icon name="options" class="mx-3"></ion-icon>
             </button>
@@ -300,6 +300,62 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="grossFilterBy" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Filter By</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <form class="pb-3">
+            <div class="form-wrap scroll w--400">
+              <div class="input">
+                <label>ID</label>
+                <input type="text" placeholder="Enter id" required />
+              </div>
+              <div class="input">
+                <label>Department</label>
+                <mat-select placeholder="Department" class="select" required>
+                  <mat-option disabled="" selected="" value="">
+                    Select department
+                  </mat-option>
+                </mat-select>
+              </div>
+              <div class="input">
+                <label>Monthly Earning</label>
+                <input type="text" placeholder="Enter amount" required />
+              </div>
+              <div class="input">
+                <label>Monthly Deduction</label>
+                <input type="text" placeholder="Enter amount" required />
+              </div>
+              <div class="input">
+                <label>Net Pay</label>
+                <input type="text" placeholder="Enter amount" required />
+              </div>
+              <div class="d-flex align-items-center mt-5">
+                <button type="button" mat-flat-button class="me-3">
+                  Apply
+                </button>
+                <button
+                  type="button"
+                  mat-stroked-button
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
     </div>

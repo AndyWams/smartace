@@ -196,7 +196,7 @@
                 mat-stroked-button
                 class="mat-stroked-secondary mr-1"
                 data-bs-toggle="modal"
-                data-bs-target="#employeeFilterBy"
+                data-bs-target="#payscalePayrollFilterBy"
               >
                 Filter <ion-icon name="options" class="mx-3"></ion-icon>
               </button>
@@ -420,7 +420,7 @@
                 mat-stroked-button
                 class="mat-stroked-secondary mr-1"
                 data-bs-toggle="modal"
-                data-bs-target="#employeeFilterBy"
+                data-bs-target="#grossPayrollFilterBy"
               >
                 Filter <ion-icon name="options" class="mx-3"></ion-icon>
               </button>
@@ -677,6 +677,110 @@
               </button>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="payscalePayrollFilterBy" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Filter By</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <form class="pb-3">
+            <div class="form-wrap w--400">
+              <div class="input">
+                <label>ID</label>
+                <input type="text" placeholder="Enter id" />
+              </div>
+              <div class="input">
+                <label>Total Earnings</label>
+                <input type="number" placeholder="Enter amount" />
+              </div>
+              <div class="input">
+                <label>Total Deductions</label>
+                <input type="number" placeholder="Enter amount" />
+              </div>
+              <div class="input">
+                <label>Net Pay</label>
+                <input type="number" placeholder="Enter amount" />
+              </div>
+              <div class="input">
+                <label>Hours Worked</label>
+                <input type="number" placeholder="Enter hours" />
+              </div>
+              <div class="d-flex align-items-center mt-5">
+                <button type="button" mat-flat-button class="me-3">
+                  Apply
+                </button>
+                <button
+                  type="button"
+                  mat-stroked-button
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="grossPayrollFilterBy" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Filter By</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <form class="pb-3">
+            <div class="form-wrap">
+              <div class="input">
+                <label>Gross Monthly Salary</label>
+                <input type="text" placeholder="Enter amount" />
+              </div>
+              <div class="input">
+                <label>Earnings</label>
+                <input type="number" placeholder="Enter amount" />
+              </div>
+              <div class="input">
+                <label>Deductions</label>
+                <input type="number" placeholder="Enter amount" />
+              </div>
+              <div class="input">
+                <label>Net Salary</label>
+                <input type="number" placeholder="Enter amount" />
+              </div>
+              <div class="input">
+                <label>Prorate Deduction</label>
+                <input type="number" placeholder="Enter hours" />
+              </div>
+              <div class="d-flex align-items-center mt-5">
+                <button type="button" mat-flat-button class="me-3">
+                  Apply
+                </button>
+                <button
+                  type="button"
+                  mat-stroked-button
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
     </div>

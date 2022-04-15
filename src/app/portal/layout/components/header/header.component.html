@@ -5,6 +5,11 @@
       <div class="notify me-4">
         <img src="assets/img/notification.svg" alt="" />
       </div>
+      <div class="d-block">
+        <label class="profile-name" *ngIf="profileName">{{
+          profileName
+        }}</label>
+      </div>
       <a class="dropdown dropdown-toggle" id="drp_down">
         <div
           class="avatar"
@@ -16,7 +21,7 @@
           x-placement="auto"
           aria-labelledby="drp_down"
         >
-          <a class="dropdown-item" routerLink="/">Logout</a>
+          <a class="dropdown-item" (click)="logout()">Logout</a>
         </div>
       </a>
     </div>
