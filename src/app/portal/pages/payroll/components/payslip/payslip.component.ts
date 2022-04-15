@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RoutesRecognized } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ObservableInput, throwError } from 'rxjs';
 import { catchError, filter } from 'rxjs/operators';
 import { PayrollService } from 'src/app/portal/services/payroll.service';
+import { Location } from '@angular/common';
 import {
   getElementTypeValue,
   getPaymentChannelValue,
+  printElement,
 } from 'src/app/portal/shared/_helperFunctions';
 
 @Component({
@@ -21,11 +23,13 @@ export class PayslipComponent implements OnInit {
   payElementBreakdownList: any[] = [];
   _paymentChannelValue = getPaymentChannelValue;
   elementTypeValue = getElementTypeValue;
+  _printElement = printElement;
   constructor(
     private payrollServ: PayrollService,
     private toastr: ToastrService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private _location: Location
   ) {}
 
   ngOnInit(): void {
@@ -64,5 +68,8 @@ export class PayslipComponent implements OnInit {
     if (this.payrollId === '') {
       this.router.navigate(['/portal/payroll/payroll-run-log']);
     }
+  }
+  gotoBack() {
+    this._location.back();
   }
 }

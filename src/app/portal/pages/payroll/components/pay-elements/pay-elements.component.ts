@@ -8,6 +8,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { printElement } from 'src/app/portal/shared/_helperFunctions';
 
 @Component({
   selector: 'app-pay-elements',
@@ -30,6 +31,7 @@ export class PayElementsComponent implements OnInit {
   enumKeys = [];
   isBusy: boolean = false;
   itemDetails: any;
+  _printElement = printElement;
   public filterForm: FormGroup = new FormGroup({});
   public dataSource: MatTableDataSource<any> = new MatTableDataSource();
   public selection = new SelectionModel(true, []);

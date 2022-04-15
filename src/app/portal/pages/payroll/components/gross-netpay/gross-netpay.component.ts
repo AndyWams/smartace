@@ -13,6 +13,10 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
+import {
+  getElementTypeValue,
+  printElement,
+} from 'src/app/portal/shared/_helperFunctions';
 
 @Component({
   selector: 'app-gross-netpay',
@@ -30,6 +34,9 @@ export class GrossNetpayComponent implements OnInit {
   show_ref: boolean = false;
   payrollId: any;
   itemDetails: any;
+  payElementBreakdown: any[] = [];
+  _printElement = printElement;
+  elementTypeValue = getElementTypeValue;
   public selection = new SelectionModel(true, []);
   public displayedColumns: string[];
   public dataSource: MatTableDataSource<any> = new MatTableDataSource();
@@ -115,10 +122,10 @@ export class GrossNetpayComponent implements OnInit {
         }
       );
   }
-  getItemDetails(id) {
-    if (id !== undefined) {
+  getItemDetails(obj: any) {
+    if (obj !== undefined) {
       this.payrollServ
-        .getGrossNetBreakdown(id)
+        .getGrossNetBreakdown(obj)
         .pipe(
           catchError((err: any): ObservableInput<any> => {
             return throwError(err);
@@ -127,6 +134,7 @@ export class GrossNetpayComponent implements OnInit {
         .subscribe((res) => {
           const { result } = res;
           this.itemDetails = result;
+          this.payElementBreakdown = this.itemDetails.items;
         });
     }
   }

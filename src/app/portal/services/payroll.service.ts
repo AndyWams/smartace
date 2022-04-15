@@ -541,10 +541,11 @@ export class PayrollService {
       .pipe(catchError(handleError));
   }
   //Get gross net breakdown
-  getGrossNetBreakdown(id: any): Observable<any> {
+  getGrossNetBreakdown(model: any): Observable<any> {
     return this.http
-      .get<any>(
-        environment.apiBaseUrl + `/Payroll/GrossNetBreakdown/${id}`,
+      .post<any>(
+        environment.apiBaseUrl + `/Payroll/GrossNetBreakdown`,
+        model,
         this.httpOptions
       )
       .pipe(catchError(handleError));

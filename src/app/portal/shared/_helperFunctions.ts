@@ -259,3 +259,11 @@ export const compareObjects = (obj1: any, obj2: any) => {
 export const formatDate = (dt: any) => {
   return dt.split('T')[0];
 };
+export const printElement = (id: any) => {
+  let printHtml = document.getElementById(id).outerHTML;
+  let elementPage =
+    '<html><head><title></title></head><body>' + printHtml + '</body>';
+  document.body.outerHTML = elementPage;
+  window.print();
+  document.location.reload();
+};

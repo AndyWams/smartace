@@ -13,6 +13,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
+import { printElement } from 'src/app/portal/shared/_helperFunctions';
 
 @Component({
   selector: 'app-payslip-analysis',
@@ -29,6 +30,7 @@ export class PayslipAnalysisComponent implements OnInit {
   isBusy: boolean = false;
   show_ref: boolean = false;
   payrollId: any;
+  _printElement = printElement;
   public selection = new SelectionModel(true, []);
   public displayedColumns: string[];
   public dataSource: MatTableDataSource<any> = new MatTableDataSource();
@@ -109,7 +111,6 @@ export class PayslipAnalysisComponent implements OnInit {
           this.dataSource = new MatTableDataSource(this.payslipAnalysisList);
           this.dataSource.paginator = this.paginator;
           this.show_ref = false;
-          console.log(this.payslipAnalysisList);
         },
         (errors) => {
           this.emptyState = errors;

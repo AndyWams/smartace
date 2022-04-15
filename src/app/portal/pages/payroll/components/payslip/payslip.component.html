@@ -2,22 +2,27 @@
   <div class="title">Payslip</div>
 </div>
 <div class="d-flex align-items-center mb-2">
-  <a href="javascript:window.history.go(-1)" mat-button>
+  <a (click)="gotoBack()" mat-button>
     <span class="icon-circ me-3"
       ><mat-icon mat-icon-button>arrow_back</mat-icon></span
     >
     Back
   </a>
 </div>
-<div class="d-flex justify-content-end mb-4">
-  <button type="button" mat-button class="print">
+<div class="d-flex justify-content-end mb-4" *ngIf="itemDetails">
+  <button
+    type="button"
+    mat-button
+    class="print"
+    (click)="_printElement('print-section')"
+  >
     <mat-icon class="me-2">print</mat-icon> Print
   </button>
   <button type="button" mat-button class="print">
     <mat-icon class="me-2">share</mat-icon> Email
   </button>
 </div>
-<div class="bg-white">
+<div class="bg-white" id="print-section">
   <section class="overview">
     <ng-container *ngIf="!itemDetails">
       <app-loading-roller></app-loading-roller>

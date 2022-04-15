@@ -33,6 +33,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { ComputeGrossComponent } from './components/compute-gross/compute-gross.component';
 import { LoadingRollerComponent } from '../../components/loading-roller/loading-roller.component';
+import { NgxPrintModule } from 'ngx-print';
 @NgModule({
   declarations: [
     PayrollComponent,
@@ -70,6 +71,7 @@ import { LoadingRollerComponent } from '../../components/loading-roller/loading-
     ChartGraphModule,
     ReactiveFormsModule,
     FormsModule,
+    NgxPrintModule,
     ToastrModule.forRoot({
       positionClass: 'toast-top-right',
     }),

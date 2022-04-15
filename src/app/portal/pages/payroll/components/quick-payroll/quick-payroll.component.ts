@@ -225,6 +225,14 @@ export class QuickPayrollComponent implements OnInit {
       );
   }
   runCheckForUnAssignedEmployees() {
+    if (this.selection.selected.length == 0) {
+      this.createQuickPayrollForm.controls['employees'].setErrors({
+        invalid: true,
+      });
+      this.toastr.error('Select an item before continuing', 'Message');
+    } else {
+      this.createQuickPayrollForm.controls['employees'].setErrors(null);
+    }
     this.payrollServ
       .checkEmployeesNotInPayScale()
       .pipe(
@@ -298,7 +306,6 @@ export class QuickPayrollComponent implements OnInit {
         ),
       });
     }
-
     this.isBusy = true;
     if (this.createQuickPayrollForm.invalid) {
       this.isBusy = false;

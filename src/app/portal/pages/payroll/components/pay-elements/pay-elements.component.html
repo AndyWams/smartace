@@ -96,7 +96,11 @@
           </div>
           <!-- Print-->
           <div>
-            <button mat-button class="print ms-1">
+            <button
+              mat-button
+              class="print ms-1"
+              (click)="_printElement('print-section')"
+            >
               <mat-icon class="me-2">print</mat-icon> Print
             </button>
           </div>
@@ -119,6 +123,7 @@
         [dataSource]="dataSource"
         class="table custom-table w--100"
         style="width: 100%"
+        id="print-section"
       >
         <ng-container
           *ngFor="
