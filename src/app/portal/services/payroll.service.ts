@@ -254,6 +254,12 @@ export class PayrollService {
       this.httpOptions
     );
   }
+  deletePaySchedule(id: string) {
+    return this.http.delete<any>(
+      environment.apiBaseUrl + `/PaySchedule/Delete/${id}`,
+      this.httpOptions
+    );
+  }
   deleteTaxType(taxId: string) {
     return this.http.delete<any>(
       environment.apiBaseUrl + `/Tax/Delete/${taxId}`,

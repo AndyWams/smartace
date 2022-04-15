@@ -174,16 +174,28 @@
           <!--Action Column-->
           <ng-container *ngIf="last">
             <td mat-cell *matCellDef="let element">
-              <button
-                type="button"
-                mat-button
-                class="btn-link"
-                data-bs-toggle="modal"
-                data-bs-target="#editPayschedule"
-                (click)="getItemDetails(element['payScheduleId'])"
-              >
-                Edit
-              </button>
+              <div class="d-flex align-items-center">
+                <button
+                  type="button"
+                  mat-button
+                  class="btn-link"
+                  data-bs-toggle="modal"
+                  data-bs-target="#editPayschedule"
+                  (click)="getItemDetails(element['payScheduleId'])"
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  mat-button
+                  class="txt-danger ms-2"
+                  data-bs-toggle="modal"
+                  data-bs-target="#deletePayschedule"
+                  (click)="getItemDetails(element['payScheduleId'])"
+                >
+                  Delete
+                </button>
+              </div>
             </td>
           </ng-container>
 
@@ -191,7 +203,9 @@
           <ng-container *ngIf="disCol == 'pay Frequency'">
             <td mat-cell *matCellDef="let element">
               <span>{{
-                element["frequency"] ? element["frequency"] : "----"
+                element["frequency"]
+                  ? frequencyValue(element["frequency"])
+                  : "----"
               }}</span>
             </td>
           </ng-container>
@@ -533,6 +547,38 @@
               </div>
             </div>
           </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="deletePayschedule" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Delete Institution</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <div class="pb-3">
+            <div class="center">
+              <p>
+                Are you sure you want to delete this item? They will no longer
+                be accessible.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-end align-items-center">
+          <button mat-flat-button class="me-3" (click)="confirmDelete()">
+            Delete <mat-spinner *ngIf="isBusy"> </mat-spinner>
+          </button>
+          <button mat-stroked-button data-bs-dismiss="modal" #close>
+            Cancel
+          </button>
         </div>
       </div>
     </div>

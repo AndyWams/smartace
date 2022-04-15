@@ -16,7 +16,10 @@ import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { scehduleOption } from 'src/assets/raw_data';
-import { formatDate } from 'src/app/portal/shared/_helperFunctions';
+import {
+  formatDate,
+  getFrequencyValue,
+} from 'src/app/portal/shared/_helperFunctions';
 
 @Component({
   selector: 'app-payschedule-setup',
@@ -29,6 +32,7 @@ export class PayscheduleSetupComponent implements OnInit {
   @ViewChildren('radioItem') radioItem: any;
   @ViewChild('closebtn') closebtn: any;
   @ViewChild('closebtn_') closebtn_: any;
+  @ViewChild('close') close: any;
   screen: number = 1;
   selectedItem: any;
   pageSize: number = 10;
@@ -50,6 +54,7 @@ export class PayscheduleSetupComponent implements OnInit {
   public selection = new SelectionModel(true, []);
   public displayedColumns: string[];
   _scheduleOption = scehduleOption;
+  frequencyValue = getFrequencyValue;
   constructor(
     private renderer: Renderer2,
     private payrollServ: PayrollService,
@@ -208,7 +213,7 @@ export class PayscheduleSetupComponent implements OnInit {
       );
     }
   }
-  getItemDetails(id) {
+  getItemDetails(id: any) {
     if (id !== undefined) {
       this.payrollServ
         .fetchPayScheduleDetails(id)
@@ -274,4 +279,22 @@ export class PayscheduleSetupComponent implements OnInit {
     }
   }
   onAssign() {}
+  confirmDelete() {
+    this.isBusy = true;
+    if (this.itemDetails !== undefined) {
+      this.payrollServ
+        .deletePaySchedule(this.itemDetails.payScheduleId)
+        .pipe(
+          catchError((err: any): ObservableInput<any> => {
+            return throwError(err);
+          })
+        )
+        .subscribe(({ message }) => {
+          this.isBusy = false;
+          this.toastr.success(message, 'Success');
+          this.close._elementRef.nativeElement.click();
+          this.getPaySchedules();
+        });
+    }
+  }
 }
