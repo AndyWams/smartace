@@ -12,6 +12,8 @@ import { LoginComponent } from './auth/login/login.component';
 import { AngularMaterialModule } from './portal/shared/angular-material.module';
 import { ApiInterceptor } from './services/api-interceptor.service';
 import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
+import { AuthGuard } from './services/auth-guard.guard';
+import { LoggedInAuthGuard } from './services/login-auth-guard.guard';
 
 @NgModule({
   declarations: [AppComponent, LoginComponent],
@@ -31,6 +33,8 @@ import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
     { provide: HTTP_INTERCEPTORS, useClass: ApiInterceptor, multi: true },
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
     JwtHelperService,
+    AuthGuard,
+    LoggedInAuthGuard,
   ],
   bootstrap: [AppComponent],
 })

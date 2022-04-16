@@ -15,7 +15,7 @@ export class AuthService {
   constructor(private http: HttpClient, public jwtHelper: JwtHelperService) {}
   login(credentials: IAuth): Observable<any> {
     return this.http
-      .post<any>(environment.authUrl, credentials)
+      .post<any>(environment.authUrl + `/Login`, credentials)
       .pipe(catchError(handleError));
   }
   public isAuthenticated(): boolean {

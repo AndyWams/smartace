@@ -19,7 +19,7 @@ export class ApiInterceptor implements HttpInterceptor {
     let url = req.url;
 
     // Do not set headers for login api
-    if (url.endsWith('login')) {
+    if (url.endsWith('/Login')) {
       return next.handle(req);
     }
 

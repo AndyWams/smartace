@@ -167,7 +167,7 @@
         </ng-container>
         <ng-container *ngIf="disCol == 'period'">
           <td mat-cell *matCellDef="let element">
-            <span>
+            <span style="width: 80%; display: flex">
               {{ element["startDate"] | date: "mediumDate" }}
               -
               {{ element["endDate"] | date: "mediumDate" }}

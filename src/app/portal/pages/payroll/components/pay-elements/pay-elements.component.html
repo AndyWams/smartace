@@ -227,7 +227,7 @@
               <span>{{
                 element["payType"] == 1
                   ? (element["payElementAmount"] | currency: "₦":"symbol")
-                  : (element["amountPerHour"] | currency: "₦":"symbol")
+                  : (element["payElementAmount"] | currency: "₦":"symbol")
               }}</span>
             </td>
           </ng-container>
