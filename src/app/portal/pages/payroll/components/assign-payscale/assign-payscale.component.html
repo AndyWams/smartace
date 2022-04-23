@@ -33,24 +33,13 @@
             style="width: fit-content"
           >
             <!-- Master Checkbox-->
-            <!-- <mat-checkbox
+            <mat-checkbox
               (change)="$event ? masterToggle() : null"
               [checked]="selection.hasValue() && isAllSelected()"
               [indeterminate]="selection.hasValue() && !isAllSelected()"
               [aria-label]="checkboxLabel()"
             >
-            </mat-checkbox> -->
-            <button mat-icon-button [matMenuTriggerFor]="menu">
-              <mat-icon>more_vert</mat-icon>
-            </button>
-            <mat-menu #menu="matMenu">
-              <button mat-menu-item>
-                <span>Option One</span>
-              </button>
-              <button mat-menu-item>
-                <span>Option Two</span>
-              </button>
-            </mat-menu>
+            </mat-checkbox>
           </div>
           <div class="search-input mr-1">
             <span><mat-icon>search</mat-icon></span>
@@ -67,30 +56,12 @@
               mat-stroked-button
               class="mat-stroked-secondary mr-1"
               data-bs-toggle="modal"
-              data-bs-target="#employeesFilterBy"
+              data-bs-target="#employeeFilterBy"
             >
               Filter <ion-icon name="options" class="mx-3"></ion-icon>
             </button>
           </div>
-          <!-- Sort by -->
-          <div class="d-flex align-items-center mr-1">
-            <label class="me-3">Sort by</label>
-            <button
-              mat-stroked-button
-              class="mat-stroked-secondary"
-              [matMenuTriggerFor]="sortby"
-            >
-              Most recent <mat-icon class="ms-2">keyboard_arrow_down</mat-icon>
-            </button>
-            <mat-menu #sortby="matMenu">
-              <button mat-menu-item>
-                <span>Option One</span>
-              </button>
-              <button mat-menu-item>
-                <span>Option Two</span>
-              </button>
-            </mat-menu>
-          </div>
+
           <div>
             <button
               mat-mini-fab
@@ -124,15 +95,14 @@
           </th>
           <ng-container *ngIf="colIndex === 0">
             <td *matCellDef="let element">
-              <span>{{ element["fullName"] }}</span>
-              <!-- <mat-checkbox
+              <mat-checkbox
                 [value]="element"
                 (click)="$event.stopPropagation()"
                 (change)="$event ? selection.toggle(element) : null"
                 [checked]="selection.isSelected(element)"
               >
                 <span>{{ element["fullName"] }}</span>
-              </mat-checkbox> -->
+              </mat-checkbox>
             </td>
           </ng-container>
           <!--Action Column-->
@@ -144,7 +114,7 @@
                 class="btn-link"
                 data-bs-toggle="modal"
                 data-bs-target="#assignPayScale"
-                (click)="getEmpId(element['employeeId'])"
+                (click)="selection.toggle(element)"
               >
                 Assign Pay Scale
               </button>
@@ -199,24 +169,95 @@
   class="d-flex align-items-center justify-content-center mt-4"
   *ngIf="dataSource.data.length && !emptyState"
 >
-  <a
+  <button
     mat-flat-button
     class="me-3"
-    [routerLink]="['/portal/payroll/review-payroll']"
-    [queryParams]="{ query: 'payscale' }"
-    *ngIf="queryString === 'payscale'"
-    >Continue</a
+    data-bs-toggle="modal"
+    data-bs-target="#assignPayScale"
+    [disabled]="selection.selected.length == 0"
   >
-  <a
-    mat-flat-button
-    class="me-3"
-    [routerLink]="['/portal/payroll/review-payroll']"
-    [queryParams]="{ query: 'gross' }"
-    *ngIf="queryString === 'gross'"
-    >Continue</a
-  >
-
+    Select {{ selection.selected.length ? selection.selected.length : "" }}
+  </button>
   <a href="javascript:window.history.go(-1)" mat-stroked-button>Cancel</a>
+</div>
+<div class="modal fade" id="employeeFilterBy" role="dialog">
+  <div class="modal-dialog modal-wrapper">
+    <div class="modal-content-wrap">
+      <div class="modal-body">
+        <div
+          class="header-top d-flex justify-content-between align-items-center px-4 py-3"
+        >
+          <div class="title">Filter By</div>
+          <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
+        </div>
+        <div class="container">
+          <form class="pb-3" [formGroup]="filterForm" (ngSubmit)="onFilter()">
+            <div class="form-wrap w--400">
+              <div class="input">
+                <label>ID</label>
+                <input
+                  type="text"
+                  placeholder="Enter id"
+                  formControlName="employeeId"
+                  [ngClass]="{
+                    'is-invalid':
+                      filterForm.controls['employeeId'].hasError('required') &&
+                      filterForm.controls['employeeId'].touched
+                  }"
+                />
+              </div>
+              <div class="input">
+                <label>Department</label>
+                <mat-select
+                  placeholder="Department"
+                  class="select"
+                  formControlName="departmentId"
+                  [ngClass]="{
+                    'is-invalid':
+                      filterForm.controls['departmentId'].hasError(
+                        'required'
+                      ) && filterForm.controls['departmentId'].touched
+                  }"
+                >
+                  <mat-option disabled="" selected="" value="">
+                    Select category
+                  </mat-option>
+                  <mat-option
+                    *ngFor="let item of departmentList"
+                    [value]="item.departmentId"
+                    >{{ item.departmentName }}</mat-option
+                  >
+                </mat-select>
+              </div>
+              <div class="input">
+                <label>Employement Date</label>
+                <input type="date" formControlName="employementDate" />
+              </div>
+              <p *ngIf="noRecord" class="txt-grey txt-md">No record found!</p>
+              <div class="d-flex align-items-center mt-5">
+                <button
+                  type="submit"
+                  mat-flat-button
+                  class="me-3"
+                  [disabled]="!filterForm.valid"
+                >
+                  Apply <mat-spinner *ngIf="isBusy_"> </mat-spinner>
+                </button>
+                <button
+                  type="button"
+                  mat-stroked-button
+                  data-bs-dismiss="modal"
+                  #closebtn_
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 <div class="modal fade" id="assignPayScale" role="dialog">
   <div class="modal-dialog modal-wrapper">
@@ -259,59 +300,7 @@
                   >
                 </mat-select>
               </div>
-              <ng-container>
-                <label class="fw-600 txt-md-md my-3">PayScale one</label>
-                <ng-container>
-                  <div class="d-flex align-items-center mb-4">
-                    <div class="input mb-0">
-                      <label>Pension</label>
-                      <input type="text" placeholder="Enter value" />
-                    </div>
-                    <div class="d-flex flex-column mx-2">
-                      <span>&nbsp;</span>
-                      <button
-                        type="button"
-                        mat-button
-                        class="txt-danger underline"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                  <div class="d-flex align-items-center mb-4">
-                    <div class="input mb-0">
-                      <label>Pension</label>
-                      <input type="text" placeholder="Enter value" />
-                    </div>
-                    <div class="d-flex flex-column mx-2">
-                      <span>&nbsp;</span>
-                      <button
-                        type="button"
-                        mat-button
-                        class="txt-danger underline"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                  <div class="d-flex align-items-center mb-4">
-                    <div class="input mb-0">
-                      <label>Pension</label>
-                      <input type="text" placeholder="Enter value" />
-                    </div>
-                    <div class="d-flex flex-column mx-2">
-                      <span>&nbsp;</span>
-                      <button
-                        type="button"
-                        mat-button
-                        class="txt-danger underline"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                </ng-container>
-              </ng-container>
+
               <div class="d-flex align-items-center mt-5">
                 <button
                   type="submit"

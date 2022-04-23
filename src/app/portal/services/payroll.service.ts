@@ -47,8 +47,8 @@ export class PayrollService {
   //assign Employees to Payscale
   assignEmployeesToPayScale(model: any): Observable<any> {
     return this.http
-      .post<any>(
-        environment.apiBaseUrl + '/PayScale/AssignEmployeeToScale',
+      .put<any>(
+        environment.apiBaseUrl + '/PayScale/AssignEmployeesToScale',
         model,
         this.httpOptions
       )
@@ -84,6 +84,15 @@ export class PayrollService {
   checkEmployeesNotInPayScale() {
     return this.http
       .get<any>(
+        environment.apiBaseUrl + '/Payroll/CheckEmployeeNotInPayScale',
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
+  }
+  //check employees not in payscale
+  runCheckEmployeesNotInPayScale(model: any) {
+    return this.http
+      .post<any>(
         environment.apiBaseUrl + '/Payroll/CheckEmployeeNotInPayScale',
         this.httpOptions
       )
@@ -567,6 +576,15 @@ export class PayrollService {
       .post<any>(
         environment.apiBaseUrl + `/Payroll/GrossNetBreakdown`,
         model,
+        this.httpOptions
+      )
+      .pipe(catchError(handleError));
+  }
+  //Get Tenant Bank Balance
+  getTenanceBankBalance() {
+    return this.http
+      .get<any>(
+        environment.apiBaseUrl + '/Payroll/GetTenantBankBalance',
         this.httpOptions
       )
       .pipe(catchError(handleError));

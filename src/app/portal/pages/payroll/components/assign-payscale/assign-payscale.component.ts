@@ -21,11 +21,13 @@ export class AssignPayscaleComponent implements OnInit {
   @ViewChild('matSelect') select: any;
   @ViewChildren('options') _options: any;
   @ViewChild('closebtn') closebtn: any;
+  @ViewChild('closebtn_') closebtn_: any;
   data = employeeData;
   queryString: string;
   payElements: string[] = [];
   payElementItems: any[] = [];
   unAssignedEmployees: any[] = [];
+  departmentList: any[] = [];
   payScales: any[] = [];
   pageSize: number = 10;
   currentPage: number = 1;
@@ -34,8 +36,10 @@ export class AssignPayscaleComponent implements OnInit {
   show_ref: boolean = false;
   payScaleId: any;
   employeeId: any;
-  isBusy = false;
+  isBusy: boolean = false;
+  isBusy_: boolean = false;
   public assignEmpForm: FormGroup = new FormGroup({});
+  public filterForm: FormGroup = new FormGroup({});
   public dataSource: MatTableDataSource<any> = new MatTableDataSource();
   public selection = new SelectionModel(true, []);
   public displayedColumns: string[];
@@ -48,7 +52,12 @@ export class AssignPayscaleComponent implements OnInit {
   ) {
     this.assignEmpForm = this.fb.group({
       payScaleId: ['', Validators.required],
-      employeeId: [],
+      payScaleEmployees: [],
+    });
+    this.filterForm = this.fb.group({
+      employeeId: [null, Validators.required],
+      departmentId: [null],
+      employementDate: [null],
     });
   }
 
@@ -56,6 +65,7 @@ export class AssignPayscaleComponent implements OnInit {
     window.scrollTo(0, 0);
     this.getRoutes();
     this.getPayElements();
+    this.getDepartments();
     this.runCheckForUnAssignedEmployees();
     this.getPayScale();
     this.displayedColumns = [
@@ -168,10 +178,34 @@ export class AssignPayscaleComponent implements OnInit {
         this.payScales = result;
       });
   }
-
-  runCheckForUnAssignedEmployees() {
+  getDepartments() {
     this.payrollServ
-      .checkEmployeesNotInPayScale()
+      .fetchDepartment()
+      .pipe(
+        catchError((err: any): ObservableInput<any> => {
+          return throwError(err);
+        })
+      )
+      .subscribe((res) => {
+        const { result } = res;
+        this.departmentList = result;
+      });
+  }
+  runCheckForUnAssignedEmployees() {
+    let model = {
+      pageNumber: this.currentPage,
+      pageSize: this.pageSize,
+      search: '',
+      sortColumn: '',
+      sortOrder: 1,
+      filter: {
+        employeeId: '',
+        departmentId: '',
+        employementDate: '',
+      },
+    };
+    this.payrollServ
+      .runCheckEmployeesNotInPayScale(model)
       .pipe(
         catchError((err: any): ObservableInput<any> => {
           return throwError(err);
@@ -193,13 +227,18 @@ export class AssignPayscaleComponent implements OnInit {
         }
       );
   }
-  getEmpId(id) {
-    this.employeeId = id;
-  }
+
   onSubmit() {
-    if (this.employeeId !== null) {
+    if (this.selection.selected.length !== 0) {
+      let empIds = this.selection.selected
+        .filter((x: any) => x !== undefined)
+        .map((a: any) => {
+          return {
+            employeeId: a.employeeId,
+          };
+        });
       this.assignEmpForm.patchValue({
-        employeeId: this.employeeId,
+        payScaleEmployees: empIds,
       });
     }
 
@@ -229,6 +268,60 @@ export class AssignPayscaleComponent implements OnInit {
           this.assignEmpForm.reset();
         }
       );
+    }
+  }
+  onFilter() {
+    this.isBusy_ = true;
+    const model = {
+      pageSize: this.pageSize,
+      pageNumber: this.currentPage,
+      search: '',
+      sortColumn: '',
+      sortOrder: 1,
+      filter: {
+        employeeId: this.filterForm.controls['employeeId'].value,
+        departmentId: this.filterForm.controls['departmentId'].value,
+        employementDate: this.filterForm.controls['employementDate'].value,
+      },
+    };
+    if (this.filterForm.invalid) {
+      this.isBusy_ = false;
+      return;
+    }
+    if (this.filterForm.valid) {
+      this.payrollServ
+        .runCheckEmployeesNotInPayScale(model)
+        .pipe(
+          catchError((err: any): ObservableInput<any> => {
+            return throwError(err);
+          })
+        )
+        .subscribe(
+          (res) => {
+            const { result } = res;
+            this.unAssignedEmployees = result;
+            this.dataSource = new MatTableDataSource(this.unAssignedEmployees);
+            this.dataSource.paginator = this.paginator;
+            this.closebtn_._elementRef.nativeElement.click();
+            this.isBusy_ = false;
+            this.filterForm.reset();
+            this.emptyState = false;
+            this.show_ref = true;
+          },
+          (errors) => {
+            this.emptyState = errors;
+            this.isBusy_ = false;
+            this.noRecord = true;
+            if (this.emptyState) {
+              this.unAssignedEmployees = [];
+            }
+          },
+          () => {
+            this.isBusy_ = false;
+            this.noRecord = false;
+            this.filterForm.reset();
+          }
+        );
     }
   }
 }

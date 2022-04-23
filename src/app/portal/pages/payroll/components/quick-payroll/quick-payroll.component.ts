@@ -45,6 +45,7 @@ export class QuickPayrollComponent implements OnInit {
   isLoading: boolean = false;
   isLoading_: boolean = false;
   payScale: string = '';
+  bankBalance: any;
 
   public createQuickPayrollForm: FormGroup = new FormGroup({});
   public filterForm: FormGroup = new FormGroup({});
@@ -118,6 +119,9 @@ export class QuickPayrollComponent implements OnInit {
   }
   handlePayChannel(event: any) {
     this.payChannel = event.source._value;
+    if (this.payChannel == 2) {
+      this.getTenantBankBalance();
+    }
   }
   handlePayScaleSelect(event: any) {
     this.payScaleId = event.source._value;
@@ -224,12 +228,25 @@ export class QuickPayrollComponent implements OnInit {
         }
       );
   }
+  getTenantBankBalance() {
+    this.payrollServ
+      .getTenanceBankBalance()
+      .pipe(
+        catchError((err: any): ObservableInput<any> => {
+          return throwError(err);
+        })
+      )
+      .subscribe((res) => {
+        this.bankBalance = res.result;
+      });
+  }
+
   runCheckForUnAssignedEmployees() {
     if (this.selection.selected.length == 0) {
       this.createQuickPayrollForm.controls['employees'].setErrors({
         invalid: true,
       });
-      this.toastr.error('Select an item before continuing', 'Message');
+      this.toastr.info('Select an item before continuing', 'Message');
     } else {
       this.createQuickPayrollForm.controls['employees'].setErrors(null);
     }

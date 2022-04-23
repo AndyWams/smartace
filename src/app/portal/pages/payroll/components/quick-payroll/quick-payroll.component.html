@@ -7,7 +7,25 @@
     *ngIf="payChannel == 2"
   >
     <label>Bank Balance</label>
-    <label class="bold-txt">NGN 39,000,920.00</label>
+    <ng-container *ngIf="!bankBalance">
+      <section class="d-flex align-items-center flex-column my-2">
+        <div class="lds-roller">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </section>
+
+      ></ng-container
+    >
+    <label class="bold-txt" *ngIf="bankBalance">{{
+      bankBalance | currency: "₦":"symbol"
+    }}</label>
   </div>
   <div class="form-wrap w--700">
     <form [formGroup]="createQuickPayrollForm">
@@ -493,7 +511,7 @@
                   }"
                   mat-button
                   class="btn-link"
-                  >Views</a
+                  >View</a
                 >
               </td>
             </ng-container>
