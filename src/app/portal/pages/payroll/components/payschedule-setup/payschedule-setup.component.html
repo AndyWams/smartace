@@ -311,7 +311,6 @@
                   }"
                 />
               </div>
-
               <div class="input">
                 <label>Pay Frequency</label>
                 <mat-select
@@ -336,56 +335,47 @@
                 </mat-select>
               </div>
               <div class="input">
-                <label>Day of the Month</label>
+                <label>Payroll Initialization Date</label>
                 <input
                   type="date"
-                  formControlName="payPeriodDate"
-                  [ngClass]="{
-                    'is-invalid':
-                      createPaySheduleForm.controls['payPeriodDate'].hasError(
-                        'required'
-                      ) &&
-                      createPaySheduleForm.controls['payPeriodDate'].touched
-                  }"
-                />
-              </div>
-              <div class="input">
-                <label>First Pay Date on New Shedule</label>
-                <input
-                  type="date"
-                  formControlName="dateBecomeActive"
+                  formControlName="payrollInitializationDate"
                   [ngClass]="{
                     'is-invalid':
                       createPaySheduleForm.controls[
-                        'dateBecomeActive'
+                        'payrollInitializationDate'
                       ].hasError('required') &&
-                      createPaySheduleForm.controls['dateBecomeActive'].touched
+                      createPaySheduleForm.controls['payrollInitializationDate']
+                        .touched
                   }"
                 />
               </div>
               <div class="input">
-                <label>Deadline to run Payroll</label>
+                <label>Payroll Deadline Date</label>
                 <input
                   type="date"
-                  formControlName="deadlineDate"
+                  formControlName="payrollDeadlineDate"
                   [ngClass]="{
                     'is-invalid':
-                      createPaySheduleForm.controls['deadlineDate'].hasError(
-                        'required'
-                      ) && createPaySheduleForm.controls['deadlineDate'].touched
+                      createPaySheduleForm.controls[
+                        'payrollDeadlineDate'
+                      ].hasError('required') &&
+                      createPaySheduleForm.controls['payrollDeadlineDate']
+                        .touched
                   }"
                 />
               </div>
               <div class="input">
-                <label>Pay Date</label>
+                <label>Payroll Payment Date</label>
                 <input
                   type="date"
-                  formControlName="payDate"
+                  formControlName="payrollPaymentDate"
                   [ngClass]="{
                     'is-invalid':
-                      createPaySheduleForm.controls['payDate'].hasError(
-                        'required'
-                      ) && createPaySheduleForm.controls['payDate'].touched
+                      createPaySheduleForm.controls[
+                        'payrollPaymentDate'
+                      ].hasError('required') &&
+                      createPaySheduleForm.controls['payrollPaymentDate']
+                        .touched
                   }"
                 />
               </div>
@@ -473,57 +463,48 @@
                 </mat-select>
               </div>
               <div class="input">
-                <label>Day of the Month</label>
+                <label>Payroll Initialization Date</label>
                 <input
                   type="date"
-                  formControlName="payPeriodDate"
-                  [ngClass]="{
-                    'is-invalid':
-                      updatePayScheduleForm.controls['payPeriodDate'].hasError(
-                        'required'
-                      ) &&
-                      updatePayScheduleForm.controls['payPeriodDate'].touched
-                  }"
-                />
-              </div>
-              <div class="input">
-                <label>First Pay Date on New Shedule</label>
-                <input
-                  type="date"
-                  formControlName="dateBecomeActive"
+                  formControlName="payrollInitializationDate"
                   [ngClass]="{
                     'is-invalid':
                       updatePayScheduleForm.controls[
-                        'dateBecomeActive'
+                        'payrollInitializationDate'
                       ].hasError('required') &&
-                      updatePayScheduleForm.controls['dateBecomeActive'].touched
+                      updatePayScheduleForm.controls[
+                        'payrollInitializationDate'
+                      ].touched
                   }"
                 />
               </div>
               <div class="input">
-                <label>Deadline to run Payroll</label>
+                <label>Payroll Deadline Date</label>
                 <input
                   type="date"
-                  formControlName="deadlineDate"
+                  formControlName="payrollDeadlineDate"
                   [ngClass]="{
                     'is-invalid':
-                      updatePayScheduleForm.controls['deadlineDate'].hasError(
-                        'required'
-                      ) &&
-                      updatePayScheduleForm.controls['deadlineDate'].touched
+                      updatePayScheduleForm.controls[
+                        'payrollDeadlineDate'
+                      ].hasError('required') &&
+                      updatePayScheduleForm.controls['payrollDeadlineDate']
+                        .touched
                   }"
                 />
               </div>
               <div class="input">
-                <label>Pay Date</label>
+                <label>Payroll Payment Date</label>
                 <input
                   type="date"
-                  formControlName="payDate"
+                  formControlName="payrollPaymentDate"
                   [ngClass]="{
                     'is-invalid':
-                      updatePayScheduleForm.controls['payDate'].hasError(
-                        'required'
-                      ) && updatePayScheduleForm.controls['payDate'].touched
+                      updatePayScheduleForm.controls[
+                        'payrollPaymentDate'
+                      ].hasError('required') &&
+                      updatePayScheduleForm.controls['payrollPaymentDate']
+                        .touched
                   }"
                 />
               </div>

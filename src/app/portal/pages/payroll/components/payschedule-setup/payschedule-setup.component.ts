@@ -65,16 +65,16 @@ export class PayscheduleSetupComponent implements OnInit {
     this.createPaySheduleForm = this.fb.group({
       payScheduleName: [null, Validators.required],
       frequency: [null],
-      payPeriodDate: [null, Validators.required],
-      dateBecomeActive: [null, Validators.required],
-      deadlineDate: [null, Validators.required],
-      payDate: [null, Validators.required],
+      payrollInitializationDate: [null, Validators.required],
+      payrollDeadlineDate: [null, Validators.required],
+      payrollPaymentDate: [null, Validators.required],
     });
     this.assignEmployeesForm = this.fb.group({
       payScaleId: [null, Validators.required],
       employeeId: [null],
     });
   }
+
   ngOnInit(): void {
     this.getPaySchedules();
     this.getEnums();
@@ -231,25 +231,21 @@ export class PayscheduleSetupComponent implements OnInit {
   }
   setFormControlElement() {
     this.updatePayScheduleForm = this.fb.group({
-      payPeriodDate: [
-        this.formatdate(this.itemDetails['payPeriodDate']),
-        Validators.required,
-      ],
-      dateBecomeActive: [
-        this.formatdate(this.itemDetails['dateBecomeActive']),
-        Validators.required,
-      ],
       payScheduleName: [
         this.itemDetails['payScheduleName'],
         Validators.required,
       ],
       frequency: [this.itemDetails['frequency']],
-      deadlineDate: [
-        this.formatdate(this.itemDetails['deadlineDate']),
+      payrollInitializationDate: [
+        this.formatdate(this.itemDetails['payrollInitializationDate']),
         Validators.required,
       ],
-      payDate: [
-        this.formatdate(this.itemDetails['payDate']),
+      payrollDeadlineDate: [
+        this.formatdate(this.itemDetails['payrollDeadlineDate']),
+        Validators.required,
+      ],
+      payrollPaymentDate: [
+        this.formatdate(this.itemDetails['payrollPaymentDate']),
         Validators.required,
       ],
       payScheduleId: [this.itemDetails['payScheduleId']],
