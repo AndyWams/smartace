@@ -78,7 +78,12 @@ export class PayscheduleSetupComponent implements OnInit {
   ngOnInit(): void {
     this.getPaySchedules();
     this.getEnums();
-    this.displayedColumns = ['Name', 'pay Frequency', 'pay Date', 'action'];
+    this.displayedColumns = [
+      'Name',
+      'pay frequency',
+      'payroll payment date',
+      'action',
+    ];
   }
 
   get formRawValue(): any {

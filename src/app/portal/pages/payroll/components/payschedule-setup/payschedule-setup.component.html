@@ -200,7 +200,7 @@
           </ng-container>
 
           <!--Table  Row Content-->
-          <ng-container *ngIf="disCol == 'pay Frequency'">
+          <ng-container *ngIf="disCol == 'pay frequency'">
             <td mat-cell *matCellDef="let element">
               <span>{{
                 element["frequency"]
@@ -209,9 +209,11 @@
               }}</span>
             </td>
           </ng-container>
-          <ng-container *ngIf="disCol == 'pay Date'">
+          <ng-container *ngIf="disCol == 'payroll payment date'">
             <td mat-cell *matCellDef="let element">
-              <span>{{ element["payDate"] | date: "mediumDate" }}</span>
+              <span>{{
+                element["payrollPaymentDate"] | date: "mediumDate"
+              }}</span>
             </td>
           </ng-container>
           <td mat-cell *matCellDef="let element">
