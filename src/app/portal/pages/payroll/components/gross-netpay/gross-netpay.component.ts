@@ -17,6 +17,7 @@ import {
   getElementTypeValue,
   printElement,
 } from 'src/app/portal/shared/_helperFunctions';
+import { ExportServiceService } from 'src/app/portal/services/export-service.service';
 
 @Component({
   selector: 'app-gross-netpay',
@@ -26,15 +27,16 @@ import {
 export class GrossNetpayComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   grossList: any[] = [];
-  pageSize: number = 10;
-  currentPage: number = 1;
-  emptyState: any;
+  pageSize: number = 20;
+  currentPage: number = 0;
   noRecord: boolean = false;
   isBusy: boolean = false;
   show_ref: boolean = false;
   payrollId: any;
   itemDetails: any;
   payElementBreakdown: any[] = [];
+  _loading: boolean = false;
+  file_name = 'gross_data';
   _printElement = printElement;
   elementTypeValue = getElementTypeValue;
   public selection = new SelectionModel(true, []);
@@ -42,6 +44,7 @@ export class GrossNetpayComponent implements OnInit {
   public dataSource: MatTableDataSource<any> = new MatTableDataSource();
   constructor(
     private payrollServ: PayrollService,
+    private exportService: ExportServiceService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
@@ -49,6 +52,9 @@ export class GrossNetpayComponent implements OnInit {
   ngOnInit(): void {
     this.getGrossNet();
     this.displayedColumns = this.column;
+  }
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
   }
   column = [
     'name',
@@ -91,12 +97,14 @@ export class GrossNetpayComponent implements OnInit {
     return myArray.join('');
   }
 
-  getGrossNet() {
+  getGrossNet(sortOrder?: string) {
+    this._loading = true;
+    this.grossList = [];
     let model = {
       pageSize: this.pageSize,
-      pageNumber: this.currentPage,
+      pageNumber: this.currentPage + 1,
       search: '',
-      sortColumn: '',
+      sortColumn: sortOrder,
       sortOrder: 1,
     };
     this.payrollServ
@@ -106,21 +114,15 @@ export class GrossNetpayComponent implements OnInit {
           return throwError(err);
         })
       )
-      .subscribe(
-        (res) => {
-          const { result } = res;
-          this.grossList = result;
-          this.dataSource = new MatTableDataSource(this.grossList);
-          this.dataSource.paginator = this.paginator;
-          this.show_ref = false;
-        },
-        (errors) => {
-          this.emptyState = errors;
-          if (this.emptyState) {
-            this.grossList = [];
-          }
-        }
-      );
+      .subscribe((res) => {
+        this._loading = false;
+        const { result } = res;
+        this.grossList = result;
+        this.dataSource = new MatTableDataSource(this.grossList);
+        this.paginator.pageIndex = this.currentPage;
+        this.paginator.length = this.grossList.length;
+        this.show_ref = false;
+      });
   }
   getItemDetails(obj: any) {
     if (obj !== undefined) {
@@ -137,5 +139,47 @@ export class GrossNetpayComponent implements OnInit {
           this.payElementBreakdown = this.itemDetails.items;
         });
     }
+  }
+  getFilterTerm(val: any) {
+    this.grossList = [];
+    if (val && val !== null) {
+      this.getGrossNet(val);
+    } else {
+      this.getGrossNet();
+    }
+  }
+  pageChanged(event: PageEvent) {
+    this.pageSize = event.pageSize;
+    this.currentPage = event.pageIndex;
+    this.getGrossNet();
+  }
+  exportToExcel(): void {
+    const edata: Array<any> = [];
+    const udt: any = {
+      data: [
+        { A: 'Gross DATA' }, // title
+        {
+          A: 'Name',
+          B: 'Gross ID',
+          C: 'Department',
+          D: 'Earnings',
+          E: 'Deductions',
+          F: 'Net pay',
+        }, // table header
+      ],
+      skipHeader: true,
+    };
+    this.grossList.forEach((data) => {
+      udt.data.push({
+        A: data.employeeName,
+        B: data.grossId,
+        C: data.departmentName,
+        D: data.totalEarning,
+        E: data.totalDeduction,
+        F: data.netPay,
+      });
+    });
+    edata.push(udt);
+    this.exportService.exportTableElmToExcel(edata, this.file_name);
   }
 }

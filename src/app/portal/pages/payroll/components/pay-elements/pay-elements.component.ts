@@ -32,8 +32,6 @@ export class PayElementsComponent implements OnInit {
   isBusy: boolean = false;
   itemDetails: any;
   _loading: boolean = false;
-  totalRows = 0;
-  hidePagenator: boolean = false;
   file_name = 'payelements_data';
   _printElement = printElement;
   public filterForm: FormGroup = new FormGroup({});

@@ -15,6 +15,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ITaxType } from 'src/app/portal/models';
+import { ExportServiceService } from 'src/app/portal/services/export-service.service';
 
 @Component({
   selector: 'app-tax-type',
@@ -26,11 +27,12 @@ export class TaxTypeComponent implements OnInit {
   @ViewChild('closebtn_') closebtn_: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   taxList: any[] = [];
-  pageSize: number = 10;
-  currentPage: number = 1;
-  emptyState: any;
+  pageSize: number = 20;
+  currentPage: number = 0;
   isBusy: boolean = false;
   itemDetails: any;
+  _loading: boolean = false;
+  file_name = 'taxlist_data';
   public updateTaxTypeForm: FormGroup = new FormGroup({});
   public dataSource: MatTableDataSource<any> = new MatTableDataSource();
 
@@ -38,6 +40,7 @@ export class TaxTypeComponent implements OnInit {
   public displayedColumns: string[];
   constructor(
     private payrollServ: PayrollService,
+    private exportService: ExportServiceService,
     private toastr: ToastrService,
     private fb: FormBuilder
   ) {}
@@ -47,12 +50,11 @@ export class TaxTypeComponent implements OnInit {
     this.displayedColumns = this.column;
     this.displayedColumns = this.displayedColumns.concat(['action']);
   }
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
   get value_(): ITaxType {
     return this.updateTaxTypeForm.getRawValue();
-  }
-
-  toggleCheck() {
-    // console.log(this.selection.selected);
   }
 
   isAllSelected() {
@@ -101,12 +103,14 @@ export class TaxTypeComponent implements OnInit {
         });
     }
   }
-  getTaxTypes() {
+  getTaxTypes(sortOrder?: string) {
+    this._loading = true;
+    this.taxList = [];
     let model = {
-      pageNumber: this.currentPage,
+      pageNumber: this.currentPage + 1,
       pageSize: this.pageSize,
       search: '',
-      sortColumn: '',
+      sortColumn: sortOrder,
       sortOrder: 1,
     };
     this.payrollServ
@@ -116,18 +120,15 @@ export class TaxTypeComponent implements OnInit {
           return throwError(err);
         })
       )
-      .subscribe(
-        (res) => {
-          const { result } = res;
-          const { data, pagination } = result;
-          this.taxList = data;
-          this.dataSource = new MatTableDataSource(this.taxList);
-          this.dataSource.paginator = this.paginator;
-        },
-        (errors) => {
-          this.emptyState = errors;
-        }
-      );
+      .subscribe((res) => {
+        this._loading = false;
+        const { result } = res;
+        const { data, pagination } = result;
+        this.taxList = data;
+        this.dataSource = new MatTableDataSource(this.taxList);
+        this.paginator.pageIndex = this.currentPage;
+        this.paginator.length = this.taxList.length;
+      });
   }
   setFormControlElement() {
     this.updateTaxTypeForm = this.fb.group({
@@ -176,5 +177,41 @@ export class TaxTypeComponent implements OnInit {
         }
       );
     }
+  }
+  getFilterTerm(val: any) {
+    this.taxList = [];
+    if (val && val !== null) {
+      this.getTaxTypes(val);
+    } else {
+      this.getTaxTypes();
+    }
+  }
+  pageChanged(event: PageEvent) {
+    this.pageSize = event.pageSize;
+    this.currentPage = event.pageIndex;
+    this.getTaxTypes();
+  }
+  exportToExcel(): void {
+    const edata: Array<any> = [];
+    const udt: any = {
+      data: [
+        { A: 'Taxlist DATA' }, // title
+        {
+          A: 'Name',
+          B: 'Tax percentage',
+          C: 'Created date',
+        }, // table header
+      ],
+      skipHeader: true,
+    };
+    this.taxList.forEach((data) => {
+      udt.data.push({
+        A: data.taxName,
+        B: data.taxPercentage,
+        C: data.createdOn,
+      });
+    });
+    edata.push(udt);
+    this.exportService.exportTableElmToExcel(edata, this.file_name);
   }
 }

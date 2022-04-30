@@ -3,13 +3,11 @@
 </div>
 <div
   class="d-flex justify-content-center align-items-center my-3 empty-state"
-  *ngIf="emptyState"
+  *ngIf="!_loading && (!payrollList || payrollList.length === 0)"
 >
   <span class="txt-grey txt-md">No record found! Please create a record.</span>
 </div>
-<ng-container *ngIf="payrollList.length === 0 && !emptyState">
-  <app-loading-roller></app-loading-roller>
-</ng-container>
+<app-loading-roller *ngIf="_loading"></app-loading-roller>
 
 <div
   class="overflow--wrap _visible"
@@ -27,17 +25,6 @@
             [aria-label]="checkboxLabel()"
           >
           </mat-checkbox>
-          <button mat-icon-button [matMenuTriggerFor]="menu">
-            <mat-icon>more_vert</mat-icon>
-          </button>
-          <mat-menu #menu="matMenu">
-            <button mat-menu-item>
-              <span>Option One</span>
-            </button>
-            <button mat-menu-item>
-              <span>Option Two</span>
-            </button>
-          </mat-menu>
         </div>
         <div class="search-input mr-1">
           <span><mat-icon>search</mat-icon></span>
@@ -67,18 +54,27 @@
             class="mat-stroked-secondary"
             [matMenuTriggerFor]="sortby"
           >
-            Most recent
-            <mat-icon class="ms-2">keyboard_arrow_down</mat-icon>
+            Most recent <mat-icon class="ms-2">keyboard_arrow_down</mat-icon>
           </button>
           <mat-menu #sortby="matMenu">
-            <button mat-menu-item>
-              <span>Option One</span>
+            <button mat-menu-item (click)="getFilterTerm('asc')">
+              <span>Ascending</span>
             </button>
-            <button mat-menu-item>
-              <span>Option Two</span>
+            <button mat-menu-item (click)="getFilterTerm('desc')">
+              <span>Descending</span>
             </button>
           </mat-menu>
         </div>
+        <button
+          mat-mini-fab
+          class="mx-2"
+          color="primary"
+          *ngIf="show_ref"
+          matTooltip="Refresh List"
+          (click)="getPayrollLogs()"
+        >
+          <mat-icon>refresh</mat-icon>
+        </button>
       </div>
     </div>
     <!--Table Layout-->
@@ -228,7 +224,12 @@
         </td>
       </tr>
     </table>
-    <mat-paginator showFirstLastButtons [pageSize]="pageSize"></mat-paginator>
+    <mat-paginator
+      showFirstLastButton
+      [pageIndex]="currentPage"
+      [pageSize]="pageSize"
+      (page)="pageChanged($event)"
+    ></mat-paginator>
   </div>
 </div>
 <div class="modal fade" id="deletePayroll" role="dialog">

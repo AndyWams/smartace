@@ -20,6 +20,7 @@ import {
   formatDate,
   getFrequencyValue,
 } from 'src/app/portal/shared/_helperFunctions';
+import { ExportServiceService } from 'src/app/portal/services/export-service.service';
 
 @Component({
   selector: 'app-payschedule-setup',
@@ -35,9 +36,8 @@ export class PayscheduleSetupComponent implements OnInit {
   @ViewChild('close') close: any;
   screen: number = 1;
   selectedItem: any;
-  pageSize: number = 10;
-  currentPage: number = 1;
-  emptyState: any;
+  pageSize: number = 20;
+  currentPage: number = 0;
   payScheduleList: any[] = [];
   itemDetails: any;
   enumkey: any;
@@ -45,6 +45,8 @@ export class PayscheduleSetupComponent implements OnInit {
   _payscheduleID: any;
   isBusy: boolean = false;
   show_ref: boolean = false;
+  _loading: boolean = false;
+  file_name = 'payschedule_data';
   date = new Date().toISOString();
   formatdate = formatDate;
   public createPaySheduleForm: FormGroup = new FormGroup({});
@@ -58,6 +60,7 @@ export class PayscheduleSetupComponent implements OnInit {
   constructor(
     private renderer: Renderer2,
     private payrollServ: PayrollService,
+    private exportService: ExportServiceService,
     private toastr: ToastrService,
     private router: Router,
     private fb: FormBuilder
@@ -84,6 +87,9 @@ export class PayscheduleSetupComponent implements OnInit {
       'payroll payment date',
       'action',
     ];
+  }
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
   }
 
   get formRawValue(): any {
@@ -155,12 +161,14 @@ export class PayscheduleSetupComponent implements OnInit {
         this.enumkey = res;
       });
   }
-  getPaySchedules() {
+  getPaySchedules(sortOrder?: string) {
+    this._loading = true;
+    this.payScheduleList = [];
     let model = {
-      pageNumber: this.currentPage,
+      pageNumber: this.currentPage + 1,
       pageSize: this.pageSize,
       search: null,
-      sortColumn: null,
+      sortColumn: sortOrder,
       sortOrder: 1,
     };
     this.payrollServ
@@ -170,23 +178,17 @@ export class PayscheduleSetupComponent implements OnInit {
           return throwError(err);
         })
       )
-      .subscribe(
-        (res) => {
-          const { result } = res;
-          const { data, pagination } = result;
-          this.payScheduleList = data;
-          this.dataSource = new MatTableDataSource(this.payScheduleList);
-          this.dataSource.paginator = this.paginator;
-          this.show_ref = false;
-          this.screen = 2;
-        },
-        (errors) => {
-          this.emptyState = errors;
-          if (this.emptyState) {
-            this.payScheduleList = [];
-          }
-        }
-      );
+      .subscribe((res) => {
+        this._loading = false;
+        const { result } = res;
+        const { data, pagination } = result;
+        this.payScheduleList = data;
+        this.dataSource = new MatTableDataSource(this.payScheduleList);
+        this.paginator.pageIndex = this.currentPage;
+        this.paginator.length = pagination.rowCount;
+        this.show_ref = false;
+        this.screen = 2;
+      });
   }
   onSubmit() {
     this.isBusy = true;
@@ -203,7 +205,6 @@ export class PayscheduleSetupComponent implements OnInit {
           this.closebtn._elementRef.nativeElement.click();
           this.getPaySchedules();
           this.screen = 2;
-          this.emptyState = false;
         },
         (error) => {
           this.isBusy = false;
@@ -297,5 +298,41 @@ export class PayscheduleSetupComponent implements OnInit {
           this.getPaySchedules();
         });
     }
+  }
+  getFilterTerm(val: any) {
+    this.payScheduleList = [];
+    if (val && val !== null) {
+      this.getPaySchedules(val);
+    } else {
+      this.getPaySchedules();
+    }
+  }
+  pageChanged(event: PageEvent) {
+    this.pageSize = event.pageSize;
+    this.currentPage = event.pageIndex;
+    this.getPaySchedules();
+  }
+  exportToExcel(): void {
+    const edata: Array<any> = [];
+    const udt: any = {
+      data: [
+        { A: 'Payschedule DATA' }, // title
+        {
+          A: 'Name',
+          B: 'Frequency',
+          C: 'Payroll Pay Date',
+        }, // table header
+      ],
+      skipHeader: true,
+    };
+    this.payScheduleList.forEach((data) => {
+      udt.data.push({
+        A: data.payScheduleName,
+        B: data.frequency,
+        C: data.payrollPaymentDate,
+      });
+    });
+    edata.push(udt);
+    this.exportService.exportTableElmToExcel(edata, this.file_name);
   }
 }

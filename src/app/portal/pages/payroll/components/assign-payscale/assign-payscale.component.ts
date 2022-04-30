@@ -223,7 +223,7 @@ export class AssignPayscaleComponent implements OnInit {
         this.unAssignedEmployees = result;
         this.dataSource = new MatTableDataSource(this.unAssignedEmployees);
         this.paginator.pageIndex = this.currentPage;
-        // this.paginator.length = pagination.rowCount;
+        this.paginator.length = this.unAssignedEmployees.length;
         this.show_ref = false;
       });
   }

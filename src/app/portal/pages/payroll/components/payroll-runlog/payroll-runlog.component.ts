@@ -23,14 +23,14 @@ export class PayrollRunlogComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('closebtn') closebtn: any;
   payrollList: any[] = [];
-  pageSize: number = 10;
-  currentPage: number = 1;
-  emptyState: any;
+  pageSize: number = 20;
+  currentPage: number = 0;
   noRecord: boolean = false;
   isBusy: boolean = false;
   show_ref: boolean = false;
   payrollId: any;
   itemDetails: any;
+  _loading: boolean = false;
   statusValue = getStatusValue;
   public dataSource: MatTableDataSource<any> = new MatTableDataSource();
   public selection = new SelectionModel(true, []);
@@ -51,6 +51,9 @@ export class PayrollRunlogComponent implements OnInit {
       'status',
       'action',
     ];
+  }
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
   }
   isAllSelected() {
     const numSelected = this.selection.selected.length;
@@ -82,12 +85,14 @@ export class PayrollRunlogComponent implements OnInit {
     const myArray = strtext.split(' ');
     return myArray.join('');
   }
-  getPayrollLogs() {
+  getPayrollLogs(sortOrder?: string) {
+    this._loading = true;
+    this.payrollList = [];
     let model = {
       pageSize: this.pageSize,
-      pageNumber: this.currentPage,
+      pageNumber: this.currentPage + 1,
       search: '',
-      sortColumn: '',
+      sortColumn: sortOrder,
       sortOrder: 1,
       payScheduleId: null,
       startDate: null,
@@ -102,23 +107,17 @@ export class PayrollRunlogComponent implements OnInit {
           return throwError(err);
         })
       )
-      .subscribe(
-        (res) => {
-          const { result } = res;
-          const { data, pagination } = result;
-          this.payrollList = data;
-          this.dataSource = new MatTableDataSource(this.payrollList);
-          this.dataSource.paginator = this.paginator;
-          this.show_ref = false;
-          this.emptyState = null;
-        },
-        (errors) => {
-          this.emptyState = errors;
-          if (this.emptyState) {
-            this.payrollList = [];
-          }
-        }
-      );
+      .subscribe((res) => {
+        this._loading = false;
+        const { result } = res;
+        const { data, pagination } = result;
+        this.payrollList = data;
+        this.dataSource = new MatTableDataSource(this.payrollList);
+        this.dataSource.paginator = this.paginator;
+        this.paginator.pageIndex = this.currentPage;
+        this.paginator.length = pagination.rowCount;
+        this.show_ref = false;
+      });
   }
   getItemDetails(id: any) {
     if (id !== undefined) {
@@ -152,5 +151,18 @@ export class PayrollRunlogComponent implements OnInit {
           this.getPayrollLogs();
         });
     }
+  }
+  getFilterTerm(val: any) {
+    this.payrollList = [];
+    if (val && val !== null) {
+      this.getPayrollLogs(val);
+    } else {
+      this.getPayrollLogs();
+    }
+  }
+  pageChanged(event: PageEvent) {
+    this.pageSize = event.pageSize;
+    this.currentPage = event.pageIndex;
+    this.getPayrollLogs();
   }
 }

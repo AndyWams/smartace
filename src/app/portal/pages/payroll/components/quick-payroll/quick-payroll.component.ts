@@ -243,7 +243,7 @@ export class QuickPayrollComponent implements OnInit {
         this.grossList = data;
         this.dataSource_ = new MatTableDataSource(this.grossList);
         this.paginator.pageIndex = this.currentPage;
-        this.paginator.length = pagination.rowCount;
+        this.paginator.length = this.grossList.length;
         this.show_ref = false;
       });
   }
