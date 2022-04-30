@@ -10,11 +10,11 @@
 </div>
 <div
   class="d-flex justify-content-center align-items-center my-3 empty-state"
-  *ngIf="emptyState"
+  *ngIf="!_loading && (!payscaleList || payscaleList.length === 0)"
 >
   <span class="txt-grey txt-md">You have not created any payscale yet.</span>
 </div>
-<ng-container *ngIf="payscaleList.length === 0 && !emptyState">
+<ng-container *ngIf="_loading">
   <app-loading-roller></app-loading-roller>
 </ng-container>
 <div
@@ -39,17 +39,6 @@
               [aria-label]="checkboxLabel()"
             >
             </mat-checkbox>
-            <button mat-icon-button [matMenuTriggerFor]="menu">
-              <mat-icon>more_vert</mat-icon>
-            </button>
-            <mat-menu #menu="matMenu">
-              <button mat-menu-item>
-                <span>Option One</span>
-              </button>
-              <button mat-menu-item>
-                <span>Option Two</span>
-              </button>
-            </mat-menu>
           </div>
           <div class="search-input mr-1">
             <span><mat-icon>search</mat-icon></span>
@@ -82,19 +71,28 @@
               Most recent <mat-icon class="ms-2">keyboard_arrow_down</mat-icon>
             </button>
             <mat-menu #sortby="matMenu">
-              <button mat-menu-item>
-                <span>Option One</span>
+              <button mat-menu-item (click)="getFilterTerm('asc')">
+                <span>Ascending</span>
               </button>
-              <button mat-menu-item>
-                <span>Option Two</span>
+              <button mat-menu-item (click)="getFilterTerm('desc')">
+                <span>Descending</span>
               </button>
             </mat-menu>
           </div>
           <!-- Export as-->
           <div>
-            <button mat-stroked-button class="mat-stroked-secondary mr-1">
+            <button
+              mat-stroked-button
+              class="mat-stroked-secondary mr-1"
+              [matMenuTriggerFor]="exportAs"
+            >
               Export as
             </button>
+            <mat-menu #exportAs="matMenu">
+              <button mat-menu-item (click)="exportToExcel()">
+                Download as Excel
+              </button>
+            </mat-menu>
           </div>
           <!-- Print-->
           <div>
@@ -240,7 +238,12 @@
         </tr>
       </table>
     </ng-container>
-    <mat-paginator showFirstLastButtons [pageSize]="pageSize"></mat-paginator>
+    <mat-paginator
+      showFirstLastButton
+      [pageIndex]="currentPage"
+      [pageSize]="pageSize"
+      (page)="pageChanged($event)"
+    ></mat-paginator>
   </div>
 </div>
 <div class="modal fade" id="payScaleFilterBy" role="dialog">

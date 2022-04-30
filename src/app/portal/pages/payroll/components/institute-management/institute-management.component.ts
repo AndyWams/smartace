@@ -15,6 +15,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { printElement } from 'src/app/portal/shared/_helperFunctions';
+import { ExportServiceService } from 'src/app/portal/services/export-service.service';
 @Component({
   selector: 'app-institute-management',
   templateUrl: './institute-management.component.html',
@@ -25,15 +26,18 @@ export class InstituteManagementComponent implements OnInit {
   @ViewChild('closebtn_') closebtn_: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   institutionList: any[] = [];
-  pageSize: number = 10;
-  currentPage: number = 1;
-  emptyState: any;
+  pageSize: number = 20;
+  currentPage = 0;
   noRecord: boolean = false;
   isBusy: boolean = false;
   show_ref: boolean = false;
   itemDetails: any;
   bankList: any[] = [];
   institutionCatList: any[] = [];
+  _loading: boolean = false;
+  totalRows = 0;
+  hidePagenator: boolean = false;
+  file_name = 'institution_data';
   _printElement = printElement;
   public filterForm: FormGroup = new FormGroup({});
   public dataSource: MatTableDataSource<any> = new MatTableDataSource();
@@ -41,6 +45,7 @@ export class InstituteManagementComponent implements OnInit {
   public displayedColumns: string[];
   constructor(
     private payrollServ: PayrollService,
+    private exportService: ExportServiceService,
     private toastr: ToastrService,
     private fb: FormBuilder
   ) {
@@ -51,7 +56,9 @@ export class InstituteManagementComponent implements OnInit {
     });
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
   ngOnInit(): void {
     this.getInstitution();
     this.getInstitutionCat();
@@ -148,12 +155,14 @@ export class InstituteManagementComponent implements OnInit {
         this.bankList = result;
       });
   }
-  getInstitution() {
+  getInstitution(sortOrder?: string) {
+    this._loading = true;
+    this.institutionList = [];
     let model = {
       pageSize: this.pageSize,
-      pageNumber: this.currentPage,
+      pageNumber: this.currentPage + 1,
       search: '',
-      sortColumn: '',
+      sortColumn: sortOrder,
       sortOrder: 1,
       filter: {
         instituteCategoryId: null,
@@ -170,19 +179,16 @@ export class InstituteManagementComponent implements OnInit {
       )
       .subscribe(
         (res) => {
+          this._loading = false;
           const { result } = res;
           const { data, pagination } = result;
           this.institutionList = data;
           this.dataSource = new MatTableDataSource(this.institutionList);
-          this.dataSource.paginator = this.paginator;
+          this.paginator.pageIndex = this.currentPage;
+          this.paginator.length = pagination.rowCount;
           this.show_ref = false;
         },
-        (errors) => {
-          this.emptyState = errors;
-          if (this.emptyState) {
-            this.institutionList = [];
-          }
-        }
+        (errors) => {}
       );
   }
   confirmDelete() {
@@ -206,9 +212,11 @@ export class InstituteManagementComponent implements OnInit {
   }
   onFilter() {
     this.isBusy = true;
+    this._loading = true;
+    this.institutionList = [];
     const model = {
       pageSize: this.pageSize,
-      pageNumber: this.currentPage,
+      pageNumber: this.currentPage + 1,
       search: '',
       sortColumn: '',
       sortOrder: 1,
@@ -233,32 +241,74 @@ export class InstituteManagementComponent implements OnInit {
         )
         .subscribe(
           (res) => {
+            this._loading = false;
             const { result } = res;
             const { data, pagination } = result;
             this.institutionList = data;
             this.dataSource = new MatTableDataSource(this.institutionList);
-            this.dataSource.paginator = this.paginator;
+            this.paginator.pageIndex = this.currentPage;
+            this.paginator.length = pagination.rowCount;
             this.closebtn_._elementRef.nativeElement.click();
             this.isBusy = false;
             this.noRecord = false;
-            this.emptyState = false;
             this.show_ref = true;
             this.filterForm.reset();
           },
-          (errors) => {
-            this.emptyState = errors;
+          () => {
             this.isBusy = false;
-            this.noRecord = true;
-            if (this.emptyState) {
-              this.institutionList = [];
-            }
+            this._loading = false;
           },
           () => {
             this.isBusy = false;
+            this._loading = false;
             this.noRecord = false;
             this.filterForm.reset();
           }
         );
     }
+  }
+  getFilterTerm(val: any) {
+    this.institutionList = [];
+    if (val && val !== null) {
+      this.getInstitution(val);
+    } else {
+      this.getInstitution();
+    }
+  }
+  pageChanged(event: PageEvent) {
+    this.pageSize = event.pageSize;
+    this.currentPage = event.pageIndex;
+    this.getInstitution();
+  }
+  exportToExcel(): void {
+    const edata: Array<any> = [];
+    const udt: any = {
+      data: [
+        { A: 'INSTITUTION DATA' }, // title
+        {
+          A: '#',
+          B: 'Institution name',
+          C: 'Institution category',
+          D: 'Account name',
+          E: 'Account number',
+          F: 'Bank',
+          G: 'Created date',
+        }, // table header
+      ],
+      skipHeader: true,
+    };
+    this.institutionList.forEach((data) => {
+      udt.data.push({
+        A: data.institutionId,
+        B: data.institutionName,
+        C: data.institutionCategory.institutionCategoryName,
+        D: data.accountName,
+        E: data.accountNumber,
+        F: data.bank.bankName,
+        G: data.createdOn,
+      });
+    });
+    edata.push(udt);
+    this.exportService.exportTableElmToExcel(edata, this.file_name);
   }
 }

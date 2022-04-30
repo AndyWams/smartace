@@ -12,6 +12,7 @@ import {
   getFrequencyValue,
   printElement,
 } from 'src/app/portal/shared/_helperFunctions';
+import { ExportServiceService } from 'src/app/portal/services/export-service.service';
 
 @Component({
   selector: 'app-pay-scale',
@@ -24,13 +25,16 @@ export class PayScaleComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   payscaleList: any[] = [];
   payElementList: any[] = [];
-  pageSize: number = 10;
-  currentPage: number = 1;
-  emptyState: any;
+  pageSize: number = 20;
+  currentPage = 0;
   noRecord: boolean = false;
   isBusy: boolean = false;
   show_ref: boolean = false;
   itemDetails: any;
+  _loading: boolean = false;
+  totalRows = 0;
+  hidePagenator: boolean = false;
+  file_name = 'payscale_data';
   frequencyValue = getFrequencyValue;
   _printElement = printElement;
   public dataSource: MatTableDataSource<any> = new MatTableDataSource();
@@ -40,6 +44,7 @@ export class PayScaleComponent implements OnInit {
 
   constructor(
     private payrollServ: PayrollService,
+    private exportService: ExportServiceService,
     private toastr: ToastrService,
     private fb: FormBuilder
   ) {
@@ -61,7 +66,9 @@ export class PayScaleComponent implements OnInit {
       'action',
     ];
   }
-
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
   ngOnChanges() {}
   isAllSelected() {
     const numSelected = this.selection.selected.length;
@@ -121,12 +128,14 @@ export class PayScaleComponent implements OnInit {
         this.payElementList = result;
       });
   }
-  getPayscale() {
+  getPayscale(sortOrder?: string) {
+    this._loading = true;
+    this.payscaleList = [];
     let model = {
       pageSize: this.pageSize,
-      pageNumber: this.currentPage,
+      pageNumber: this.currentPage + 1,
       search: '',
-      sortColumn: '',
+      sortColumn: sortOrder,
       sortOrder: 1,
       filter: {
         payScaleName: null,
@@ -140,22 +149,16 @@ export class PayScaleComponent implements OnInit {
           return throwError(err);
         })
       )
-      .subscribe(
-        (res) => {
-          const { result } = res;
-          const { data, pagination } = result;
-          this.payscaleList = data;
-          this.dataSource = new MatTableDataSource(this.payscaleList);
-          this.dataSource.paginator = this.paginator;
-          this.show_ref = false;
-        },
-        (errors) => {
-          this.emptyState = errors;
-          if (this.emptyState) {
-            this.payscaleList = [];
-          }
-        }
-      );
+      .subscribe((res) => {
+        this._loading = false;
+        const { result } = res;
+        const { data, pagination } = result;
+        this.payscaleList = data;
+        this.dataSource = new MatTableDataSource(this.payscaleList);
+        this.paginator.pageIndex = this.currentPage;
+        this.paginator.length = pagination.rowCount;
+        this.show_ref = false;
+      });
   }
   confirmDelete() {
     this.isBusy = true;
@@ -177,9 +180,11 @@ export class PayScaleComponent implements OnInit {
   }
   onFilter() {
     this.isBusy = true;
+    this._loading = true;
+    this.payscaleList = [];
     const model = {
-      pageNumber: 1,
-      pageSize: 10,
+      pageSize: this.pageSize,
+      pageNumber: this.currentPage + 1,
       search: '',
       sortColumn: '',
       sortOrder: 1,
@@ -202,32 +207,72 @@ export class PayScaleComponent implements OnInit {
         )
         .subscribe(
           (res) => {
+            this._loading = false;
             const { result } = res;
             const { data, pagination } = result;
             this.payscaleList = data;
             this.dataSource = new MatTableDataSource(this.payscaleList);
-            this.dataSource.paginator = this.paginator;
+            this.paginator.pageIndex = this.currentPage;
+            this.paginator.length = pagination.rowCount;
             this.closebtn._elementRef.nativeElement.click();
             this.isBusy = false;
             this.noRecord = false;
-            this.emptyState = false;
             this.show_ref = true;
             this.filterForm.reset();
           },
-          (errors) => {
-            this.emptyState = errors;
+          () => {
+            this._loading = false;
             this.isBusy = false;
             this.noRecord = true;
-            if (this.emptyState) {
-              this.payscaleList = [];
-            }
           },
           () => {
             this.isBusy = false;
+            this._loading = false;
             this.noRecord = false;
             this.filterForm.reset();
           }
         );
     }
+  }
+  getFilterTerm(val: any) {
+    this.payscaleList = [];
+    if (val && val !== null) {
+      this.getPayscale(val);
+    } else {
+      this.getPayscale();
+    }
+  }
+  pageChanged(event: PageEvent) {
+    this.pageSize = event.pageSize;
+    this.currentPage = event.pageIndex;
+    this.getPayElements();
+  }
+  exportToExcel(): void {
+    const edata: Array<any> = [];
+    const udt: any = {
+      data: [
+        { A: 'PAYSCALE DATA' }, // title
+        {
+          A: '#',
+          B: 'Name',
+          C: 'Pay elements',
+          D: 'Pay frequency',
+          E: 'Number of employees',
+        }, // table header
+      ],
+      skipHeader: true,
+    };
+    this.payscaleList.forEach((data) => {
+      let res = data.payScaleElements.map((x) => x.payElement.payElementName);
+      udt.data.push({
+        A: data.payScaleId,
+        B: data.payScaleName,
+        C: res.toString(),
+        D: data.frequency,
+        E: data.totalEmployees,
+      });
+    });
+    edata.push(udt);
+    this.exportService.exportTableElmToExcel(edata, this.file_name);
   }
 }

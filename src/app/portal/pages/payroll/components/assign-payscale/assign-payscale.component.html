@@ -11,13 +11,13 @@
 </div>
 <div
   class="d-flex justify-content-center align-items-center my-3 empty-state"
-  *ngIf="emptyState"
+  *ngIf="
+    !_loading && (!unAssignedEmployees || unAssignedEmployees.length === 0)
+  "
 >
   <span class="txt-grey txt-md">No record found.</span>
 </div>
-<ng-container *ngIf="unAssignedEmployees.length === 0 && !emptyState">
-  <app-loading-roller></app-loading-roller>
-</ng-container>
+<app-loading-roller *ngIf="_loading"></app-loading-roller>
 <div
   class="overflow--wrap _visible"
   [ngClass]="{ hide: unAssignedEmployees.length == 0 }"
@@ -162,12 +162,17 @@
         </tr>
       </table>
     </ng-container>
-    <mat-paginator showFirstLastButtons [pageSize]="pageSize"></mat-paginator>
+    <mat-paginator
+      showFirstLastButton
+      [pageIndex]="currentPage"
+      [pageSize]="pageSize"
+      (page)="pageChanged($event)"
+    ></mat-paginator>
   </div>
 </div>
 <div
   class="d-flex align-items-center justify-content-center mt-4"
-  *ngIf="dataSource.data.length && !emptyState"
+  *ngIf="dataSource.data.length"
 >
   <button
     mat-flat-button

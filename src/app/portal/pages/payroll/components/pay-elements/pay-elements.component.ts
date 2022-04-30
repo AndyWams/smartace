@@ -9,6 +9,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { printElement } from 'src/app/portal/shared/_helperFunctions';
+import { ExportServiceService } from 'src/app/portal/services/export-service.service';
 
 @Component({
   selector: 'app-pay-elements',
@@ -22,15 +23,18 @@ export class PayElementsComponent implements OnInit {
   payElementList: any[] = [];
   institutionList: any[] = [];
   payElementCats: any[] = [];
-  pageSize: number = 10;
-  currentPage: number = 1;
-  emptyState: any;
+  pageSize: number = 20;
+  currentPage = 0;
   noRecord: boolean = false;
   show_ref: boolean = false;
   enumkey: any;
   enumKeys = [];
   isBusy: boolean = false;
   itemDetails: any;
+  _loading: boolean = false;
+  totalRows = 0;
+  hidePagenator: boolean = false;
+  file_name = 'payelements_data';
   _printElement = printElement;
   public filterForm: FormGroup = new FormGroup({});
   public dataSource: MatTableDataSource<any> = new MatTableDataSource();
@@ -39,6 +43,7 @@ export class PayElementsComponent implements OnInit {
 
   constructor(
     private payrollServ: PayrollService,
+    private exportService: ExportServiceService,
     private toastr: ToastrService,
     private fb: FormBuilder
   ) {
@@ -58,6 +63,9 @@ export class PayElementsComponent implements OnInit {
     this.getPaymentInstitution();
     this.getPayElementsCats();
     this.displayedColumns = this.column;
+  }
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
   }
 
   column = [
@@ -143,12 +151,14 @@ export class PayElementsComponent implements OnInit {
         this.payElementCats = result;
       });
   }
-  getPayElements() {
+  getPayElements(sortOrder?: string) {
+    this._loading = true;
+    this.payElementList = [];
     let model = {
       pageSize: this.pageSize,
-      pageNumber: this.currentPage,
+      pageNumber: this.currentPage + 1,
       search: '',
-      sortColumn: '',
+      sortColumn: sortOrder,
       sortOrder: 1,
       filter: {
         payElementCatId: null,
@@ -166,22 +176,16 @@ export class PayElementsComponent implements OnInit {
           return throwError(err);
         })
       )
-      .subscribe(
-        (res) => {
-          const { result } = res;
-          const { data, pagination } = result;
-          this.payElementList = data;
-          this.dataSource = new MatTableDataSource(this.payElementList);
-          this.dataSource.paginator = this.paginator;
-          this.show_ref = false;
-        },
-        (errors) => {
-          this.emptyState = errors;
-          if (this.emptyState) {
-            this.payElementList = [];
-          }
-        }
-      );
+      .subscribe((res) => {
+        this._loading = false;
+        const { result } = res;
+        const { data, pagination } = result;
+        this.payElementList = data;
+        this.dataSource = new MatTableDataSource(this.payElementList);
+        this.paginator.pageIndex = this.currentPage;
+        this.paginator.length = pagination.rowCount;
+        this.show_ref = false;
+      });
   }
   getItemDetails(id: any) {
     if (id !== undefined) {
@@ -217,10 +221,12 @@ export class PayElementsComponent implements OnInit {
     }
   }
   onFilter() {
+    this._loading = true;
+    this.payElementList = [];
     this.isBusy = true;
     const model = {
       pageSize: this.pageSize,
-      pageNumber: this.currentPage,
+      pageNumber: this.currentPage + 1,
       search: '',
       sortColumn: '',
       sortOrder: 1,
@@ -247,32 +253,77 @@ export class PayElementsComponent implements OnInit {
         )
         .subscribe(
           (res) => {
+            this._loading = false;
             const { result } = res;
             const { data, pagination } = result;
             this.payElementList = data;
             this.dataSource = new MatTableDataSource(this.payElementList);
-            this.dataSource.paginator = this.paginator;
+            this.paginator.pageIndex = this.currentPage;
+            this.paginator.length = pagination.rowCount;
             this.closebtn_._elementRef.nativeElement.click();
             this.isBusy = false;
             this.noRecord = false;
-            this.emptyState = false;
             this.show_ref = true;
             this.filterForm.reset();
           },
-          (errors) => {
-            this.emptyState = errors;
+          () => {
             this.noRecord = true;
             this.isBusy = false;
-            if (this.emptyState) {
-              this.payElementList = [];
-            }
+            this._loading = false;
           },
           () => {
             this.isBusy = false;
             this.noRecord = false;
+            this._loading = false;
             this.filterForm.reset();
           }
         );
     }
+  }
+  getFilterTerm(val: any) {
+    this.institutionList = [];
+    if (val && val !== null) {
+      this.getPayElements(val);
+    } else {
+      this.getPayElements();
+    }
+  }
+  pageChanged(event: PageEvent) {
+    this.pageSize = event.pageSize;
+    this.currentPage = event.pageIndex;
+    this.getPayElements();
+  }
+  exportToExcel(): void {
+    const edata: Array<any> = [];
+    const udt: any = {
+      data: [
+        { A: 'PAYELEMENTS DATA' }, // title
+        {
+          A: '#',
+          B: 'Name',
+          C: 'Pay type',
+          D: 'Element name',
+          E: 'Element category',
+          F: 'Element type',
+          G: 'Amount',
+          H: 'Institution',
+        }, // table header
+      ],
+      skipHeader: true,
+    };
+    this.payElementList.forEach((data) => {
+      udt.data.push({
+        A: data.payElementId,
+        B: data.payElementName,
+        C: data.payTypeName,
+        D: data.payElementName,
+        E: data.payElementCategoryName,
+        F: data.elementTypeName,
+        G: data.payElementAmount,
+        H: data.institutionName,
+      });
+    });
+    edata.push(udt);
+    this.exportService.exportTableElmToExcel(edata, this.file_name);
   }
 }

@@ -25,16 +25,15 @@ export class QuickPayrollComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('closebtn_') closebtn_: any;
   @ViewChild('closebtn') closebtn: any;
+  @ViewChild('closeBtn') closeBtn: any;
   runByItem: string = 'Payscale';
   payChannel: number = 1;
   employeeList: any[] = [];
   grossList: any[] = [];
   unAssignedEmployees: any[] = [];
-  pageSize: number = 10;
-  currentPage: number = 1;
-  emptyState: any;
-  emptyState_: any;
-  emptyState__: any = true;
+  pageSize: number = 20;
+  currentPage: number = 0;
+  emptyState_: boolean = false;
   isBusy: boolean = false;
   isBusy_: boolean = false;
   noRecord: boolean = false;
@@ -42,13 +41,14 @@ export class QuickPayrollComponent implements OnInit {
   paySchedules: any[] = [];
   payScales: any[] = [];
   payScaleId: any;
-  isLoading: boolean = false;
-  isLoading_: boolean = false;
   payScale: string = '';
   bankBalance: any;
-
+  _loading: boolean = false;
+  totalRows = 0;
+  show_ref: boolean = false;
   public createQuickPayrollForm: FormGroup = new FormGroup({});
-  public filterForm: FormGroup = new FormGroup({});
+  public filterPayscaleEmployeesForm: FormGroup = new FormGroup({});
+  public filterGrossNetForm: FormGroup = new FormGroup({});
   public dataSource: MatTableDataSource<any> = new MatTableDataSource();
   public dataSource_: MatTableDataSource<any> = new MatTableDataSource();
   public selection = new SelectionModel(true, []);
@@ -67,6 +67,20 @@ export class QuickPayrollComponent implements OnInit {
       employees: [null],
       payScheduleId: [null],
       runBy: [this.runByItem],
+    });
+    this.filterPayscaleEmployeesForm = this.fb.group({
+      employeeId: [null, Validators.required],
+      totalEarnings: [null],
+      totalDeductions: [null],
+      netPay: [null],
+      hoursWorked: [null],
+    });
+    this.filterGrossNetForm = this.fb.group({
+      grossMonthlySalary: [null, Validators.required],
+      totalEarnings: [null],
+      totalDeductions: [null],
+      netPay: [null],
+      prorateDeduction: [null],
     });
   }
 
@@ -93,6 +107,9 @@ export class QuickPayrollComponent implements OnInit {
       'action',
     ];
   }
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
   get formRawValue(): any {
     return this.createQuickPayrollForm.getRawValue();
   }
@@ -106,14 +123,8 @@ export class QuickPayrollComponent implements OnInit {
     if (runby == 'Payscale') {
       this.employeeList = [];
       this.grossList = [];
-      this.emptyState = null;
-      this.emptyState__ = true;
-      this.isLoading = false;
     } else {
-      this.emptyState__ = false;
       this.employeeList = [];
-      this.emptyState = true;
-      this.isLoading_ = true;
       this.getGrossnet();
     }
   }
@@ -165,16 +176,24 @@ export class QuickPayrollComponent implements OnInit {
     const myArray = strtext.split(' ');
     return myArray.join('');
   }
-  getEmployees() {
+  getEmployees(sortOrder?: string) {
+    this._loading = true;
+    this.employeeList = [];
     let model = {
       pageSize: this.pageSize,
-      pageNumber: this.currentPage,
+      pageNumber: this.currentPage + 1,
       search: '',
-      sortColumn: '',
+      sortColumn: sortOrder,
       sortOrder: 1,
       payScaleId: this.payScaleId,
+      filter: {
+        employeeId: null,
+        totalEarnings: null,
+        totalDeductions: null,
+        netPay: null,
+        hoursWorked: null,
+      },
     };
-    this.isLoading = true;
     this.payrollServ
       .returnEmployeesNetByPayScaleId(model)
       .pipe(
@@ -182,30 +201,34 @@ export class QuickPayrollComponent implements OnInit {
           return throwError(err);
         })
       )
-      .subscribe(
-        (res) => {
-          const { result } = res;
-          const { data, pagination } = result;
-          this.employeeList = data;
-          this.dataSource = new MatTableDataSource(this.employeeList);
-          this.dataSource.paginator = this.paginator;
-          this.isLoading = false;
-          this.emptyState = null;
-        },
-        (errors) => {
-          this.emptyState = errors;
-        }
-      );
+      .subscribe((res) => {
+        this._loading = false;
+        const { result } = res;
+        const { data, pagination } = result;
+        this.employeeList = data;
+        this.dataSource = new MatTableDataSource(this.employeeList);
+        this.paginator.pageIndex = this.currentPage;
+        this.paginator.length = pagination.rowCount;
+        this.show_ref = false;
+      });
   }
-  getGrossnet() {
+  getGrossnet(sortOrder?: string) {
+    this._loading = true;
+    this.grossList = [];
     let model = {
       pageSize: this.pageSize,
-      pageNumber: this.currentPage,
+      pageNumber: this.currentPage + 1,
       search: '',
-      sortColumn: '',
+      sortColumn: sortOrder,
       sortOrder: 1,
+      filter: {
+        grossMonthlySalary: null,
+        totalEarnings: null,
+        totalDeductions: null,
+        netPay: null,
+        prorateDeduction: null,
+      },
     };
-    this.isLoading_ = true;
     this.payrollServ
       .returnEmployeeNetPay(model)
       .pipe(
@@ -213,20 +236,16 @@ export class QuickPayrollComponent implements OnInit {
           return throwError(err);
         })
       )
-      .subscribe(
-        (res) => {
-          const { result } = res;
-          const { data } = result;
-          this.grossList = data;
-          this.dataSource_ = new MatTableDataSource(this.grossList);
-          this.dataSource_.paginator = this.paginator;
-          this.isLoading_ = false;
-          this.emptyState__ = null;
-        },
-        (errors) => {
-          this.emptyState__ = errors;
-        }
-      );
+      .subscribe((res) => {
+        this._loading = false;
+        const { result } = res;
+        const { data, pagination } = result;
+        this.grossList = data;
+        this.dataSource_ = new MatTableDataSource(this.grossList);
+        this.paginator.pageIndex = this.currentPage;
+        this.paginator.length = pagination.rowCount;
+        this.show_ref = false;
+      });
   }
   getTenantBankBalance() {
     this.payrollServ
@@ -240,7 +259,6 @@ export class QuickPayrollComponent implements OnInit {
         this.bankBalance = res.result;
       });
   }
-
   runCheckForUnAssignedEmployees() {
     if (this.selection.selected.length == 0) {
       this.createQuickPayrollForm.controls['employees'].setErrors({
@@ -262,10 +280,8 @@ export class QuickPayrollComponent implements OnInit {
           const { result } = res;
           this.unAssignedEmployees = result;
         },
-        (err) => {
-          if (err) {
-            this.emptyState_ = err;
-          }
+        () => {
+          this.emptyState_ = true;
         }
       );
   }
@@ -351,27 +367,36 @@ export class QuickPayrollComponent implements OnInit {
       );
     }
   }
-  onFilter() {
+  onFilterPayScaleEmployees() {
     this.isBusy_ = true;
+    this._loading = true;
+    this.employeeList = [];
     const model = {
       pageSize: this.pageSize,
-      pageNumber: this.currentPage,
+      pageNumber: this.currentPage + 1,
       search: '',
       sortColumn: '',
       sortOrder: 1,
+      payScaleId: this.payScaleId,
       filter: {
-        employeeId: this.filterForm.controls['employeeId'].value,
-        departmentId: this.filterForm.controls['departmentId'].value,
-        employementDate: this.filterForm.controls['employementDate'].value,
+        employeeId:
+          this.filterPayscaleEmployeesForm.controls['employeeId'].value,
+        totalEarnings:
+          this.filterPayscaleEmployeesForm.controls['totalEarnings'].value,
+        totalDeductions:
+          this.filterPayscaleEmployeesForm.controls['totalDeductions'].value,
+        netPay: this.filterPayscaleEmployeesForm.controls['netPay'].value,
+        hoursWorked:
+          this.filterPayscaleEmployeesForm.controls['hoursWorked'].value,
       },
     };
-    if (this.filterForm.invalid) {
+    if (this.filterPayscaleEmployeesForm.invalid) {
       this.isBusy_ = false;
       return;
     }
-    if (this.filterForm.valid) {
+    if (this.filterPayscaleEmployeesForm.valid) {
       this.payrollServ
-        .fetchAllEmployees(model)
+        .returnEmployeesNetByPayScaleId(model)
         .pipe(
           catchError((err: any): ObservableInput<any> => {
             return throwError(err);
@@ -379,30 +404,104 @@ export class QuickPayrollComponent implements OnInit {
         )
         .subscribe(
           (res) => {
+            this._loading = false;
             const { result } = res;
             const { data, pagination } = result;
             this.employeeList = data;
             this.dataSource = new MatTableDataSource(this.employeeList);
-            this.dataSource.paginator = this.paginator;
+            this.paginator.pageIndex = this.currentPage;
+            this.paginator.length = pagination.rowCount;
             this.closebtn._elementRef.nativeElement.click();
             this.isBusy_ = false;
-            this.filterForm.reset();
-            this.emptyState = false;
+            this.filterPayscaleEmployeesForm.reset();
+            this.show_ref = true;
           },
-          (errors) => {
-            this.emptyState = errors;
+          () => {
             this.isBusy_ = false;
             this.noRecord = true;
-            if (this.emptyState) {
-              this.employeeList = [];
-            }
           },
           () => {
             this.isBusy_ = false;
             this.noRecord = false;
-            this.filterForm.reset();
+            this.filterPayscaleEmployeesForm.reset();
           }
         );
     }
+  }
+  onFilterGrossNets() {
+    this.isBusy_ = true;
+    this._loading = true;
+    this.grossList = [];
+    const model = {
+      pageSize: this.pageSize,
+      pageNumber: this.currentPage + 1,
+      search: '',
+      sortColumn: '',
+      sortOrder: 1,
+      payScaleId: this.payScaleId,
+      filter: {
+        grossMonthlySalary:
+          this.filterGrossNetForm.controls['grossMonthlySalary'].value,
+        totalEarnings: this.filterGrossNetForm.controls['totalEarnings'].value,
+        totalDeductions:
+          this.filterGrossNetForm.controls['totalDeductions'].value,
+        netPay: this.filterGrossNetForm.controls['netPay'].value,
+        prorateDeduction:
+          this.filterGrossNetForm.controls['prorateDeduction'].value,
+      },
+    };
+    if (this.filterGrossNetForm.invalid) {
+      this.isBusy_ = false;
+      return;
+    }
+    if (this.filterGrossNetForm.valid) {
+      this.payrollServ
+        .returnEmployeeNetPay(model)
+        .pipe(
+          catchError((err: any): ObservableInput<any> => {
+            return throwError(err);
+          })
+        )
+        .subscribe(
+          (res) => {
+            this._loading = false;
+            const { result } = res;
+            const { data, pagination } = result;
+            this.grossList = data;
+            this.dataSource = new MatTableDataSource(this.grossList);
+            this.paginator.pageIndex = this.currentPage;
+            this.paginator.length = pagination.rowCount;
+            this.closeBtn._elementRef.nativeElement.click();
+            this.isBusy_ = false;
+            this.filterGrossNetForm.reset();
+            this.show_ref = true;
+          },
+          () => {
+            this.isBusy_ = false;
+            this.noRecord = true;
+          },
+          () => {
+            this.isBusy_ = false;
+            this.noRecord = false;
+            this.filterGrossNetForm.reset();
+          }
+        );
+    }
+  }
+  getFilterTerm(val: any) {
+    this.employeeList = [];
+    if (val && val !== null) {
+      this.getEmployees(val);
+      this.getGrossnet(val);
+    } else {
+      this.getEmployees();
+      this.getGrossnet();
+    }
+  }
+  pageChanged(event: PageEvent) {
+    this.pageSize = event.pageSize;
+    this.currentPage = event.pageIndex;
+    this.getEmployees();
+    this.getGrossnet();
   }
 }

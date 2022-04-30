@@ -149,17 +149,7 @@
   <div class="title-sm px-5" *ngIf="runByItem === 'Payscale'">
     Select Employees
   </div>
-  <ng-container *ngIf="employeeList.length === 0 && !emptyState">
-    <div
-      class="d-flex justify-content-center align-items-center mh-100 _visble"
-      [ngClass]="{ hide: !employeeList.length == 0 }"
-    >
-      <p class="f14 txt-grey" *ngIf="!isLoading && runByItem === 'Payscale'">
-        Select employees by payscale
-      </p>
-      <app-loading-roller *ngIf="isLoading"></app-loading-roller>
-    </div>
-  </ng-container>
+  <app-loading-roller *ngIf="_loading"></app-loading-roller>
   <!--Table Content for employees-->
   <div
     class="overflow--wrap _visible"
@@ -187,17 +177,6 @@
                 [aria-label]="checkboxLabel()"
               >
               </mat-checkbox>
-              <button mat-icon-button [matMenuTriggerFor]="menu">
-                <mat-icon>more_vert</mat-icon>
-              </button>
-              <mat-menu #menu="matMenu">
-                <button mat-menu-item>
-                  <span>Option One</span>
-                </button>
-                <button mat-menu-item>
-                  <span>Option Two</span>
-                </button>
-              </mat-menu>
             </div>
             <div class="search-input mr-1">
               <span><mat-icon>search</mat-icon></span>
@@ -231,11 +210,11 @@
                 <mat-icon class="ms-2">keyboard_arrow_down</mat-icon>
               </button>
               <mat-menu #sortby="matMenu">
-                <button mat-menu-item>
-                  <span>Option One</span>
+                <button mat-menu-item (click)="getFilterTerm('asc')">
+                  <span>Ascending</span>
                 </button>
-                <button mat-menu-item>
-                  <span>Option Two</span>
+                <button mat-menu-item (click)="getFilterTerm('desc')">
+                  <span>Descending</span>
                 </button>
               </mat-menu>
             </div>
@@ -256,6 +235,16 @@
                 Bulk Upload
               </button>
             </div>
+            <button
+              mat-mini-fab
+              class="mx-2"
+              color="primary"
+              *ngIf="show_ref"
+              matTooltip="Refresh List"
+              (click)="getEmployees()"
+            >
+              <mat-icon>refresh</mat-icon>
+            </button>
           </div>
         </div>
         <!--Table Layout-->
@@ -322,7 +311,9 @@
             </ng-container>
             <ng-container *ngIf="disCol == 'total deduction'">
               <td mat-cell *matCellDef="let element">
-                <span>{{ element["totalDeduction"] }}</span>
+                <span>{{
+                  element["totalDeduction"] | currency: "₦":"symbol"
+                }}</span>
               </td>
             </ng-container>
             <ng-container *ngIf="disCol == 'net pay'">
@@ -379,14 +370,6 @@
       </button>
     </div>
   </div>
-  <ng-container *ngIf="grossList.length === 0 && !emptyState__">
-    <div
-      class="d-flex justify-content-center align-items-center mh-100 _visble"
-      [ngClass]="{ hide: !grossList.length == 0 }"
-    >
-      <app-loading-roller *ngIf="isLoading_"></app-loading-roller>
-    </div>
-  </ng-container>
   <!--Table Content for gross/net-->
   <div
     class="overflow--wrap _visible"
@@ -411,17 +394,6 @@
                 [aria-label]="checkboxLabel()"
               >
               </mat-checkbox>
-              <button mat-icon-button [matMenuTriggerFor]="menu">
-                <mat-icon>more_vert</mat-icon>
-              </button>
-              <mat-menu #menu="matMenu">
-                <button mat-menu-item>
-                  <span>Option One</span>
-                </button>
-                <button mat-menu-item>
-                  <span>Option Two</span>
-                </button>
-              </mat-menu>
             </div>
             <div class="search-input mr-1">
               <span><mat-icon>search</mat-icon></span>
@@ -455,11 +427,11 @@
                 <mat-icon class="ms-2">keyboard_arrow_down</mat-icon>
               </button>
               <mat-menu #sortby="matMenu">
-                <button mat-menu-item>
-                  <span>Option One</span>
+                <button mat-menu-item (click)="getFilterTerm('asc')">
+                  <span>Ascending</span>
                 </button>
-                <button mat-menu-item>
-                  <span>Option Two</span>
+                <button mat-menu-item (click)="getFilterTerm('desc')">
+                  <span>Descending</span>
                 </button>
               </mat-menu>
             </div>
@@ -480,6 +452,16 @@
                 Bulk Upload
               </button>
             </div>
+            <button
+              mat-mini-fab
+              class="mx-2"
+              color="primary"
+              *ngIf="show_ref"
+              matTooltip="Refresh List"
+              (click)="getGrossnet()"
+            >
+              <mat-icon>refresh</mat-icon>
+            </button>
           </div>
         </div>
         <!--Table Layout-->
@@ -614,10 +596,10 @@
     </div>
   </div>
   <mat-paginator
-    showFirstLastButtons
+    showFirstLastButton
+    [pageIndex]="currentPage"
     [pageSize]="pageSize"
-    class="_visible"
-    [ngClass]="{ hide: employeeList.length == 0 && grossList.length == 0 }"
+    (page)="pageChanged($event)"
   ></mat-paginator>
 </div>
 <div class="modal fade" id="runPayroll" role="dialog">
@@ -647,7 +629,7 @@
               <label class="title-sm fw-light"
                 >{{ unAssignedEmployees.length }}
                 {{ unAssignedEmployees.length == 1 ? "employee" : "employees" }}
-                do not have a Pay scale</label
+                does not have a Pay scale</label
               >
             </div>
             <div [ngClass]="{ scroll: unAssignedEmployees.length > 5 }">
@@ -715,36 +697,66 @@
           <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
         </div>
         <div class="container">
-          <form class="pb-3">
+          <form
+            class="pb-3"
+            [formGroup]="filterPayscaleEmployeesForm"
+            (ngSubmit)="onFilterPayScaleEmployees()"
+          >
             <div class="form-wrap w--400">
               <div class="input">
                 <label>ID</label>
-                <input type="text" placeholder="Enter id" />
+                <input
+                  type="text"
+                  placeholder="Enter id"
+                  formControlName="employeeId"
+                />
               </div>
               <div class="input">
                 <label>Total Earnings</label>
-                <input type="number" placeholder="Enter amount" />
+                <input
+                  type="number"
+                  placeholder="Enter earnings"
+                  formControlName="totalEarnings"
+                />
               </div>
               <div class="input">
                 <label>Total Deductions</label>
-                <input type="number" placeholder="Enter amount" />
+                <input
+                  type="number"
+                  placeholder="Enter deductions"
+                  formControlName="totalDeductions"
+                />
               </div>
               <div class="input">
                 <label>Net Pay</label>
-                <input type="number" placeholder="Enter amount" />
+                <input
+                  type="number"
+                  placeholder="Enter net pay"
+                  formControlName="netPay"
+                />
               </div>
               <div class="input">
                 <label>Hours Worked</label>
-                <input type="number" placeholder="Enter hours" />
+                <input
+                  type="number"
+                  placeholder="Enter hours worked"
+                  formControlName="hoursWorked"
+                />
               </div>
               <div class="d-flex align-items-center mt-5">
-                <button type="button" mat-flat-button class="me-3">
-                  Apply
+                <button
+                  type="submit"
+                  mat-flat-button
+                  class="me-3"
+                  [disabled]="!filterPayscaleEmployeesForm.valid"
+                >
+                  Apply <mat-spinner *ngIf="isBusy_"> </mat-spinner>
                 </button>
                 <button
                   type="button"
                   mat-stroked-button
                   data-bs-dismiss="modal"
+                  #closebtn
                 >
                   Cancel
                 </button>
@@ -767,36 +779,62 @@
           <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
         </div>
         <div class="container">
-          <form class="pb-3">
+          <form
+            class="pb-3"
+            [formGroup]="filterGrossNetForm"
+            (ngSubmit)="onFilterGrossNets()"
+          >
             <div class="form-wrap">
               <div class="input">
                 <label>Gross Monthly Salary</label>
-                <input type="text" placeholder="Enter amount" />
+                <input
+                  type="text"
+                  placeholder="Enter salary"
+                  formControlName="grossMonthlySalary"
+                />
               </div>
               <div class="input">
                 <label>Earnings</label>
-                <input type="number" placeholder="Enter amount" />
+                <input
+                  type="number"
+                  placeholder="Enter earnings"
+                  formControlName="totalEarnings"
+                />
               </div>
               <div class="input">
                 <label>Deductions</label>
-                <input type="number" placeholder="Enter amount" />
+                <input
+                  type="number"
+                  placeholder="Enter deductions"
+                  formControlName="totalDeductions"
+                />
               </div>
               <div class="input">
                 <label>Net Salary</label>
-                <input type="number" placeholder="Enter amount" />
+                <input
+                  type="number"
+                  placeholder="Enter net pay"
+                  formControlName="netPay"
+                />
               </div>
               <div class="input">
                 <label>Prorate Deduction</label>
-                <input type="number" placeholder="Enter hours" />
+                <input type="number" placeholder="Enter deductions" />
               </div>
               <div class="d-flex align-items-center mt-5">
-                <button type="button" mat-flat-button class="me-3">
-                  Apply
+                <button
+                  type="submit"
+                  mat-flat-button
+                  class="me-3"
+                  [disabled]="!filterGrossNetForm.valid"
+                >
+                  Apply <mat-spinner *ngIf="isBusy_"> </mat-spinner>
                 </button>
                 <button
                   type="button"
                   mat-stroked-button
                   data-bs-dismiss="modal"
+                  #closeBtn
                 >
                   Cancel
                 </button>

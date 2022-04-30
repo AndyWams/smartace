@@ -1,7 +1,7 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -30,14 +30,15 @@ export class AssignPayscaleComponent implements OnInit {
   departmentList: any[] = [];
   payScales: any[] = [];
   pageSize: number = 10;
-  currentPage: number = 1;
-  emptyState: any;
+  currentPage: number = 0;
+
   noRecord: boolean = false;
   show_ref: boolean = false;
   payScaleId: any;
   employeeId: any;
   isBusy: boolean = false;
   isBusy_: boolean = false;
+  _loading: boolean = false;
   public assignEmpForm: FormGroup = new FormGroup({});
   public filterForm: FormGroup = new FormGroup({});
   public dataSource: MatTableDataSource<any> = new MatTableDataSource();
@@ -75,6 +76,9 @@ export class AssignPayscaleComponent implements OnInit {
       'employment date',
       'action',
     ];
+  }
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
   }
   get formRawValue(): any {
     return this.assignEmpForm.getRawValue();
@@ -191,12 +195,14 @@ export class AssignPayscaleComponent implements OnInit {
         this.departmentList = result;
       });
   }
-  runCheckForUnAssignedEmployees() {
+  runCheckForUnAssignedEmployees(sortOrder?: string) {
+    this._loading = true;
+    this.unAssignedEmployees = [];
     let model = {
-      pageNumber: this.currentPage,
+      pageNumber: this.currentPage + 1,
       pageSize: this.pageSize,
       search: '',
-      sortColumn: '',
+      sortColumn: sortOrder,
       sortOrder: 1,
       filter: {
         employeeId: '',
@@ -211,21 +217,15 @@ export class AssignPayscaleComponent implements OnInit {
           return throwError(err);
         })
       )
-      .subscribe(
-        (res) => {
-          const { result } = res;
-          this.unAssignedEmployees = result;
-          this.dataSource = new MatTableDataSource(this.unAssignedEmployees);
-          this.dataSource.paginator = this.paginator;
-          this.show_ref = false;
-        },
-        (errors) => {
-          this.emptyState = errors;
-          if (this.emptyState) {
-            this.unAssignedEmployees = [];
-          }
-        }
-      );
+      .subscribe((res) => {
+        this._loading = false;
+        const { result, pagination } = res;
+        this.unAssignedEmployees = result;
+        this.dataSource = new MatTableDataSource(this.unAssignedEmployees);
+        this.paginator.pageIndex = this.currentPage;
+        // this.paginator.length = pagination.rowCount;
+        this.show_ref = false;
+      });
   }
 
   onSubmit() {
@@ -271,10 +271,11 @@ export class AssignPayscaleComponent implements OnInit {
     }
   }
   onFilter() {
+    this._loading = true;
     this.isBusy_ = true;
     const model = {
       pageSize: this.pageSize,
-      pageNumber: this.currentPage,
+      pageNumber: this.currentPage + 1,
       search: '',
       sortColumn: '',
       sortOrder: 1,
@@ -298,23 +299,21 @@ export class AssignPayscaleComponent implements OnInit {
         )
         .subscribe(
           (res) => {
-            const { result } = res;
+            this._loading = false;
+            const { result, pagination } = res;
             this.unAssignedEmployees = result;
             this.dataSource = new MatTableDataSource(this.unAssignedEmployees);
-            this.dataSource.paginator = this.paginator;
+            this.paginator.pageIndex = this.currentPage;
+            // this.paginator.length = pagination.rowCount;
             this.closebtn_._elementRef.nativeElement.click();
             this.isBusy_ = false;
             this.filterForm.reset();
-            this.emptyState = false;
+
             this.show_ref = true;
           },
           (errors) => {
-            this.emptyState = errors;
             this.isBusy_ = false;
             this.noRecord = true;
-            if (this.emptyState) {
-              this.unAssignedEmployees = [];
-            }
           },
           () => {
             this.isBusy_ = false;
@@ -323,5 +322,18 @@ export class AssignPayscaleComponent implements OnInit {
           }
         );
     }
+  }
+  getFilterTerm(val: any) {
+    this.unAssignedEmployees = [];
+    if (val && val !== null) {
+      this.runCheckForUnAssignedEmployees(val);
+    } else {
+      this.runCheckForUnAssignedEmployees();
+    }
+  }
+  pageChanged(event: PageEvent) {
+    this.pageSize = event.pageSize;
+    this.currentPage = event.pageIndex;
+    this.runCheckForUnAssignedEmployees();
   }
 }

@@ -38,9 +38,8 @@ export class CreatePayScaleComponent implements OnInit {
   departmentList: any[] = [];
   filteredPayElements: any[] = [];
   filteredEmployee: any[] = [];
-  pageSize: number = 10;
-  currentPage: number = 1;
-  emptyState: any;
+  pageSize: number = 20;
+  currentPage: number = 0;
   isBusy: boolean = false;
   isBusy_: boolean = false;
   noRecord: boolean = false;
@@ -48,7 +47,8 @@ export class CreatePayScaleComponent implements OnInit {
   itemDetails: any;
   enumkey: any[] = [];
   _payscaleID: any;
-
+  _loading: boolean = false;
+  totalRows = 0;
   compareFunc = compareObjects;
   public createPayScaleForm: FormGroup = new FormGroup({});
   public updatePayScaleForm: FormGroup = new FormGroup({});
@@ -92,6 +92,9 @@ export class CreatePayScaleComponent implements OnInit {
   }
 
   ngOnChanges() {}
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
   get formRawValue(): any {
     return this.createPayScaleForm.getRawValue();
   }
@@ -183,12 +186,14 @@ export class CreatePayScaleComponent implements OnInit {
         this.departmentList = result;
       });
   }
-  getEmployees() {
+  getEmployees(sortOrder?: string) {
+    this._loading = true;
+    this.employeeList = [];
     let model = {
       pageSize: this.pageSize,
-      pageNumber: this.currentPage,
+      pageNumber: this.currentPage + 1,
       search: '',
-      sortColumn: '',
+      sortColumn: sortOrder,
       sortOrder: 1,
     };
     this.payrollServ
@@ -198,19 +203,16 @@ export class CreatePayScaleComponent implements OnInit {
           return throwError(err);
         })
       )
-      .subscribe(
-        (res) => {
-          const { result } = res;
-          const { data, pagination } = result;
-          this.employeeList = data;
-          this.dataSource = new MatTableDataSource(this.employeeList);
-          this.dataSource.paginator = this.paginator;
-          this.show_ref = false;
-        },
-        (errors) => {
-          this.emptyState = errors;
-        }
-      );
+      .subscribe((res) => {
+        this._loading = false;
+        const { result } = res;
+        const { data, pagination } = result;
+        this.employeeList = data;
+        this.dataSource = new MatTableDataSource(this.employeeList);
+        this.paginator.pageIndex = this.currentPage;
+        this.paginator.length = pagination.rowCount;
+        this.show_ref = false;
+      });
   }
   getPayElements() {
     this.payrollServ
@@ -404,9 +406,11 @@ export class CreatePayScaleComponent implements OnInit {
   }
   onFilter() {
     this.isBusy_ = true;
+    this._loading = true;
+    this.employeeList = [];
     const model = {
       pageSize: this.pageSize,
-      pageNumber: this.currentPage,
+      pageNumber: this.currentPage + 1,
       search: '',
       sortColumn: '',
       sortOrder: 1,
@@ -430,27 +434,26 @@ export class CreatePayScaleComponent implements OnInit {
         )
         .subscribe(
           (res) => {
+            this._loading = false;
             const { result } = res;
             const { data, pagination } = result;
             this.employeeList = data;
             this.dataSource = new MatTableDataSource(this.employeeList);
-            this.dataSource.paginator = this.paginator;
+            this.paginator.pageIndex = this.currentPage;
+            this.paginator.length = pagination.rowCount;
             this.closebtn_._elementRef.nativeElement.click();
             this.isBusy_ = false;
             this.filterForm.reset();
-            this.emptyState = false;
             this.show_ref = true;
           },
-          (errors) => {
-            this.emptyState = errors;
+          () => {
+            this._loading = false;
             this.isBusy_ = false;
             this.noRecord = true;
-            if (this.emptyState) {
-              this.employeeList = [];
-            }
           },
           () => {
             this.isBusy_ = false;
+            this._loading = false;
             this.noRecord = false;
             this.filterForm.reset();
           }
@@ -458,11 +461,12 @@ export class CreatePayScaleComponent implements OnInit {
     }
   }
   onFilterPayScaleEmployees() {
-    this.selection.clear();
     this.isBusy_ = true;
+    this._loading = true;
+    this.employeeList = [];
     const model = {
       pageSize: this.pageSize,
-      pageNumber: this.currentPage,
+      pageNumber: this.currentPage + 1,
       search: '',
       sortColumn: '',
       sortOrder: 1,
@@ -487,25 +491,22 @@ export class CreatePayScaleComponent implements OnInit {
         )
         .subscribe(
           (res) => {
+            this._loading = false;
             const { result } = res;
             const { data, pagination } = result;
             this.employeeList = data;
             this.dataSource = new MatTableDataSource(this.employeeList);
-            this.dataSource.paginator = this.paginator;
+            this.paginator.pageIndex = this.currentPage;
+            this.paginator.length = pagination.rowCount;
             this.closebtn._elementRef.nativeElement.click();
             this.isBusy_ = false;
             this.filterForm.reset();
-            this.emptyState = false;
+
             this.show_ref = true;
-            this.selection.select(...data);
           },
-          (errors) => {
-            this.emptyState = errors;
+          () => {
             this.isBusy_ = false;
             this.noRecord = true;
-            if (this.emptyState) {
-              this.employeeList = [];
-            }
           },
           () => {
             this.isBusy_ = false;
@@ -514,5 +515,19 @@ export class CreatePayScaleComponent implements OnInit {
           }
         );
     }
+  }
+  getFilterTerm(val: any) {
+    this.employeeList = [];
+    if (val && val !== null) {
+      this.getEmployees(val);
+    } else {
+      this.getEmployees();
+    }
+  }
+  pageChanged(event: PageEvent) {
+    this.pageSize = event.pageSize;
+    this.currentPage = event.pageIndex;
+    this.getEmployees();
+    this.onFilterPayScaleEmployees();
   }
 }
