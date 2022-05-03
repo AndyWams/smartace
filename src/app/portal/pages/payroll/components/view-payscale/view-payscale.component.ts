@@ -1,7 +1,6 @@
-import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -21,9 +20,8 @@ export class ViewPayscaleComponent implements OnInit {
   @ViewChild('closebtn_') closebtn_: any;
   @ViewChild('closebtn') closebtn: any;
   data = employeeData;
-  pageSize: number = 10;
-  currentPage: number = 1;
-  emptyState: any;
+  pageSize: number = 20;
+  currentPage: number = 0;
   employeeList: any[] = [];
   departmentList: any[] = [];
   itemDetails: any;
@@ -31,10 +29,10 @@ export class ViewPayscaleComponent implements OnInit {
   isBusy_: boolean = false;
   show_ref: boolean = false;
   noRecord: boolean = false;
+  _loading: boolean = false;
   public frequencyValue = getFrequencyValue;
   public filterForm: FormGroup = new FormGroup({});
   public dataSource: MatTableDataSource<any> = new MatTableDataSource();
-  public selection = new SelectionModel(true, []);
   public displayedColumns: string[];
   constructor(
     private router: Router,
@@ -54,30 +52,13 @@ export class ViewPayscaleComponent implements OnInit {
     this.getRoutes();
     this.getItemDetails();
     this.getDepartments();
-    this.getPayScaleEmployees();
+
     this.displayedColumns = this.column;
   }
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
-  }
-  masterToggle() {
-    if (this.isAllSelected()) {
-      this.selection.clear();
-      return;
-    }
-    this.selection.select(...this.dataSource.data);
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
   }
 
-  checkboxLabel(row?: any): string {
-    if (!row) {
-      return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
-    }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${
-      row.position + 1
-    }`;
-  }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -102,12 +83,14 @@ export class ViewPayscaleComponent implements OnInit {
         });
     }
   }
-  getPayScaleEmployees() {
+  getPayScaleEmployees(sortOrder?: string) {
+    this._loading = true;
+    this.employeeList = [];
     let model = {
       pageSize: this.pageSize,
-      pageNumber: this.currentPage,
+      pageNumber: this.currentPage + 1,
       search: '',
-      sortColumn: '',
+      sortColumn: sortOrder,
       sortOrder: 1,
       payScaleId: this._payscaleID,
       filter: {
@@ -123,25 +106,23 @@ export class ViewPayscaleComponent implements OnInit {
           return throwError(err);
         })
       )
-      .subscribe(
-        (res) => {
-          const { result } = res;
-          const { data, pagination } = result;
-          this.employeeList = data;
-          this.dataSource = new MatTableDataSource(this.employeeList);
-          this.dataSource.paginator = this.paginator;
-          this.show_ref = false;
-        },
-        (errors) => {
-          this.emptyState = errors;
-        }
-      );
+      .subscribe((res) => {
+        this._loading = false;
+        const { result } = res;
+        const { data, pagination } = result;
+        this.employeeList = data;
+        this.dataSource = new MatTableDataSource(this.employeeList);
+        this.paginator.pageIndex = this.currentPage;
+        this.paginator.length = pagination.rowCount;
+        this.show_ref = false;
+      });
   }
   getRoutes() {
     this.route.queryParams
       .pipe(filter((params) => params.id))
       .subscribe((params) => {
         this._payscaleID = params.id;
+        this.getPayScaleEmployees();
       });
   }
   getDepartments() {
@@ -158,10 +139,12 @@ export class ViewPayscaleComponent implements OnInit {
       });
   }
   onFilter() {
+    this._loading = true;
+    this.employeeList = [];
     this.isBusy_ = true;
     const model = {
       pageSize: this.pageSize,
-      pageNumber: this.currentPage,
+      pageNumber: this.currentPage + 1,
       search: '',
       sortColumn: '',
       sortOrder: 1,
@@ -186,24 +169,23 @@ export class ViewPayscaleComponent implements OnInit {
         )
         .subscribe(
           (res) => {
+            this._loading = false;
             const { result } = res;
             const { data, pagination } = result;
             this.employeeList = data;
             this.dataSource = new MatTableDataSource(this.employeeList);
-            this.dataSource.paginator = this.paginator;
+            this.paginator.pageIndex = this.currentPage;
+            this.paginator.length = pagination.rowCount;
             this.closebtn_._elementRef.nativeElement.click();
             this.isBusy_ = false;
             this.filterForm.reset();
-            this.emptyState = false;
+
             this.show_ref = true;
           },
-          (errors) => {
-            this.emptyState = errors;
+          () => {
+            this._loading = false;
             this.isBusy_ = false;
             this.noRecord = true;
-            if (this.emptyState) {
-              this.employeeList = [];
-            }
           },
           () => {
             this.isBusy_ = false;
@@ -230,5 +212,18 @@ export class ViewPayscaleComponent implements OnInit {
           this.router.navigate(['/portal/payroll/pay-scale']);
         });
     }
+  }
+  getFilterTerm(val: any) {
+    this.employeeList = [];
+    if (val && val !== null) {
+      this.getPayScaleEmployees(val);
+    } else {
+      this.getPayScaleEmployees();
+    }
+  }
+  pageChanged(event: PageEvent) {
+    this.pageSize = event.pageSize;
+    this.currentPage = event.pageIndex;
+    this.getPayScaleEmployees();
   }
 }

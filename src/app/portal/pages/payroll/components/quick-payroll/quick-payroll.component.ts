@@ -15,7 +15,8 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { MatSort, Sort } from '@angular/material/sort';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
 @Component({
   selector: 'app-quick-payroll',
   templateUrl: './quick-payroll.component.html',
@@ -23,6 +24,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class QuickPayrollComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
+
   @ViewChild('closebtn_') closebtn_: any;
   @ViewChild('closebtn') closebtn: any;
   @ViewChild('closeBtn') closeBtn: any;
@@ -58,7 +60,8 @@ export class QuickPayrollComponent implements OnInit {
     private payrollServ: PayrollService,
     private toastr: ToastrService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private _liveAnnouncer: LiveAnnouncer
   ) {
     this.createQuickPayrollForm = this.fb.group({
       startDate: ['', Validators.required],
@@ -112,6 +115,10 @@ export class QuickPayrollComponent implements OnInit {
   }
   get formRawValue(): any {
     return this.createQuickPayrollForm.getRawValue();
+  }
+
+  sortChange(evt: any) {
+    console.log(evt);
   }
 
   handleRunBy(event: any) {

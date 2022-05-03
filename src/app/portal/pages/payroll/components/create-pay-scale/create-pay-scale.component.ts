@@ -68,7 +68,7 @@ export class CreatePayScaleComponent implements OnInit {
       payScaleName: ['', Validators.required],
       frequency: [null, Validators.required],
       payScaleElements: [],
-      payScaleEmployees: [],
+      payScaleEmployees: [null, Validators.required],
     });
     this.filterForm = this.fb.group({
       employeeId: [null, Validators.required],

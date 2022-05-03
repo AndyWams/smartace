@@ -8,21 +8,8 @@
   >
     <label>Bank Balance</label>
     <ng-container *ngIf="!bankBalance">
-      <section class="d-flex align-items-center flex-column my-2">
-        <div class="lds-roller">
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
-      </section>
-
-      ></ng-container
-    >
+      <app-loading-roller></app-loading-roller>
+    </ng-container>
     <label class="bold-txt" *ngIf="bankBalance">{{
       bankBalance | currency: "₦":"symbol"
     }}</label>

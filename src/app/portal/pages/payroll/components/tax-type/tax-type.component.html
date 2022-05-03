@@ -223,7 +223,9 @@
                 <label>DAte CREATED </label>
                 <label
                   ><span>{{
-                    itemDetails.createdOn ? itemDetails.createdOn : "-----"
+                    itemDetails.createdOn
+                      ? (itemDetails.createdOn | date: "mediumDate")
+                      : "-----"
                   }}</span></label
                 >
               </div>

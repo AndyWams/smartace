@@ -493,7 +493,7 @@
             </th>
             <!--Table  Row Content-->
             <ng-container *ngIf="colIndex === 0">
-              <td *matCellDef="let element">
+              <td *matCellDef="let element; let i = index">
                 <mat-checkbox
                   [value]="element"
                   (click)="$event.stopPropagation()"
@@ -566,7 +566,9 @@
           type="submit"
           mat-flat-button
           class="me-4"
-          [disabled]="!createPayScaleForm.valid"
+          [disabled]="
+            !createPayScaleForm.valid && selection.selected.length == 0
+          "
           (click)="onSubmit()"
         >
           Save <mat-spinner *ngIf="isBusy"> </mat-spinner>

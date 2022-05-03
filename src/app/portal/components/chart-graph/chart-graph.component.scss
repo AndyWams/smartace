@@ -28,8 +28,8 @@
 canvas {
   margin: 0 auto;
   &.line-chart {
-    width: -webkit-fill-available;
-    height: auto;
+    height: 100%;
+    width: 100%;
   }
 }
 .chart-label {
