@@ -13,6 +13,7 @@ import {
   IInstitutionList,
   IPayElement,
   IPayElementCat,
+  IPayElementExta,
   IPayElementList,
   IPayscale,
   IPayscaleList,
@@ -158,6 +159,19 @@ export class PayrollService {
     return this.http
       .post<IPayElement>(
         environment.apiBaseUrl + '/PayElement/Create',
+        model,
+        this.httpOptions
+      )
+      .pipe(
+        map((status) => status),
+        catchError(handleError)
+      );
+  }
+  //Create Pay Element Extra
+  addPayElementExtra(model: IPayElementExta): Observable<any> {
+    return this.http
+      .post<IPayElement>(
+        environment.apiBaseUrl + '/PayrollExtra/Create',
         model,
         this.httpOptions
       )
@@ -711,6 +725,18 @@ export class PayrollService {
     return this.http
       .put<any>(
         environment.apiBaseUrl + '/PaySchedule/Edit',
+        model,
+        this.httpOptions
+      )
+      .pipe(
+        map((status) => status),
+        catchError(handleError)
+      );
+  }
+  updatePayelementExtra(model: any): Observable<any> {
+    return this.http
+      .put<any>(
+        environment.apiBaseUrl + '/PayrollExtra/Edit',
         model,
         this.httpOptions
       )

@@ -93,7 +93,7 @@ export class QuickPayrollComponent implements OnInit {
     this.getEnums();
     this.displayedColumns = [
       'name',
-      'emp Id',
+      'employee Id',
       'total earning',
       'total deduction',
       'net pay',
@@ -208,16 +208,24 @@ export class QuickPayrollComponent implements OnInit {
           return throwError(err);
         })
       )
-      .subscribe((res) => {
-        this._loading = false;
-        const { result } = res;
-        const { data, pagination } = result;
-        this.employeeList = data;
-        this.dataSource = new MatTableDataSource(this.employeeList);
-        this.paginator.pageIndex = this.currentPage;
-        this.paginator.length = pagination.rowCount;
-        this.show_ref = false;
-      });
+      .subscribe(
+        (res) => {
+          this._loading = false;
+          const { result } = res;
+          const { data, pagination } = result;
+          this.employeeList = data;
+          this.dataSource = new MatTableDataSource(this.employeeList);
+          this.paginator.pageIndex = this.currentPage;
+          this.paginator.length = pagination.rowCount;
+          this.show_ref = false;
+        },
+        (errors) => {
+          if (errors) {
+            this._loading = false;
+            this.employeeList = [];
+          }
+        }
+      );
   }
   getGrossnet(sortOrder?: string) {
     this._loading = true;
@@ -243,16 +251,24 @@ export class QuickPayrollComponent implements OnInit {
           return throwError(err);
         })
       )
-      .subscribe((res) => {
-        this._loading = false;
-        const { result } = res;
-        const { data, pagination } = result;
-        this.grossList = data;
-        this.dataSource_ = new MatTableDataSource(this.grossList);
-        this.paginator.pageIndex = this.currentPage;
-        this.paginator.length = this.grossList.length;
-        this.show_ref = false;
-      });
+      .subscribe(
+        (res) => {
+          this._loading = false;
+          const { result } = res;
+          const { data, pagination } = result;
+          this.grossList = data;
+          this.dataSource_ = new MatTableDataSource(this.grossList);
+          this.paginator.pageIndex = this.currentPage;
+          this.paginator.length = this.grossList.length;
+          this.show_ref = false;
+        },
+        (errors) => {
+          if (errors) {
+            this._loading = false;
+            this.grossList = [];
+          }
+        }
+      );
   }
   getTenantBankBalance() {
     this.payrollServ

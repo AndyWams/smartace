@@ -61,8 +61,6 @@ export class PayslipComponent implements OnInit {
       .subscribe((params) => {
         this.payrollId = params.payrollId;
         this.employeeId = params.empid;
-        console.log(this.employeeId);
-
         this.getItemDetails();
       });
     if (this.payrollId === '') {

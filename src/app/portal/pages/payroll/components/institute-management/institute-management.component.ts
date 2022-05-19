@@ -188,7 +188,12 @@ export class InstituteManagementComponent implements OnInit {
           this.paginator.length = pagination.rowCount;
           this.show_ref = false;
         },
-        (errors) => {}
+        (errors) => {
+          if (errors) {
+            this._loading = false;
+            this.institutionList = [];
+          }
+        }
       );
   }
   confirmDelete() {

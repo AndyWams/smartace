@@ -149,16 +149,24 @@ export class PayScaleComponent implements OnInit {
           return throwError(err);
         })
       )
-      .subscribe((res) => {
-        this._loading = false;
-        const { result } = res;
-        const { data, pagination } = result;
-        this.payscaleList = data;
-        this.dataSource = new MatTableDataSource(this.payscaleList);
-        this.paginator.pageIndex = this.currentPage;
-        this.paginator.length = pagination.rowCount;
-        this.show_ref = false;
-      });
+      .subscribe(
+        (res) => {
+          this._loading = false;
+          const { result } = res;
+          const { data, pagination } = result;
+          this.payscaleList = data;
+          this.dataSource = new MatTableDataSource(this.payscaleList);
+          this.paginator.pageIndex = this.currentPage;
+          this.paginator.length = pagination.rowCount;
+          this.show_ref = false;
+        },
+        (errors) => {
+          if (errors) {
+            this._loading = false;
+            this.payscaleList = [];
+          }
+        }
+      );
   }
   confirmDelete() {
     this.isBusy = true;

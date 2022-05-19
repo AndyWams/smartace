@@ -71,7 +71,7 @@ export class AssignPayscaleComponent implements OnInit {
     this.getPayScale();
     this.displayedColumns = [
       'Name',
-      'emp id',
+      'employee id',
       'department',
       'employment date',
       'action',

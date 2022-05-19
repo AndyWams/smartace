@@ -114,15 +114,23 @@ export class GrossNetpayComponent implements OnInit {
           return throwError(err);
         })
       )
-      .subscribe((res) => {
-        this._loading = false;
-        const { result } = res;
-        this.grossList = result;
-        this.dataSource = new MatTableDataSource(this.grossList);
-        this.paginator.pageIndex = this.currentPage;
-        this.paginator.length = this.grossList.length;
-        this.show_ref = false;
-      });
+      .subscribe(
+        (res) => {
+          this._loading = false;
+          const { result } = res;
+          this.grossList = result;
+          this.dataSource = new MatTableDataSource(this.grossList);
+          this.paginator.pageIndex = this.currentPage;
+          this.paginator.length = this.grossList.length;
+          this.show_ref = false;
+        },
+        (errors) => {
+          if (errors) {
+            this._loading = false;
+            this.grossList = [];
+          }
+        }
+      );
   }
   getItemDetails(obj: any) {
     if (obj !== undefined) {

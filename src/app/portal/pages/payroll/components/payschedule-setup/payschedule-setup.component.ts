@@ -178,17 +178,25 @@ export class PayscheduleSetupComponent implements OnInit {
           return throwError(err);
         })
       )
-      .subscribe((res) => {
-        this._loading = false;
-        const { result } = res;
-        const { data, pagination } = result;
-        this.payScheduleList = data;
-        this.dataSource = new MatTableDataSource(this.payScheduleList);
-        this.paginator.pageIndex = this.currentPage;
-        this.paginator.length = pagination.rowCount;
-        this.show_ref = false;
-        this.screen = 2;
-      });
+      .subscribe(
+        (res) => {
+          this._loading = false;
+          const { result } = res;
+          const { data, pagination } = result;
+          this.payScheduleList = data;
+          this.dataSource = new MatTableDataSource(this.payScheduleList);
+          this.paginator.pageIndex = this.currentPage;
+          this.paginator.length = pagination.rowCount;
+          this.show_ref = false;
+          this.screen = 2;
+        },
+        (errors) => {
+          if (errors) {
+            this._loading = false;
+            this.payScheduleList = [];
+          }
+        }
+      );
   }
   onSubmit() {
     this.isBusy = true;

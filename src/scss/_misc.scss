@@ -8,6 +8,10 @@
   font-weight: 500;
   color: $black;
 }
+.w-300 {
+  width: 300px;
+  margin: 0 auto;
+}
 .fw-400 {
   font-weight: 400;
 }
@@ -143,7 +147,7 @@
     z-index: 1 !important;
     border-collapse: separate;
     border-spacing: 0em 0em;
-    padding: 0em 2em;
+    padding: 0em;
     &.w-100 {
       width: 100%;
     }
@@ -165,7 +169,7 @@
         border-bottom-left-radius: 3px;
       }
       &:last-child {
-        padding: 1.2rem 2em 1.2rem 0em;
+        padding: 1.2rem 3em 1.2rem 1em;
         border-top-right-radius: 3px;
         border-bottom-right-radius: 3px;
       }
@@ -680,7 +684,7 @@ mat-select-trigger {
 
 .adjust-wrap {
   .adjust-flex {
-    padding: 0em 2em;
+    padding: 0em 0.5em;
     .mr-1 {
       margin-right: 1em;
     }

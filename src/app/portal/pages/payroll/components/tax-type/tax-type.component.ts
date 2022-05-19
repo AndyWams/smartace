@@ -120,15 +120,23 @@ export class TaxTypeComponent implements OnInit {
           return throwError(err);
         })
       )
-      .subscribe((res) => {
-        this._loading = false;
-        const { result } = res;
-        const { data, pagination } = result;
-        this.taxList = data;
-        this.dataSource = new MatTableDataSource(this.taxList);
-        this.paginator.pageIndex = this.currentPage;
-        this.paginator.length = this.taxList.length;
-      });
+      .subscribe(
+        (res) => {
+          this._loading = false;
+          const { result } = res;
+          const { data, pagination } = result;
+          this.taxList = data;
+          this.dataSource = new MatTableDataSource(this.taxList);
+          this.paginator.pageIndex = this.currentPage;
+          this.paginator.length = this.taxList.length;
+        },
+        (errors) => {
+          if (errors) {
+            this._loading = false;
+            this.taxList = [];
+          }
+        }
+      );
   }
   setFormControlElement() {
     this.updateTaxTypeForm = this.fb.group({

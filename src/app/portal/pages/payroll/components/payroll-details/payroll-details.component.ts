@@ -5,16 +5,19 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ObservableInput, throwError } from 'rxjs';
 import { catchError, filter } from 'rxjs/operators';
 import { PayrollService } from 'src/app/portal/services/payroll.service';
 import {
+  commaFormatted,
   compareObjects,
   getElementTypeValue,
   getPaymentChannelValue,
   getStatusValue,
+  numberCheck,
 } from 'src/app/portal/shared/_helperFunctions';
 
 @Component({
@@ -23,38 +26,57 @@ import {
   styleUrls: ['./payroll-details.component.scss'],
 })
 export class PayrollDetailsComponent implements OnInit {
+  @ViewChild('closebtn') closebtn: any;
+  @ViewChild('closebtn_') closebtn_: any;
   @ViewChild('txtDate') txtDate: any;
+  @ViewChild('_txtDate') _txtDate: any;
   @ViewChild('txtDate_') txtDate_: any;
   @ViewChild('allSelected') allSelected: any;
-  @ViewChildren('options') _options: any;
+  @ViewChild('allSelected_') allSelected_: any;
+  @ViewChildren('options') options: any;
   @ViewChild('matSelect') select: any;
+  @ViewChild('matSelect_') select_: any;
   queryString: string;
   payElementDuration: string = 'oneOff';
+  payElementDuration_: string = 'oneOff_';
   payElements: string[] = [];
   payElementItems: any[] = [];
+  payElementItems_: any[] = [];
   payElementBreakdownList: any[] = [];
   enumkey: any[] = [];
   itemDetails: any;
   payrollId: string;
   isBusy: boolean = false;
   isBusy_: boolean = false;
-  payChannel = getPaymentChannelValue;
+  employeeId: any;
+  payelementDetails: any;
+
+  filteredPayElements: any[] = [];
   compareFunc = compareObjects;
+  numberCheck = numberCheck;
+  commaFormat = commaFormatted;
+  query_: string = 'edit';
+  payChannel = getPaymentChannelValue;
   statusValue = getStatusValue;
   elementTypeValue = getElementTypeValue;
-  options = [
-    { value: 'Pay Element 1', label: 'Pay Element 1' },
-    { value: 'Pay Element 2', label: 'Pay Element 2' },
-    { value: 'Pay Element 3', label: 'Pay Element 3' },
-  ];
 
+  public addPayelementForm: FormGroup = new FormGroup({});
+  public updatePayElementForm: FormGroup = new FormGroup({});
   constructor(
     private payrollServ: PayrollService,
     private route: ActivatedRoute,
     private router: Router,
     private toastr: ToastrService,
-    private renderer: Renderer2
-  ) {}
+    private renderer: Renderer2,
+    private fb: FormBuilder
+  ) {
+    this.addPayelementForm = this.fb.group({
+      employeeId: [null],
+      payElementLine: [null, Validators.required],
+      startDate: [null],
+      endDate: [null],
+    });
+  }
 
   ngOnInit(): void {
     window.scrollTo(0, 0);
@@ -63,14 +85,28 @@ export class PayrollDetailsComponent implements OnInit {
     this.getEnums();
   }
   ngAfterViewInit() {
-    this.onDateLoad();
+    if (this.query_ !== 'edit') {
+      this.onDateLoad();
+    }
+  }
+  get formRawValue(): any {
+    return this.addPayelementForm.getRawValue();
+  }
+  get editFormValue(): any {
+    return this.updatePayElementForm.getRawValue();
   }
   get stripedObjValue() {
     if (this.payElements.length !== 0) {
       return this.payElementItems.slice(0, 2).map((x: any) => x.payElementName);
     }
   }
-
+  get stripedObjValue_() {
+    if (this.payElements.length !== 0) {
+      return this.payElementItems_
+        .slice(0, 2)
+        .map((x: any) => x.payElementName);
+    }
+  }
   getEnums() {
     this.payrollServ
       .fetchEnums()
@@ -96,38 +132,66 @@ export class PayrollDetailsComponent implements OnInit {
         this.payElements = result;
       });
   }
-  dropItem(index: number) {
+  dropItem(index: number, allSlc: any, slc: any) {
     let x = index;
-    this.allSelected.deselect();
-    this.select.selected[x].deselect();
-    this._options._results.splice(x, 1);
+    allSlc.deselect();
+    slc.selected[x].deselect();
+    if (allSlc) {
+      this.options._results.splice(x, 1);
+    }
   }
-  toggleAllSelection() {
-    if (this.allSelected.selected) {
-      this.select.options._results.map((item) => {
+  toggleAllSelection(allSlc: any, slc: any) {
+    if (allSlc.selected) {
+      slc.options._results.map((item) => {
         item.select();
       });
     } else {
-      this.select.options._results.map((item) => {
+      slc.options._results.map((item) => {
         item.deselect();
       });
+    }
+  }
+  toggleOne(allSlc: any, slc: any) {
+    if (allSlc.selected) {
+      allSlc.deselect();
+      return false;
+    }
+    if (slc == this.select && slc.value.length == this.payElements.length) {
+      allSlc.select();
+    }
+    if (slc == this.select_ && slc.value.length == this.payElements.length) {
+      allSlc.select();
     }
   }
   handlePayElementChange(event: any) {
     let result = event.source._value.filter((t) => t !== 0);
     this.payElementItems = result.map((x) => x);
   }
-  toggleOne() {
-    if (this.allSelected.selected) {
-      this.allSelected.deselect();
-      return false;
-    }
-    if (this.select.value.length == this.payElements.length) {
-      this.allSelected.select();
-    }
+  handlePayElementChange_(event: any) {
+    let result = event.source._value.filter((t) => t !== 0);
+    this.payElementItems_ = result.map((x) => x);
   }
   handleToggle(event: any) {
     this.payElementDuration = event.value;
+    if (this.payElementDuration == 'oneOff') {
+      this.addPayelementForm.controls['startDate'].setValue(null);
+      this.addPayelementForm.controls['endDate'].setValue(null);
+      this.renderer.setProperty(this.txtDate.nativeElement, 'value', null);
+      this.renderer.setProperty(this._txtDate.nativeElement, 'value', null);
+    } else {
+      this.onDateLoad();
+    }
+  }
+  handleToggle_(event: any) {
+    this.payElementDuration_ = event.value;
+    if (this.payElementDuration_ == 'oneOff_') {
+      this.updatePayElementForm.controls['startDate'].setValue(null);
+      this.updatePayElementForm.controls['endDate'].setValue(null);
+      this.renderer.setProperty(this.txtDate.nativeElement, 'value', null);
+      this.renderer.setProperty(this._txtDate.nativeElement, 'value', null);
+    } else {
+      this.onDateLoad();
+    }
   }
   onDateLoad() {
     var dtToday = new Date();
@@ -140,8 +204,10 @@ export class PayrollDetailsComponent implements OnInit {
 
     this.renderer.setAttribute(this.txtDate.nativeElement, 'min', maxDate);
     this.renderer.setProperty(this.txtDate.nativeElement, 'value', maxDate);
-    this.renderer.setAttribute(this.txtDate_.nativeElement, 'min', maxDate);
-    this.renderer.setProperty(this.txtDate_.nativeElement, 'value', maxDate);
+    this.addPayelementForm.controls['startDate'].setValue(maxDate);
+    if (this.payelementDetails) {
+      this.updatePayElementForm.controls['startDate'].setValue(maxDate);
+    }
   }
   onApprove() {
     this.isBusy = true;
@@ -231,6 +297,139 @@ export class PayrollDetailsComponent implements OnInit {
         });
     }
   }
+  onAddPayElement() {
+    let ids: any;
+    if (this.addPayelementForm.controls['payElementLine'].value !== null) {
+      ids = this.addPayelementForm.controls['payElementLine'].value
+        .filter((x: any) => x !== 0)
+        .map((a: any) => {
+          return {
+            payElementId: a.payElementId,
+          };
+        });
+    }
+    this.addPayelementForm.patchValue({
+      payElementLine: ids,
+      employeeId: this.employeeId,
+    });
 
-  onDateChange() {}
+    this.isBusy = true;
+    if (this.addPayelementForm.invalid) {
+      this.isBusy = false;
+      return;
+    }
+    if (this.addPayelementForm.valid) {
+      //Make api call here...
+      this.payrollServ.addPayElementExtra(this.formRawValue).subscribe(
+        ({ message, data }) => {
+          this.toastr.success(message, 'Message');
+          this.addPayelementForm.reset();
+          this.closebtn._elementRef.nativeElement.click();
+        },
+        (error) => {
+          this.isBusy = false;
+          this.toastr.error(error, 'Message', {
+            timeOut: 3000,
+          });
+        },
+        () => {
+          this.isBusy = false;
+          this.addPayelementForm.reset();
+        }
+      );
+    }
+  }
+  onUpdate() {
+    let ids: any;
+    if (this.updatePayElementForm.controls['payElementLine'].value !== null) {
+      ids = this.updatePayElementForm.controls['payElementLine'].value
+        .filter((x: any) => x !== 0)
+        .map((a: any) => {
+          return {
+            payElementId: a.payElementId,
+          };
+        });
+    }
+    this.updatePayElementForm.patchValue({
+      payElementLine: ids,
+      payElementAmount: parseFloat(
+        `${this.updatePayElementForm.controls['payElementAmount'].value}`.replace(
+          /,/g,
+          ''
+        )
+      ),
+      employeeId: this.employeeId,
+    });
+
+    this.isBusy = true;
+    if (this.updatePayElementForm.invalid) {
+      this.isBusy = false;
+      return;
+    }
+    if (this.updatePayElementForm.valid) {
+      //Make api call here...
+      this.payrollServ.updatePayelementExtra(this.editFormValue).subscribe(
+        ({ message, data }) => {
+          this.toastr.success(message, 'Message');
+          this.updatePayElementForm.reset();
+          this.closebtn_._elementRef.nativeElement.click();
+        },
+        (error) => {
+          this.isBusy = false;
+          this.toastr.error(error, 'Message', {
+            timeOut: 3000,
+          });
+        },
+        () => {
+          this.isBusy = false;
+          this.updatePayElementForm.reset();
+        }
+      );
+    }
+  }
+  setFormControlElement() {
+    this.updatePayElementForm = this.fb.group({
+      employeeId: [null],
+      startDate: [this.payelementDetails.startDate],
+      endDate: [this.payelementDetails.endDate],
+      payElementLine: [this.filteredPayElements],
+      payElementAmount: [this.payelementDetails.payElementAmount],
+      payrollExtraId: [this.payelementDetails.payrollItemId],
+    });
+  }
+  getPayelementDetails(itemId) {
+    this.payelementDetails = null;
+    if (itemId !== undefined) {
+      this.payrollServ
+        .fetchPayElementDetails(itemId)
+        .pipe(
+          catchError((err: any): ObservableInput<any> => {
+            return throwError(err);
+          })
+        )
+        .subscribe(
+          (res) => {
+            const { result } = res;
+            this.payelementDetails = result;
+            this.filteredPayElements = this.payelementDetails[
+              'payElementLine'
+            ].map((x: any) => {
+              return {
+                payElementId: x.payElementId,
+                payElementName: x.payElement.payElementName,
+              };
+            });
+            this.payElementItems_ = this.filteredPayElements;
+            this.setFormControlElement();
+          },
+          () => {
+            this.payelementDetails = null;
+          }
+        );
+    } else {
+      this.toastr.error('Something went wrong!', 'Message', {
+        timeOut: 3000,
+      });
+    }
+  }
 }

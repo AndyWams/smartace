@@ -82,6 +82,7 @@
           class="btn--primary"
           data-bs-toggle="modal"
           data-bs-target="#addPayElement"
+          (click)="query_ = 'add'"
         >
           <mat-icon class="me-2">add</mat-icon>
           Add Pay Element
@@ -102,6 +103,7 @@
                   class="btn--primary"
                   data-bs-toggle="modal"
                   data-bs-target="#editPayElement"
+                  (click)="getPayelementDetails(item['payElementId'])"
                 >
                   Edit
                 </button>
@@ -131,6 +133,7 @@
                   class="btn--primary"
                   data-bs-toggle="modal"
                   data-bs-target="#editPayElement"
+                  (click)="getPayelementDetails(item['payElementId'])"
                 >
                   Edit
                 </button>
@@ -407,100 +410,134 @@
           <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
         </div>
         <div class="container">
-          <form class="pb-3">
-            <div class="form-wrap w--500">
-              <div class="input">
-                <mat-select
-                  placeholder="Pay element"
-                  class="select"
-                  multiple
-                  #matSelect
-                  (selectionChange)="handlePayElementChange($event)"
-                >
-                  <mat-select-trigger>
-                    {{ payElements ? stripedObjValue : "" }}
-                    <span class="more" *ngIf="payElementItems.length > 2">
-                      +{{ payElementItems.length - 2 }} other item
-                    </span>
-                  </mat-select-trigger>
-                  <mat-option
-                    #allSelected
-                    (click)="toggleAllSelection()"
-                    [value]="0"
-                    >All</mat-option
+          <ng-container *ngIf="query_ == 'add'">
+            <form
+              class="pb-3"
+              [formGroup]="addPayelementForm"
+              (ngSubmit)="onAddPayElement()"
+            >
+              <div class="form-wrap w--500">
+                <div class="input">
+                  <mat-select
+                    placeholder="Pay element"
+                    class="select"
+                    multiple
+                    #matSelect
+                    formControlName="payElementLine"
+                    (selectionChange)="handlePayElementChange($event)"
+                    [ngClass]="{
+                      'is-invalid':
+                        addPayelementForm.controls['payElementLine'].hasError(
+                          'required'
+                        ) &&
+                        addPayelementForm.controls['payElementLine'].touched
+                    }"
                   >
-                  <mat-option
-                    *ngFor="let item of payElements"
-                    [value]="item"
-                    (click)="toggleOne()"
-                  >
-                    {{ item.payElementName }}
-                  </mat-option>
-                </mat-select>
-              </div>
-              <ng-container *ngIf="payElementItems.length !== 0">
-                <div class="grid">
-                  <div class="chips_wrap d-flex align-items-center">
-                    <div
-                      class="_chips animate__animated animate__bounceIn"
-                      *ngFor="let chip of payElementItems; let i = index"
+                    <mat-select-trigger>
+                      {{ payElements ? stripedObjValue : "" }}
+                      <span class="more" *ngIf="payElementItems.length > 2">
+                        +{{ payElementItems.length - 2 }} other item
+                      </span>
+                    </mat-select-trigger>
+                    <mat-option
+                      #allSelected
+                      (click)="toggleAllSelection(allSelected, select)"
+                      [value]="0"
+                      >All</mat-option
                     >
-                      <span>{{ chip.payElementName }}</span>
-                      <span (click)="dropItem(i)"
-                        ><ion-icon name="close"></ion-icon
-                      ></span>
+                    <mat-option
+                      *ngFor="let item of payElements"
+                      [value]="item"
+                      (click)="toggleOne(allSelected, select)"
+                    >
+                      {{ item.payElementName }}
+                    </mat-option>
+                  </mat-select>
+                </div>
+                <ng-container *ngIf="payElementItems.length !== 0">
+                  <div class="grid">
+                    <div class="chips_wrap d-flex align-items-center">
+                      <div
+                        class="_chips animate__animated animate__bounceIn"
+                        *ngFor="let chip of payElementItems; let i = index"
+                      >
+                        <span>{{ chip.payElementName }}</span>
+                        <span (click)="dropItem(i, allSelected, select)"
+                          ><ion-icon name="close"></ion-icon
+                        ></span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </ng-container>
-              <div class="input">
-                <mat-radio-group aria-label="Select an option">
-                  <mat-radio-button
-                    class="me-4"
-                    value="oneOff"
-                    (change)="handleToggle($event)"
-                    checked
-                    id="oneOff"
-                    >One Off</mat-radio-button
-                  >
-                  <mat-radio-button
-                    value="recurrent"
-                    (change)="handleToggle($event)"
-                    id="recurrent"
-                    >Recurrent</mat-radio-button
-                  >
-                </mat-radio-group>
-              </div>
-              <ng-container>
-                <div
-                  class="hideDate animate__animated animate__fadeIn"
-                  [ngClass]="{ show_date: payElementDuration === 'recurrent' }"
-                >
-                  <div class="input mb-0 me-3">
-                    <label for="">Start Date</label>
-                    <input type="date" (change)="onDateChange()" #txtDate />
-                  </div>
-                  <div class="input mb-0">
-                    <label for=""
-                      >End Date
-                      <span class="txt-sm italize">(Optional)</span></label
+                </ng-container>
+                <div class="input">
+                  <mat-radio-group aria-label="Select an option">
+                    <mat-radio-button
+                      class="me-4"
+                      value="oneOff"
+                      (change)="handleToggle($event)"
+                      checked
+                      id="oneOff"
+                      >One Off</mat-radio-button
                     >
-                    <input type="date" (change)="onDateChange()" />
-                  </div>
+                    <mat-radio-button
+                      value="recurrent"
+                      (change)="handleToggle($event)"
+                      id="recurrent"
+                      >Recurrent</mat-radio-button
+                    >
+                  </mat-radio-group>
                 </div>
-              </ng-container>
-              <div class="d-flex align-items-center mt-5">
-                <button type="button" mat-flat-button class="me-3">Add</button>
-                <button
-                  type="button"
-                  mat-stroked-button
-                  data-bs-dismiss="modal"
-                >
-                  Cancel
-                </button>
+                <ng-container>
+                  <div
+                    class="hideDate animate__animated animate__fadeIn"
+                    [ngClass]="{
+                      show_date: payElementDuration === 'recurrent'
+                    }"
+                  >
+                    <div class="input mb-0 me-3">
+                      <label for="">Start Date</label>
+                      <input
+                        type="date"
+                        (change)="onDateChange()"
+                        #txtDate
+                        formControlName="startDate"
+                      />
+                    </div>
+                    <div class="input mb-0">
+                      <label for=""
+                        >End Date
+                        <span class="txt-sm italize">(Optional)</span></label
+                      >
+                      <input
+                        type="date"
+                        #_txtDate
+                        (change)="onDateChange()"
+                        formControlName="endDate"
+                      />
+                    </div>
+                  </div>
+                </ng-container>
+                <div class="d-flex align-items-center mt-5">
+                  <button
+                    type="submit"
+                    mat-flat-button
+                    class="me-3"
+                    [disabled]="!addPayelementForm.valid"
+                  >
+                    Add <mat-spinner *ngIf="isBusy"> </mat-spinner>
+                  </button>
+                  <button
+                    type="button"
+                    mat-stroked-button
+                    data-bs-dismiss="modal"
+                    #closebtn
+                  >
+                    Cancel
+                  </button>
+                </div>
               </div>
-            </div>
-          </form>
+            </form>
+          </ng-container>
         </div>
       </div>
     </div>
@@ -517,94 +554,145 @@
           <ion-icon name="close-outline" data-bs-dismiss="modal"></ion-icon>
         </div>
         <div class="container">
-          <form class="pb-3">
-            <div class="form-wrap w--500">
-              <div class="d-flex align-items-center mb-4">
-                <div class="input mb-0">
-                  <label>Pension</label>
-                  <input type="text" placeholder="Enter value" />
-                </div>
-                <div class="d-flex flex-column mx-2">
-                  <span>&nbsp;</span>
-                  <button type="button" mat-button class="txt-danger underline">
-                    Delete
-                  </button>
-                </div>
-              </div>
-              <div class="d-flex align-items-center mb-4">
-                <div class="input mb-0">
-                  <label>Pension</label>
-                  <input type="text" placeholder="Enter value" />
-                </div>
-                <div class="d-flex flex-column mx-2">
-                  <span>&nbsp;</span>
-                  <button type="button" mat-button class="txt-danger underline">
-                    Delete
-                  </button>
-                </div>
-              </div>
-              <div class="d-flex align-items-center mb-4">
-                <div class="input mb-0">
-                  <label>Pension</label>
-                  <input type="text" placeholder="Enter value" />
-                </div>
-                <div class="d-flex flex-column mx-2">
-                  <span>&nbsp;</span>
-                  <button type="button" mat-button class="txt-danger underline">
-                    Delete
-                  </button>
-                </div>
-              </div>
-              <div class="input">
-                <mat-radio-group aria-label="Select an option">
-                  <mat-radio-button
-                    class="me-4"
-                    value="oneOff_"
-                    (change)="handleToggle($event)"
-                    checked
-                    id="oneOff_"
-                    >One Off</mat-radio-button
-                  >
-                  <mat-radio-button
-                    value="recurrent_"
-                    (change)="handleToggle($event)"
-                    id="recurrent_"
-                    >Recurrent</mat-radio-button
-                  >
-                </mat-radio-group>
-              </div>
-              <ng-container>
-                <div
-                  class="hideDate animate__animated animate__fadeIn"
-                  [ngClass]="{ show_date: payElementDuration === 'recurrent' }"
-                >
-                  <div class="input mb-0 me-3">
-                    <label for="">Start Date</label>
-                    <input type="date" (change)="onDateChange()" #txtDate_ />
-                  </div>
-                  <div class="input mb-0">
-                    <label for=""
-                      >End Date
-                      <span class="txt-sm italize">(Optional)</span></label
-                    >
-                    <input type="date" (change)="onDateChange()" />
-                  </div>
-                </div>
-              </ng-container>
-              <div class="d-flex align-items-center mt-5">
-                <button type="button" mat-flat-button class="me-3">
-                  Update
-                </button>
-                <button
-                  type="button"
-                  mat-stroked-button
-                  data-bs-dismiss="modal"
-                >
-                  Cancel
-                </button>
-              </div>
+          <ng-container *ngIf="!payelementDetails">
+            <div class="d-flex justify-content-center w-300">
+              <app-loading-roller></app-loading-roller>
             </div>
-          </form>
+          </ng-container>
+          <ng-container *ngIf="payelementDetails && query_">
+            <form
+              class="pb-3"
+              [formGroup]="updatePayElementForm"
+              (ngSubmit)="onUpdate()"
+            >
+              <div class="form-wrap w--500">
+                <ng-container
+                  *ngIf="payelementDetails['payElementLine'].length"
+                >
+                  <div class="input">
+                    <label class="mb-2">Pay Element</label>
+                    <mat-select
+                      placeholder="Pay element"
+                      class="select"
+                      multiple
+                      #matSelect_
+                      [compareWith]="compareFunc"
+                      formControlName="payElementLine"
+                      (selectionChange)="handlePayElementChange_($event)"
+                    >
+                      <mat-select-trigger>
+                        {{ payElements ? stripedObjValue_ : "" }}
+                        <span class="more" *ngIf="payElementItems_.length > 2">
+                          +{{ payElementItems_.length - 2 }} other item
+                        </span>
+                      </mat-select-trigger>
+                      <mat-option
+                        #allSelected_
+                        (click)="toggleAllSelection(allSelected_, select_)"
+                        [value]="0"
+                        >All</mat-option
+                      >
+                      <mat-option
+                        *ngFor="let item of payElements"
+                        [value]="item"
+                        (click)="toggleOne(allSelected_, select_)"
+                      >
+                        {{ item.payElementName }}
+                      </mat-option>
+                    </mat-select>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="payElementItems_.length !== 0">
+                  <div class="grid">
+                    <div class="chips_wrap d-flex align-items-center">
+                      <div
+                        class="_chips animate__animated animate__bounceIn"
+                        *ngFor="let chip of payElementItems_; let i = index"
+                      >
+                        <span>{{ chip.payElementName }}</span>
+                        <span (click)="dropItem(i, allSelected_, select_)"
+                          ><ion-icon name="close"></ion-icon
+                        ></span>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+                <div class="grid mb-3">
+                  <label class="mb-2">Amount</label>
+                  <div class="input mb-0">
+                    <input
+                      type="text"
+                      (keydown)="numberCheck($event)"
+                      (keyup)="commaFormat($event)"
+                      placeholder="Amount"
+                      formControlName="payElementAmount"
+                    />
+                  </div>
+                </div>
+                <div class="input">
+                  <mat-radio-group aria-label="Select an option">
+                    <mat-radio-button
+                      class="me-4"
+                      value="oneOff_"
+                      (change)="handleToggle_($event)"
+                      checked
+                      id="oneOff_"
+                      >One Off</mat-radio-button
+                    >
+                    <mat-radio-button
+                      value="recurrent_"
+                      (change)="handleToggle_($event)"
+                      id="recurrent_"
+                      >Recurrent</mat-radio-button
+                    >
+                  </mat-radio-group>
+                </div>
+                <ng-container>
+                  <div
+                    class="hideDate animate__animated animate__fadeIn"
+                    [ngClass]="{
+                      show_date: payElementDuration_ === 'recurrent_'
+                    }"
+                  >
+                    <div class="input mb-0 me-3">
+                      <label for="">Start Date</label>
+                      <input
+                        type="date"
+                        (change)="onDateChange()"
+                        #txtDate
+                        formControlName="startDate"
+                      />
+                    </div>
+                    <div class="input mb-0">
+                      <label for=""
+                        >End Date
+                        <span class="txt-sm italize">(Optional)</span></label
+                      >
+                      <input
+                        type="date"
+                        #_txtDate
+                        (change)="onDateChange()"
+                        formControlName="endDate"
+                      />
+                    </div>
+                  </div>
+                </ng-container>
+                <div class="d-flex align-items-center mt-5">
+                  <button type="submit" mat-flat-button class="me-3">
+                    Update <mat-spinner *ngIf="isBusy"> </mat-spinner>
+                  </button>
+                  <button
+                    type="button"
+                    mat-stroked-button
+                    data-bs-dismiss="modal"
+                    #closebtn_
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </form>
+          </ng-container>
         </div>
       </div>
     </div>

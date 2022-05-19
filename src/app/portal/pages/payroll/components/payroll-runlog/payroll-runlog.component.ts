@@ -107,19 +107,29 @@ export class PayrollRunlogComponent implements OnInit {
           return throwError(err);
         })
       )
-      .subscribe((res) => {
-        this._loading = false;
-        const { result } = res;
-        const { data, pagination } = result;
-        this.payrollList = data;
-        this.dataSource = new MatTableDataSource(this.payrollList);
-        this.dataSource.paginator = this.paginator;
-        this.paginator.pageIndex = this.currentPage;
-        this.paginator.length = pagination.rowCount;
-        this.show_ref = false;
-      });
+      .subscribe(
+        (res) => {
+          this._loading = false;
+          const { result } = res;
+          const { data, pagination } = result;
+          this.payrollList = data;
+          this.dataSource = new MatTableDataSource(this.payrollList);
+          this.dataSource.paginator = this.paginator;
+          this.paginator.pageIndex = this.currentPage;
+
+          this.paginator.length = pagination.rowCount;
+          this.show_ref = false;
+        },
+        (errors) => {
+          if (errors) {
+            this._loading = false;
+            this.payrollList = [];
+          }
+        }
+      );
   }
   getItemDetails(id: any) {
+    this.payrollId = id;
     if (id !== undefined) {
       this.payrollServ
         .fetchPayrollLogDetails(id)
@@ -136,9 +146,9 @@ export class PayrollRunlogComponent implements OnInit {
   }
   confirmDelete() {
     this.isBusy = true;
-    if (this.itemDetails !== undefined) {
+    if (this.payrollId !== undefined) {
       this.payrollServ
-        .deletePayroll(this.itemDetails.payrollId)
+        .deletePayroll(this.payrollId)
         .pipe(
           catchError((err: any): ObservableInput<any> => {
             return throwError(err);

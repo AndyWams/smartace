@@ -62,6 +62,12 @@ export interface IPayElement {
   taxValue: number;
   payElementLine: IPayElementLine[];
 }
+export interface IPayElementExta {
+  employeeId: string;
+  payElementLine: IPayElementLine[];
+  startDate: Date;
+  endDate: Date;
+}
 export interface IPayElementList {
   pageNumber: number;
   pageSize: number;
