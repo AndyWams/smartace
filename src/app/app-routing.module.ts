@@ -7,7 +7,7 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
-    canActivate: [LoggedInAuthGuard],
+    // canActivate: [LoggedInAuthGuard],
   },
   {
     path: 'portal',

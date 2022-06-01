@@ -19,7 +19,6 @@ import {
   getStatusValue,
   numberCheck,
 } from 'src/app/portal/shared/_helperFunctions';
-
 @Component({
   selector: 'app-payroll-details',
   templateUrl: './payroll-details.component.html',
@@ -281,6 +280,7 @@ export class PayrollDetailsComponent implements OnInit {
       this.router.navigate(['/portal/payroll/payroll-run-log']);
     }
   }
+
   getItemDetails() {
     if (this.payrollId !== undefined) {
       this.payrollServ
